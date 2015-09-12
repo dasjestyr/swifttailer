@@ -94,8 +94,18 @@ namespace Fivel.Wpf.Models.Observable
                 {
                     if (!fs.CanRead || fs.Length == _lastIndex) return; // no change
 
-                    var newContent = new byte[fs.Length - _lastIndex];
-                    fs.Seek(_lastIndex, SeekOrigin.Begin);
+                    // avoid reading the entire file on startup
+                    long startAt = _lastIndex;
+                    if (startAt == 0 && fs.Length > _displayBuffer)
+                    {
+                        startAt = fs.Length - _displayBuffer;
+                        Trace.WriteLine($"File was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
+                    }
+
+                    var newContent = new byte[fs.Length - startAt];
+                    Trace.WriteLine($"This chunk will be {newContent.Length} bytes.");
+
+                    fs.Seek(startAt, SeekOrigin.Begin);
 
                     var bytesRead = await fs.ReadAsync(newContent, 0, newContent.Length);
 
