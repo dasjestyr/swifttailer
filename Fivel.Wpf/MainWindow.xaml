@@ -39,17 +39,24 @@
 
         </Menu>
         
-        <TabControl ItemsSource="{Binding Tails}" Grid.Row="1">
+        <TabControl ItemsSource="{Binding Tails}" Grid.Row="1" x:Name="SessionTabs">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="AllowDrop" Value="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}" />
+                    <EventSetter Event="PreviewMouseMove" Handler="TabItem_PreviewMouseMove" />
+                    <EventSetter Event="Drop" Handler="TabItem_Drop" />
+                </Style>
+            </TabControl.Resources>
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding Name}" Tag="{Binding Id}" />
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <i:Interaction.Behaviors>
-                            
+                            <behaviors:AutoScrollBehavior />
                         </i:Interaction.Behaviors>
                         <TextBox Text="{Binding Contents}" AcceptsReturn="True" FontFamily="Courier New"/>
                     </ScrollViewer>

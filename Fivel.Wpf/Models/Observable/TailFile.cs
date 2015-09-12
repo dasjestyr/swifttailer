@@ -12,7 +12,6 @@ namespace Fivel.Wpf.Models.Observable
 {
     public class TailFile : ModelBase
     {
-        private readonly LogInfo _logInfo;
         private readonly int _displayBuffer;
         private readonly TimeSpan _interval;
         private readonly CancellationTokenSource _cts;
@@ -25,16 +24,29 @@ namespace Fivel.Wpf.Models.Observable
             set
             {
                 _contents = value;
-                Trace.WriteLine(value);
                 OnPropertyChanged();
             }
         }
 
-        public string Name => _logInfo.Alias;
+        public int Order
+        {
+            get { return LogInfo.Order; }
+            set
+            {
+                LogInfo.Order = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Name => LogInfo.Alias;
+
+        public string Id => LogInfo.Id;
+
+        public LogInfo LogInfo { get; }
 
         public TailFile(LogInfo logInfo)
         {
-            _logInfo = logInfo;
+            LogInfo = logInfo;
             _displayBuffer = Settings.DisplayBufferSize * 1000;
             _interval = new TimeSpan(Settings.PollingInterval);
             _cts = new CancellationTokenSource();
@@ -63,21 +75,22 @@ namespace Fivel.Wpf.Models.Observable
                 }
             }, _cts.Token);
 
-            Debug.WriteLine($"Stopped tailing {_logInfo.Alias}");
+            Debug.WriteLine($"Stopped tailing {LogInfo.Alias}");
         }
 
         private async Task UpdateFile()
         {
             try
             {
-                if (!File.Exists(_logInfo.Location))
+                if (!File.Exists(LogInfo.Location))
                 {
-                    Contents = $"File not found: {_logInfo.Location}";
+                    Trace.WriteLine($"{LogInfo.Location} was not found.");
+                    Contents = $"File not found: {LogInfo.Location}";
                     _cts.Cancel();
                     return;
                 }
 
-                using (var fs = new FileStream(_logInfo.Location, FileMode.Open))
+                using (var fs = new FileStream(LogInfo.Location, FileMode.Open))
                 {
                     if (!fs.CanRead || fs.Length == _lastIndex) return; // no change
 
@@ -88,8 +101,9 @@ namespace Fivel.Wpf.Models.Observable
 
                     // trim the buffer off the front
                     var trimmedContent = Contents;
-                    if (!string.IsNullOrEmpty(Contents) && (Contents.Length + bytesRead > _displayBuffer))
+                    if (!string.IsNullOrEmpty(Contents) && Contents.Length + bytesRead > _displayBuffer)
                     {
+                        Trace.WriteLine("Windows contents exceed the display buffer size. Trimming off the top...");
                         var skipLength = (_displayBuffer - bytesRead) < Contents.Length ? 0 : _displayBuffer - bytesRead;
                         var contentBytes = Encoding.UTF8.GetBytes(Contents).Skip(skipLength).ToArray();
                         trimmedContent = Encoding.UTF8.GetString(contentBytes);

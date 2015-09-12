@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using Fivel.Wpf.Commands;
 using Fivel.Wpf.Data;
@@ -13,12 +14,21 @@ namespace Fivel.Wpf.ViewModels
         private LogGroup _selectedGroup;
         private ObservableCollection<LogGroup> _groups;
         private ObservableCollection<TailFile> _tails = new ObservableCollection<TailFile>();
+        private bool _isRunning;
 
         public SelectGroupCommand SelectGroupCommand { get; private set; }
 
         public ToggleTailingCommand ToggleTailingCommand { get; private set; }
 
-        public bool IsRunning { get; set; }
+        public bool IsRunning
+        {
+            get { return _isRunning; }
+            set
+            {
+                _isRunning = value;
+                OnPropertyChanged();
+            }
+        }
 
         #region -- Observable Properties --
 
@@ -79,6 +89,7 @@ namespace Fivel.Wpf.ViewModels
         
         public void StartTailing()
         {
+            Trace.WriteLine("Starting tails...");
             Status = "Running";
             IsRunning = true;
             var tasks = Tails.Select(t => t.StartTailing()).ToList();
@@ -86,6 +97,7 @@ namespace Fivel.Wpf.ViewModels
 
         public void StopTailing()
         {
+            Trace.WriteLine("Stopping tails...");
             foreach (var tail in Tails)
             {
                 tail.StopTailing();
@@ -94,14 +106,31 @@ namespace Fivel.Wpf.ViewModels
             IsRunning = false;
         }
 
-        private void BindGroups()
+        public void BindGroups()
         {
+            Trace.WriteLine("Rebinding log tails...");
             Tails.Clear();
-            var tails = SelectedGroup.Logs.Select(t => new TailFile(t));
+            var tails = SelectedGroup.Logs
+                .OrderBy(l => l.Order)
+                .Select(t => new TailFile(t));
+
             foreach (var tail in tails)
             {
                 Tails.Add(tail);
             }
+        }
+
+        public void SaveOrder()
+        {
+            var logs = Tails
+                .ToList()
+                .Select(log => log.LogInfo)
+                .ToList();
+
+            DemoLogSource.Instance.Logs.Groups
+                .Single(g => g.Id.Equals(SelectedGroup.Id)).Logs = logs;
+
+            DemoLogSource.Instance.SaveState();
         }
     }
 }

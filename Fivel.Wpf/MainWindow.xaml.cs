@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Fivel.Wpf.Models.Observable;
+using Fivel.Wpf.ViewModels;
 
 namespace Fivel.Wpf
 {
@@ -23,6 +25,57 @@ namespace Fivel.Wpf
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            var item = e.Source as TabItem;
+            if (item == null) return;
+
+            if (Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
+            {
+                DragDrop.DoDragDrop(item, item, DragDropEffects.All);
+            }
+        }
+
+        private void TabItem_Drop(object sender, DragEventArgs e)
+        {
+
+            var itemTarget = e.Source as TabItem;
+            var itemSource = e.Data.GetData(typeof (TabItem)) as TabItem;
+
+            var pageContext = DataContext as MainViewModel;
+            var targetContext = itemTarget?.DataContext as TailFile;
+            var sourceContext = itemSource?.DataContext as TailFile;
+
+            if (targetContext == null || sourceContext == null || pageContext == null) return;
+
+            if (sourceContext.Order < targetContext.Order)
+            {
+                var sourceOrder = sourceContext.Order;
+                sourceContext.Order = targetContext.Order;
+                for (var i = targetContext.Order; i > sourceOrder; i--)
+                {
+                    var item = SessionTabs.Items[i] as TailFile;
+                    if (item == null) continue;
+                    item.Order--;
+                }
+                pageContext.BindGroups();
+                pageContext.SaveOrder();
+            }
+            else
+            {
+                var sourceOrder = sourceContext.Order;
+                sourceContext.Order = targetContext.Order;
+                for (var i = targetContext.Order; i < sourceOrder; i++)
+                {
+                    var item = SessionTabs.Items[i] as TailFile;
+                    if(item == null) continue;
+                    item.Order++;
+                }
+                pageContext.BindGroups();
+                pageContext.SaveOrder();
+            }
         }
     }
 }

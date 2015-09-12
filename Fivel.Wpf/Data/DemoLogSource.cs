@@ -8,16 +8,37 @@ namespace Fivel.Wpf.Data
     {
         public event LogCollectionChangedHandler LogCollectionChanged;
 
+        private readonly string _logFileLocation;
+        private readonly object _objectLock;
+        private Logs _logs;
         private static DemoLogSource _instance;
 
         public static DemoLogSource Instance => _instance ?? (_instance = new DemoLogSource());
 
-        public Logs Logs { get; private set; }
+        public Logs Logs
+        {
+            get { return _logs; }
+            private set
+            {
+                _logs = value;
+                OnLogCollectionChanged();
+            }
+        }
 
         private DemoLogSource()
         {
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DesignTime", "DemoFiles.json");
-            LoadLogs(filePath);
+            _objectLock = new object();
+            _logFileLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DesignTime", "DemoFiles.json");
+            LoadLogs(_logFileLocation);
+        }
+
+        public void SaveState()
+        {
+            var logsJson = JsonConvert.SerializeObject(Logs);
+            lock (_objectLock)
+            {
+                WriteToFile(_logFileLocation, logsJson);
+            }
         }
 
         private void LoadLogs(string path)
@@ -34,6 +55,11 @@ namespace Fivel.Wpf.Data
         private void OnLogCollectionChanged()
         {
             LogCollectionChanged?.Invoke(this, new EventArgs());
+        }
+
+        private static void WriteToFile(string path, string content)
+        {
+            File.WriteAllText(path, content);
         }
     }
 

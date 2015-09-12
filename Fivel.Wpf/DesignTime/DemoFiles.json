@@ -5,15 +5,18 @@
       "logs": [
         {
           "alias": "OAuth Audit",
-          "location": "C:\\Users\\jeremy\\Desktop\\tailing\\tester.txt"
+          "location": "C:\\Users\\jeremy\\Desktop\\tailing\\tester.txt",
+          "order" :  0
         },
         {
           "alias": "Paylite - Unsecure",
-          "location": "c:\\test\\paylite\\paylite_debug.log"
+          "location": "c:\\test\\paylite\\paylite_debug.log",
+          "order" :  1
         },
         {
           "alias": "Paylite - Secure",
-          "location": "c:\\test\\paylite.x509\\paylite_debug.log"
+          "location": "c:\\test\\paylite.x509\\paylite_debug.log",
+          "order" :  2
         }
       ]
     },
@@ -22,19 +25,23 @@
       "logs": [
         {
           "alias": "OAuth Audit 2",
-          "location": "c:\\test\\oauth_audit.log"
+          "location": "c:\\test\\oauth_audit.log",
+          "order" :  0
         },
         {
           "alias": "Paylite - Unsecure",
-          "location": "c:\\test\\paylite\\paylite_debug.log"
+          "location": "c:\\test\\paylite\\paylite_debug.log",
+          "order" :  1
         },
         {
           "alias": "Paylite - Secure",
-          "location": "c:\\test\\paylite.x509\\paylite_debug.log"
+          "location": "c:\\test\\paylite.x509\\paylite_debug.log",
+          "order" :  2
         },
         {
           "alias": "Test Alias",
-          "location":  "c:\\test\\paylite.x509\\paylite_debug.log"
+          "location":  "c:\\test\\paylite.x509\\paylite_debug.log",
+          "order" :  3
         }
       ]
     }
