@@ -90,7 +90,7 @@ namespace Fivel.Wpf.Models.Observable
                     return;
                 }
 
-                using (var fs = new FileStream(LogInfo.Location, FileMode.Open))
+                using (var fs = new FileStream(LogInfo.Location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     if (!fs.CanRead || fs.Length == _lastIndex) return; // no change
 
