@@ -1,0 +1,42 @@
+﻿{
+  "groups": [
+    {
+      "name": "AIB 144",
+      "logs": [
+        {
+          "alias": "OAuth Audit",
+          "location": "C:\\Users\\jeremy\\Desktop\\tailing\\tester.txt"
+        },
+        {
+          "alias": "Paylite - Unsecure",
+          "location": "c:\\test\\paylite\\paylite_debug.log"
+        },
+        {
+          "alias": "Paylite - Secure",
+          "location": "c:\\test\\paylite.x509\\paylite_debug.log"
+        }
+      ]
+    },
+    {
+      "name": "AIB 168",
+      "logs": [
+        {
+          "alias": "OAuth Audit 2",
+          "location": "c:\\test\\oauth_audit.log"
+        },
+        {
+          "alias": "Paylite - Unsecure",
+          "location": "c:\\test\\paylite\\paylite_debug.log"
+        },
+        {
+          "alias": "Paylite - Secure",
+          "location": "c:\\test\\paylite.x509\\paylite_debug.log"
+        },
+        {
+          "alias": "Test Alias",
+          "location":  "c:\\test\\paylite.x509\\paylite_debug.log"
+        }
+      ]
+    }
+  ]
+}
