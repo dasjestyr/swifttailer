@@ -26,7 +26,7 @@ namespace Fivel.Wpf.Commands
             await ClearHighlights();
             await SetHighlights(_vm.SearchPhrase);
          
-            Trace.WriteLine($"Found {_vm.LogLines.Count(line => line.Highlight)} results!");
+            Trace.WriteLine($"Found {_vm.LogLines.Count(line => line.Highlight.Category == LogHighlight.HighlightCategory.Find)} results!");
         }
 
         private async Task ClearHighlights()
@@ -35,7 +35,7 @@ namespace Fivel.Wpf.Commands
             {
                 foreach (var item in _vm.LogLines)
                 {
-                    item.Highlight = false;
+                    item.Highlight = LogHighlight.None;
                 }
             });
         }
@@ -49,7 +49,7 @@ namespace Fivel.Wpf.Commands
                 foreach (var line in _vm.LogLines
                     .Where(line => line.Content.IndexOf(phrase, StringComparison.OrdinalIgnoreCase) != -1)) // TODO: make case sensitivity optional
                 {
-                    line.Highlight = true;
+                    line.Highlight = LogHighlight.Find;
                 }
             });
         }

@@ -7,20 +7,22 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:behaviors="clr-namespace:Fivel.Wpf.Behaviors"
         xmlns:converters="clr-namespace:Fivel.Wpf.Converters"
+        xmlns:observable="clr-namespace:Fivel.Wpf.Models.Observable"
         mc:Ignorable="d"
         Title="Fivel" Height="600" Width="800">
     <Window.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <converters:HighlightConverter x:Key="HighlightConverter"/>
         <Style TargetType="ListBoxItem" x:Key="HighlightItemStyle">
-            <Style.Resources>
-                
-            </Style.Resources>
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Highlight}" Value="True">
+                <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Find">
                     <Setter Property="Background" Value="Yellow" />
                 </DataTrigger>
             </Style.Triggers>
+        </Style>
+        <Style TargetType="StatusBarItem">
+            <Setter Property="Margin" Value="10 0"/>
         </Style>
     </Window.Resources>
     <Window.DataContext>
@@ -87,15 +89,15 @@
             </TabControl.ContentTemplate>
         </TabControl>
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
-            <Button x:Name="StartButton" Content="Start" Command="{Binding ToggleTailingCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}" Width="120" Margin="5"
+            <Button x:Name="StartButton" Content="Run" Command="{Binding ToggleTailingCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}" Width="120" Margin="5"
                     IsEnabled="{Binding ElementName=StopButton, Path=IsEnabled, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}"/>
-            <Button x:Name="StopButton" Content="Stop" Width="120" Margin="5" Command="{Binding ToggleTailingCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+            <Button x:Name="StopButton" Content="Pause" Width="120" Margin="5" Command="{Binding ToggleTailingCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
                     IsEnabled="{Binding ElementName=StartButton, Path=IsEnabled, Converter={StaticResource InverseBoolConverter}}"/>
         </StackPanel>
         
         <StatusBar Grid.Row="3" MinHeight="20">
-            <StatusBarItem Content="{Binding Status, FallbackValue=Idle}" HorizontalAlignment="Left" Margin="10 0" />
-            <StatusBarItem Content="{Binding SelectedGroup.Name, FallbackValue='AIB 144'}" HorizontalAlignment="Left" Margin="10 0"/>
+            <StatusBarItem Content="{Binding Status, FallbackValue=Idle}" HorizontalAlignment="Left" />
+            <StatusBarItem Content="{Binding SelectedGroup.Name, FallbackValue='Group 1'}" HorizontalAlignment="Left" />
         </StatusBar>
     </Grid>
 </Window>

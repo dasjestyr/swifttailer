@@ -4,11 +4,11 @@ namespace Fivel.Wpf.Models.Observable
 {
     public class LogLine : ModelBase
     {
-        private bool _highlight;
+        private LogHighlight _highlight;
 
         public string Content { get; set; }
 
-        public bool Highlight
+        public LogHighlight Highlight
         {
             get { return _highlight; }
             set
@@ -18,7 +18,7 @@ namespace Fivel.Wpf.Models.Observable
             }
         }
 
-        public LogLine(string content, bool highlight)
+        public LogLine(string content, LogHighlight highlight)
         {
             Content = content;
             Highlight = highlight;

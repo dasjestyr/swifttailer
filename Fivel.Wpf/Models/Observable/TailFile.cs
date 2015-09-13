@@ -235,12 +235,10 @@ namespace Fivel.Wpf.Models.Observable
             LogLines.Clear();
             LogLines.AddRange(args.NewText
                 .Split(new []{"\r\n"}, StringSplitOptions.RemoveEmptyEntries)
-                .Select(line => new LogLine(line, false)));
+                .Select(line => new LogLine(line, LogHighlight.None)));
 
             // trigger listeners
             RawContentChanged?.Invoke(this, args);
         }
-
-        
     }
 }

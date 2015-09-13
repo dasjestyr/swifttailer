@@ -90,12 +90,14 @@
     <Compile Include="Commands\SelectGroupCommand.cs" />
     <Compile Include="Commands\ApplyHighlightingCommand.cs" />
     <Compile Include="Commands\ToggleTailingCommand.cs" />
+    <Compile Include="Converters\HighlightConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Data\ILogSource.cs" />
     <Compile Include="Data\LogGroup.cs" />
     <Compile Include="Data\LogInfo.cs" />
     <Compile Include="Data\Logs.cs" />
     <Compile Include="DelegateDefinitions.cs" />
+    <Compile Include="Models\Observable\LogHighlight.cs" />
     <Compile Include="Models\Observable\LogLine.cs" />
     <Compile Include="Models\Observable\RawContentsChangedEventArgs.cs" />
     <Compile Include="Models\Observable\TailFile.cs" />
