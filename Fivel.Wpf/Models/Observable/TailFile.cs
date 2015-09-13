@@ -47,7 +47,7 @@ namespace Fivel.Wpf.Models.Observable
         /// <value>
         /// The text changed command.
         /// </value>
-        public TextChangedCommand TextChangedCommand { get; set; }
+        public ApplyHighlightingCommand ApplyHighlightingCommand { get; set; }
 
         #region -- Observable Properties --
 
@@ -125,7 +125,7 @@ namespace Fivel.Wpf.Models.Observable
             _displayBuffer = Settings.DisplayBufferSize * 0x400;
             _cts = new CancellationTokenSource();
 
-            TextChangedCommand = new TextChangedCommand(this);
+            ApplyHighlightingCommand = new ApplyHighlightingCommand(this);
             LogLines = new ObservableCollection<LogLine>();
 
             BindingOperations.EnableCollectionSynchronization(LogLines, _lockObject);

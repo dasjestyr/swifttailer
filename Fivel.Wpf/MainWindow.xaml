@@ -63,7 +63,8 @@
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <ListBox x:Name="LogList" ItemsSource="{Binding LogLines}" Grid.Row="0" SelectionMode="Extended" ItemContainerStyle="{StaticResource HighlightItemStyle}">
+                        <ListBox x:Name="LogList" ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" SelectionMode="Extended" 
+                                 ItemContainerStyle="{StaticResource HighlightItemStyle}" behaviors:ListBoxExtenders.AutoScrollToEnd="True">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Content}" />
@@ -76,7 +77,7 @@
                      Text="{Binding SearchPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding TextChangedCommand}" CommandParameter="{Binding ElementName=LogList}" />
+                                        <i:InvokeCommandAction Command="{Binding ApplyHighlightingCommand}" CommandParameter="{Binding ElementName=LogList}" />
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>

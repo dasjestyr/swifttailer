@@ -7,11 +7,11 @@ using Fivel.Wpf.Models.Observable;
 
 namespace Fivel.Wpf.Commands
 {
-    public class TextChangedCommand : ICommand
+    public class ApplyHighlightingCommand : ICommand
     {
         private readonly TailFile _vm;
 
-        public TextChangedCommand(TailFile vm)
+        public ApplyHighlightingCommand(TailFile vm)
         {
             _vm = vm;
         }
@@ -47,7 +47,7 @@ namespace Fivel.Wpf.Commands
             await Task.Run(() =>
             {
                 foreach (var line in _vm.LogLines
-                    .Where(line => line.Content.Contains(phrase)))
+                    .Where(line => line.Content.IndexOf(phrase, StringComparison.OrdinalIgnoreCase) != -1)) // TODO: make case sensitivity optional
                 {
                     line.Highlight = true;
                 }
