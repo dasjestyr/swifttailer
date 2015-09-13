@@ -76,7 +76,7 @@ namespace Fivel.Wpf.Models.Observable
                 {
                     while (!_cts.IsCancellationRequested)
                     {
-                        Contents = await GetUpdates();
+                        await GetUpdates();
                         await Task.Delay(Settings.PollingInterval);
                     }
                 }, _cts.Token);
@@ -93,14 +93,14 @@ namespace Fivel.Wpf.Models.Observable
             Trace.WriteLine($"Stopped tailing {LogInfo.Alias}");
         }
         
-        private async Task<string> GetUpdates()
+        private async Task GetUpdates()
         {
             try
             {
                 using (var fs = new FileStream(LogInfo.Location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     if (fs.Length == 0 || !fs.CanRead || fs.Length == _lastIndex)
-                        return Contents; // no change
+                        return; // no change
 
                     // avoid reading the entire file on startup
                     var startAt = _lastIndex;
@@ -112,13 +112,6 @@ namespace Fivel.Wpf.Models.Observable
                     }
 
                     var contentLength = fs.Length - startAt;
-                    if (contentLength < 0)
-                    {
-                        // trying to track some weird overflow case
-                        Trace.WriteLine($"!!!!!!{LogInfo.Location} Length: {fs.Length} startAt: {startAt}");
-                        return Contents;
-                    }
-
                     var newContent = new byte[contentLength];
                     Trace.WriteLine($"This chunk will be {newContent.Length} bytes.");
 
@@ -127,9 +120,8 @@ namespace Fivel.Wpf.Models.Observable
                     await fs.ReadAsync(newContent, 0, newContent.Length);
 
                     // trim the buffer off the front
-                    Contents += Encoding.UTF8.GetString(newContent);
-                    var trimmedContent = string.Empty;
-                    if (Contents.Length > _displayBuffer)
+                    var trimmedContent = Contents;
+                    if (!string.IsNullOrEmpty(Contents) && Contents.Length > _displayBuffer)
                     {
                         var contentBytes = Encoding.UTF8.GetBytes(Contents);
                         var newBytes = new byte[_displayBuffer];
@@ -138,17 +130,13 @@ namespace Fivel.Wpf.Models.Observable
                     }
 
                     // update the model
-                    var c = trimmedContent + Encoding.UTF8.GetString(newContent);
+                    Contents = trimmedContent + Encoding.UTF8.GetString(newContent);
                     Trace.WriteLine($"Content is now {Contents.Length} characters.");
                     _lastIndex = startAt;
                     _lastIndex = fs.Position;
-                    return c;
                 }
             }
-            catch (IOException)
-            {
-                return Contents;
-            }
+            catch (IOException) {}
         }
 
         #region -- Old Style Threading --
