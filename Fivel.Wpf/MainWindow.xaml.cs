@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,6 +77,11 @@ namespace Fivel.Wpf
                 pageContext.BindGroups();
                 pageContext.SaveOrder();
             }
+        }
+
+        private void LogFilter_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            
         }
     }
 }

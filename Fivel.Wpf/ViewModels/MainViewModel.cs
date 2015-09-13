@@ -1,7 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Input;
 using Fivel.Wpf.Commands;
 using Fivel.Wpf.Data;
 using Fivel.Wpf.Models.Observable;
@@ -16,6 +19,7 @@ namespace Fivel.Wpf.ViewModels
         private ObservableCollection<LogGroup> _groups;
         private ObservableCollection<TailFile> _tails = new ObservableCollection<TailFile>();
         private bool _isRunning;
+        private string _searchPhrase;
 
         public SelectGroupCommand SelectGroupCommand { get; private set; }
 
@@ -74,6 +78,22 @@ namespace Fivel.Wpf.ViewModels
             }
         }
 
+        public string SearchPhrase
+        {
+            get { return _searchPhrase; }
+            set
+            {
+                _searchPhrase = value;
+                UpdateFilters();
+                OnPropertyChanged();
+            }
+        }
+
+        private void UpdateFilters()
+        {
+            
+        }
+
         #endregion
 
         public MainViewModel()
@@ -84,7 +104,6 @@ namespace Fivel.Wpf.ViewModels
             SelectedGroup = DemoLogSource.Instance.Logs.Groups[0];
             ToggleTailingCommand = new ToggleTailingCommand(this);
             SelectGroupCommand = new SelectGroupCommand(this);
-
             BindGroups();
         }
         
@@ -101,6 +120,7 @@ namespace Fivel.Wpf.ViewModels
             Trace.WriteLine("Stopping tails...");
             foreach (var tail in Tails)
             {
+                tail.RawContentChanged -= TailContentsChangedHandler;
                 tail.StopTailing();
             }
             Status = "Idle";
@@ -117,8 +137,15 @@ namespace Fivel.Wpf.ViewModels
 
             foreach (var tail in tails)
             {
+                tail.RawContentChanged += TailContentsChangedHandler;
                 Tails.Add(tail);
             }
+        }
+
+        private void TailContentsChangedHandler(object sender, RawContentsChangedEventArgs args)
+        {
+            
+            
         }
 
         public void SaveOrder()

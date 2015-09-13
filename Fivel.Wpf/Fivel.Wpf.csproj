@@ -87,12 +87,16 @@
     <Compile Include="Behaviors\AutoScrollBehavior.cs" />
     <Compile Include="Behaviors\MenuItemExtensions.cs" />
     <Compile Include="Commands\SelectGroupCommand.cs" />
+    <Compile Include="Commands\TextChangedCommand.cs" />
     <Compile Include="Commands\ToggleTailingCommand.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Data\ILogSource.cs" />
     <Compile Include="Data\LogGroup.cs" />
     <Compile Include="Data\LogInfo.cs" />
     <Compile Include="Data\Logs.cs" />
+    <Compile Include="DelegateDefinitions.cs" />
+    <Compile Include="Models\Observable\LogLine.cs" />
+    <Compile Include="Models\Observable\RawContentsChangedEventArgs.cs" />
     <Compile Include="Models\Observable\TailFile.cs" />
     <Compile Include="Pages\LogFileConfig.xaml.cs">
       <DependentUpon>LogFileConfig.xaml</DependentUpon>

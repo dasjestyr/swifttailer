@@ -1,12 +1,13 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Navigation;
+using System.Windows.Data;
+using Fivel.Wpf.Commands;
 using Fivel.Wpf.Data;
 using Provausio.Common.Portable;
 
@@ -14,19 +15,82 @@ namespace Fivel.Wpf.Models.Observable
 {
     public class TailFile : ModelBase
     {
+        private readonly object _lockObject = new object();
         private readonly long _displayBuffer;
-        private readonly TimeSpan _interval;
         private CancellationTokenSource _cts;
-        private string _contents;
+        private string _logText;
         private long _lastIndex;
+        private ObservableCollection<LogLine> _logLines;
+        private string _searchPhrase;
 
+        public event RawContentsChangedHandler RawContentChanged;
 
-        public string Contents
+        /// <summary>
+        /// Gets or sets the log name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name => LogInfo.Alias;
+
+        /// <summary>
+        /// Gets or sets the log identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
+        public string Id => LogInfo.Id;
+
+        /// <summary>
+        /// Gets or sets the text changed command. Used to apply highlighting.
+        /// </summary>
+        /// <value>
+        /// The text changed command.
+        /// </value>
+        public TextChangedCommand TextChangedCommand { get; set; }
+
+        #region -- Observable Properties --
+
+        /// <summary>
+        /// Gets or sets the raw contents.
+        /// </summary>
+        /// <value>
+        /// The raw contents.
+        /// </value>
+        public string LogText
         {
-            get { return _contents; }
+            get { return _logText; }
             set
             {
-                _contents = value;
+                var originalText = _logText;
+                _logText = value;
+                OnPropertyChanged();
+                OnLogTextChanged(new RawContentsChangedEventArgs(originalText, _logText, Id));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the log lines.
+        /// </summary>
+        /// <value>
+        /// The log lines.
+        /// </value>
+        public ObservableCollection<LogLine> LogLines
+        {
+            get { return _logLines; }
+            set
+            {
+                _logLines = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SearchPhrase
+        {
+            get { return _searchPhrase; }
+            set
+            {
+                _searchPhrase = value;
                 OnPropertyChanged();
             }
         }
@@ -41,26 +105,45 @@ namespace Fivel.Wpf.Models.Observable
             }
         }
 
-        public string Name => LogInfo.Alias;
-
-        public string Id => LogInfo.Id;
-
+        #endregion
+        
+        /// <summary>
+        /// Gets the log information.
+        /// </summary>
+        /// <value>
+        /// The log information.
+        /// </value>
         public LogInfo LogInfo { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TailFile" /> class.
+        /// </summary>
+        /// <param name="logInfo">The log information.</param>
         public TailFile(LogInfo logInfo)
         {
             LogInfo = logInfo;
             _displayBuffer = Settings.DisplayBufferSize * 0x400;
-            _interval = new TimeSpan(Settings.PollingInterval);
             _cts = new CancellationTokenSource();
+
+            TextChangedCommand = new TextChangedCommand(this);
+            LogLines = new ObservableCollection<LogLine>();
+
+            BindingOperations.EnableCollectionSynchronization(LogLines, _lockObject);
         }
 
+        /// <summary>
+        /// Starts the tailing.
+        /// </summary>
+        /// <returns></returns>
         public Task StartTailing()
         {
             Trace.WriteLine("Starting...");
             return DoTail();
         }
 
+        /// <summary>
+        /// Stops the tailing.
+        /// </summary>
         public void StopTailing()
         {
             Trace.WriteLine("Called cancellation");
@@ -86,7 +169,7 @@ namespace Fivel.Wpf.Models.Observable
                 await Task.Run(() =>
                 {
                     Trace.WriteLine($"{LogInfo.Location} was not found.");
-                    Contents = $"File not found: {LogInfo.Location}";
+                    LogText = $"File not found: {LogInfo.Location}";
                 });
             }
 
@@ -95,6 +178,8 @@ namespace Fivel.Wpf.Models.Observable
         
         private async Task GetUpdates()
         {
+            var originalText = LogText;
+
             try
             {
                 using (var fs = new FileStream(LogInfo.Location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -117,21 +202,25 @@ namespace Fivel.Wpf.Models.Observable
 
                     fs.Seek(startAt, SeekOrigin.Begin);
 
+                    // read the new data
                     await fs.ReadAsync(newContent, 0, newContent.Length);
 
-                    // trim the buffer off the front
-                    var trimmedContent = Contents;
-                    if (!string.IsNullOrEmpty(Contents) && Contents.Length > _displayBuffer)
+                    // trim off the front of the content if it exceeds the display buffer
+                    var trimmedContent = originalText;
+                    if (!string.IsNullOrEmpty(LogText) && LogText.Length > _displayBuffer)
                     {
-                        var contentBytes = Encoding.UTF8.GetBytes(Contents);
+                        var contentBytes = Encoding.UTF8.GetBytes(LogText);
                         var newBytes = new byte[_displayBuffer];
                         Array.Copy(contentBytes, contentBytes.Length - _displayBuffer, newBytes, 0, _displayBuffer);
                         trimmedContent = Encoding.UTF8.GetString(newBytes);
                     }
 
                     // update the model
-                    Contents = trimmedContent + Encoding.UTF8.GetString(newContent);
-                    Trace.WriteLine($"Content is now {Contents.Length} characters.");
+                    LogText = trimmedContent + Encoding.UTF8.GetString(newContent);
+
+                    OnLogTextChanged(new RawContentsChangedEventArgs(originalText, LogText, Id));
+
+                    Trace.WriteLine($"Content is now {LogText.Length} characters.");
                     _lastIndex = startAt;
                     _lastIndex = fs.Position;
                 }
@@ -139,9 +228,19 @@ namespace Fivel.Wpf.Models.Observable
             catch (IOException) {}
         }
 
-        #region -- Old Style Threading --
+        private void OnLogTextChanged(RawContentsChangedEventArgs args)
+        {
+            Trace.WriteLine("RawContentChanged event fired");
+
+            LogLines.Clear();
+            LogLines.AddRange(args.NewText
+                .Split(new []{"\r\n"}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(line => new LogLine(line, false)));
+
+            // trigger listeners
+            RawContentChanged?.Invoke(this, args);
+        }
 
         
-        #endregion
     }
 }
