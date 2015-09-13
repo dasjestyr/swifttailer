@@ -100,7 +100,7 @@ namespace Fivel.Wpf.Models.Observable
                     if (startAt == 0 && fs.Length > _displayBuffer)
                     {
                         startAt = fs.Length - _displayBuffer;
-                        Trace.WriteLine($"File was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
+                        Trace.WriteLine($"{LogInfo.Alias} file was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
                     }
 
                     long contentLength = fs.Length - startAt;
@@ -130,6 +130,8 @@ namespace Fivel.Wpf.Models.Observable
 
                     // update the model
                     Contents = trimmedContent + Encoding.UTF8.GetString(newContent);
+                    Trace.WriteLine($"Content is now {Contents.Length} characters.");
+                    _lastIndex = startAt;
                     _lastIndex = fs.Position;
                 }
             }
