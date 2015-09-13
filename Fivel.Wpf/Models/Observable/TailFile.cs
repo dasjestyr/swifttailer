@@ -12,11 +12,12 @@ namespace Fivel.Wpf.Models.Observable
 {
     public class TailFile : ModelBase
     {
-        private readonly int _displayBuffer;
+        private readonly long _displayBuffer;
         private readonly TimeSpan _interval;
         private readonly CancellationTokenSource _cts;
         private string _contents;
-        private int _lastIndex;
+        private long _lastIndex;
+
 
         public string Contents
         {
@@ -102,7 +103,15 @@ namespace Fivel.Wpf.Models.Observable
                         Trace.WriteLine($"File was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
                     }
 
-                    var newContent = new byte[fs.Length - startAt];
+                    long contentLength = fs.Length - startAt;
+                    if (contentLength < 0)
+                    {
+                        // trying to track some weird overflow case
+                        Trace.WriteLine($"!!!!!! Length: {fs.Length} startAt: {startAt}");
+                        return;
+                    }
+
+                    var newContent = new byte[contentLength];
                     Trace.WriteLine($"This chunk will be {newContent.Length} bytes.");
 
                     fs.Seek(startAt, SeekOrigin.Begin);
@@ -115,13 +124,13 @@ namespace Fivel.Wpf.Models.Observable
                     {
                         Trace.WriteLine("Windows contents exceed the display buffer size. Trimming off the top...");
                         var skipLength = (_displayBuffer - bytesRead) < Contents.Length ? 0 : _displayBuffer - bytesRead;
-                        var contentBytes = Encoding.UTF8.GetBytes(Contents).Skip(skipLength).ToArray();
+                        var contentBytes = Encoding.UTF8.GetBytes(Contents).Skip((int)skipLength).ToArray();
                         trimmedContent = Encoding.UTF8.GetString(contentBytes);
                     }
 
                     // update the model
                     Contents = trimmedContent + Encoding.UTF8.GetString(newContent);
-                    _lastIndex += bytesRead;
+                    _lastIndex = fs.Position;
                 }
             }
             catch (IOException) { }

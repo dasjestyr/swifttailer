@@ -42,7 +42,7 @@
         <TabControl ItemsSource="{Binding Tails}" Grid.Row="1" x:Name="SessionTabs">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
-                    <Setter Property="AllowDrop" Value="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}" />
+                    <!--<Setter Property="AllowDrop" Value="True" />-->
                     <EventSetter Event="PreviewMouseMove" Handler="TabItem_PreviewMouseMove" />
                     <EventSetter Event="Drop" Handler="TabItem_Drop" />
                 </Style>
