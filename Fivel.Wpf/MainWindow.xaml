@@ -35,10 +35,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
-            <MenuItem Header="Settings">
+            <MenuItem Header="_Settings">
                 <MenuItem Header="Log files..." />
                 <Separator />
-                <MenuItem Header="Tailing Groups" ItemsSource="{Binding Groups}">
+                <MenuItem Header="Tailing _Groups" ItemsSource="{Binding Groups}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}">
                     <MenuItem.ItemTemplate>
                         <DataTemplate>
                             <MenuItem Header="{Binding Name}" IsCheckable="True" HorizontalContentAlignment="Left" behaviors:MenuItemExtensions.GroupName="SelectedGroup"  Template="{DynamicResource MenuItemNoIcons}"
@@ -64,7 +64,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <ListBox x:Name="LogList" ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" SelectionMode="Extended" 
-                                 ItemContainerStyle="{StaticResource HighlightItemStyle}" behaviors:ListBoxExtenders.AutoScrollToEnd="True">
+                                 ItemContainerStyle="{StaticResource HighlightItemStyle}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Content}" />
