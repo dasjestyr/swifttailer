@@ -4,6 +4,6 @@
     {
         public static int DisplayBufferSize { get; set; } = 255;
 
-        public static int PollingInterval { get; set; } = 1000;
+        public static int PollingInterval { get; set; } = 1500;
     }
 }

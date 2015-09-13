@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Navigation;
 using Fivel.Wpf.Data;
 using Provausio.Common.Portable;
 
@@ -14,7 +16,7 @@ namespace Fivel.Wpf.Models.Observable
     {
         private readonly long _displayBuffer;
         private readonly TimeSpan _interval;
-        private readonly CancellationTokenSource _cts;
+        private CancellationTokenSource _cts;
         private string _contents;
         private long _lastIndex;
 
@@ -48,7 +50,7 @@ namespace Fivel.Wpf.Models.Observable
         public TailFile(LogInfo logInfo)
         {
             LogInfo = logInfo;
-            _displayBuffer = Settings.DisplayBufferSize * 1000;
+            _displayBuffer = Settings.DisplayBufferSize * 0x400;
             _interval = new TimeSpan(Settings.PollingInterval);
             _cts = new CancellationTokenSource();
         }
@@ -67,48 +69,54 @@ namespace Fivel.Wpf.Models.Observable
 
         private async Task DoTail()
         {
-            await Task.Run(async () =>
+            _cts = new CancellationTokenSource();
+            if (File.Exists(LogInfo.Location))
             {
-                while (!_cts.IsCancellationRequested)
+                await Task.Run(async () =>
                 {
-                    await UpdateFile();
-                    await Task.Delay(_interval);
-                }
-            }, _cts.Token);
-
-            Debug.WriteLine($"Stopped tailing {LogInfo.Alias}");
-        }
-
-        private async Task UpdateFile()
-        {
-            try
+                    while (!_cts.IsCancellationRequested)
+                    {
+                        Contents = await GetUpdates();
+                        await Task.Delay(Settings.PollingInterval);
+                    }
+                }, _cts.Token);
+            }
+            else
             {
-                if (!File.Exists(LogInfo.Location))
+                await Task.Run(() =>
                 {
                     Trace.WriteLine($"{LogInfo.Location} was not found.");
                     Contents = $"File not found: {LogInfo.Location}";
-                    _cts.Cancel();
-                    return;
-                }
+                });
+            }
 
+            Trace.WriteLine($"Stopped tailing {LogInfo.Alias}");
+        }
+        
+        private async Task<string> GetUpdates()
+        {
+            try
+            {
                 using (var fs = new FileStream(LogInfo.Location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    if (!fs.CanRead || fs.Length == _lastIndex) return; // no change
+                    if (fs.Length == 0 || !fs.CanRead || fs.Length == _lastIndex)
+                        return Contents; // no change
 
                     // avoid reading the entire file on startup
-                    long startAt = _lastIndex;
+                    var startAt = _lastIndex;
                     if (startAt == 0 && fs.Length > _displayBuffer)
                     {
                         startAt = fs.Length - _displayBuffer;
-                        Trace.WriteLine($"{LogInfo.Alias} file was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
+                        Trace.WriteLine(
+                            $"{LogInfo.Alias} file was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
                     }
 
-                    long contentLength = fs.Length - startAt;
+                    var contentLength = fs.Length - startAt;
                     if (contentLength < 0)
                     {
                         // trying to track some weird overflow case
-                        Trace.WriteLine($"!!!!!! Length: {fs.Length} startAt: {startAt}");
-                        return;
+                        Trace.WriteLine($"!!!!!!{LogInfo.Location} Length: {fs.Length} startAt: {startAt}");
+                        return Contents;
                     }
 
                     var newContent = new byte[contentLength];
@@ -116,26 +124,36 @@ namespace Fivel.Wpf.Models.Observable
 
                     fs.Seek(startAt, SeekOrigin.Begin);
 
-                    var bytesRead = await fs.ReadAsync(newContent, 0, newContent.Length);
+                    await fs.ReadAsync(newContent, 0, newContent.Length);
 
                     // trim the buffer off the front
-                    var trimmedContent = Contents;
-                    if (!string.IsNullOrEmpty(Contents) && Contents.Length + bytesRead > _displayBuffer)
+                    Contents += Encoding.UTF8.GetString(newContent);
+                    var trimmedContent = string.Empty;
+                    if (Contents.Length > _displayBuffer)
                     {
-                        Trace.WriteLine("Windows contents exceed the display buffer size. Trimming off the top...");
-                        var skipLength = (_displayBuffer - bytesRead) < Contents.Length ? 0 : _displayBuffer - bytesRead;
-                        var contentBytes = Encoding.UTF8.GetBytes(Contents).Skip((int)skipLength).ToArray();
-                        trimmedContent = Encoding.UTF8.GetString(contentBytes);
+                        var contentBytes = Encoding.UTF8.GetBytes(Contents);
+                        var newBytes = new byte[_displayBuffer];
+                        Array.Copy(contentBytes, contentBytes.Length - _displayBuffer, newBytes, 0, _displayBuffer);
+                        trimmedContent = Encoding.UTF8.GetString(newBytes);
                     }
 
                     // update the model
-                    Contents = trimmedContent + Encoding.UTF8.GetString(newContent);
+                    var c = trimmedContent + Encoding.UTF8.GetString(newContent);
                     Trace.WriteLine($"Content is now {Contents.Length} characters.");
                     _lastIndex = startAt;
                     _lastIndex = fs.Position;
+                    return c;
                 }
             }
-            catch (IOException) { }
+            catch (IOException)
+            {
+                return Contents;
+            }
         }
+
+        #region -- Old Style Threading --
+
+        
+        #endregion
     }
 }

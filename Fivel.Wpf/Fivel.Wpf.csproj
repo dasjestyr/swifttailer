@@ -58,7 +58,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Provausio.Common.Portable">
-      <HintPath>..\..\..\git\provausio.common\Provausio.Common.Portable\bin\Release\Provausio.Common.Portable.dll</HintPath>
+      <HintPath>..\..\provausio.common\Provausio.Common.Portable\bin\Release\Provausio.Common.Portable.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

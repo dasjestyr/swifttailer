@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Fivel.Wpf.Commands;
@@ -92,9 +93,9 @@ namespace Fivel.Wpf.ViewModels
             Trace.WriteLine("Starting tails...");
             Status = "Running";
             IsRunning = true;
-            var tasks = Tails.Select(t => t.StartTailing()).ToList();
+            var tailingTasks = Tails.Select(t => t.StartTailing()).ToList();
         }
-
+        
         public void StopTailing()
         {
             Trace.WriteLine("Stopping tails...");
