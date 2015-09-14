@@ -18,8 +18,22 @@ namespace Fievel.Wpf.Data
         public string Location { get; set; }
 
         public LogInfo()
+            : this(string.Empty)
+        {
+            
+        }
+
+        public LogInfo(string location)
+            : this(location, string.Empty)
+        {
+            
+        }
+
+        public LogInfo(string location, string alias)
         {
             Id = Guid.NewGuid().ToString("N");
+            Location = location;
+            Alias = alias;
         }
     }
 }

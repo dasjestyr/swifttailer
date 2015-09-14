@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Fievel.Wpf.Data
@@ -18,6 +19,17 @@ namespace Fievel.Wpf.Data
         public LogGroup()
         {
             Id = Guid.NewGuid();
+        }
+
+        /// <summary>
+        /// Adds the log. The order will be set automatically.
+        /// </summary>
+        /// <param name="log">The log.</param>
+        public void AddLog(LogInfo log)
+        {
+            var highestOrder = Logs.Max(l => l.Order);
+            log.Order = highestOrder + 1;
+            Logs.Add(log);
         }
     }
 }

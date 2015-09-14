@@ -4,16 +4,16 @@ using Newtonsoft.Json;
 
 namespace Fievel.Wpf.Data
 {
-    public class DemoLogSource : ILogSource
+    public class LogSource : ILogSource
     {
         public event LogCollectionChangedHandler LogCollectionChanged;
 
         private readonly string _logFileLocation;
         private readonly object _objectLock;
         private Logs _logs;
-        private static DemoLogSource _instance;
+        private static LogSource _instance;
 
-        public static DemoLogSource Instance => _instance ?? (_instance = new DemoLogSource());
+        public static LogSource Instance => _instance ?? (_instance = new LogSource());
 
         public Logs Logs
         {
@@ -25,7 +25,7 @@ namespace Fievel.Wpf.Data
             }
         }
 
-        private DemoLogSource()
+        private LogSource()
         {
             _objectLock = new object();
             _logFileLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DesignTime", "DemoFiles.json");
@@ -38,6 +38,7 @@ namespace Fievel.Wpf.Data
             lock (_objectLock)
             {
                 WriteToFile(_logFileLocation, logsJson);
+                OnLogCollectionChanged();
             }
         }
 

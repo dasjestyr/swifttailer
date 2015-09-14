@@ -91,6 +91,10 @@
     <Compile Include="Behaviors\AutoScrollBehavior.cs" />
     <Compile Include="Behaviors\ListboxBehaviors.cs" />
     <Compile Include="Behaviors\MenuItemExtensions.cs" />
+    <Compile Include="Commands\CloseWindowCommand.cs" />
+    <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />
+    <Compile Include="Commands\PickLogCommand.cs" />
+    <Compile Include="Commands\SaveLogToGroupCommand.cs" />
     <Compile Include="Commands\SelectGroupCommand.cs" />
     <Compile Include="Commands\ApplyHighlightingCommand.cs" />
     <Compile Include="Commands\ToggleTailingCommand.cs" />
@@ -108,8 +112,12 @@
     <Compile Include="Pages\LogFileConfig.xaml.cs">
       <DependentUpon>LogFileConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\LogPicker.xaml.cs">
+      <DependentUpon>LogPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModels\LogConfigEditorViewModel.cs" />
+    <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -119,12 +127,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\DemoLogSource.cs" />
+    <Compile Include="Data\LogSource.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Pages\LogFileConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\LogPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

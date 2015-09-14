@@ -38,7 +38,8 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="_Settings">
-                <MenuItem Header="Log files..." />
+                <MenuItem Header="_Add Group..." />
+                <MenuItem Header="Add _Log to Group..." Command="{Binding OpenLogPickerDialogCommand}"/>
                 <Separator />
                 <MenuItem Header="Tailing _Groups" ItemsSource="{Binding Groups}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}">
                     <MenuItem.ItemTemplate>
@@ -49,7 +50,6 @@
                     </MenuItem.ItemTemplate>
                 </MenuItem>
             </MenuItem>
-
         </Menu>
         
         <TabControl ItemsSource="{Binding Tails}" Grid.Row="1" x:Name="SessionTabs">

@@ -21,7 +21,7 @@ namespace Fievel.Wpf.ViewModels
 
         public LogConfigEditorViewModel()
         {
-            LogGroups = new ObservableCollection<LogGroup>(DemoLogSource.Instance.Logs.Groups);
+            LogGroups = new ObservableCollection<LogGroup>(LogSource.Instance.Logs.Groups);
         }
     }
 }

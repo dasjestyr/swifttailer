@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using Fievel.Wpf.Commands;
@@ -17,10 +18,13 @@ namespace Fievel.Wpf.ViewModels
         private bool _isRunning;
         private string _searchPhrase;
 
+        #region -- Commands --
         public SelectGroupCommand SelectGroupCommand { get; private set; }
-
         public ToggleTailingCommand ToggleTailingCommand { get; private set; }
+        public OpenLogPickerDialogCommand OpenLogPickerDialogCommand { get; set; }
+        #endregion
 
+        #region -- Observable Properties --
         public bool IsRunning
         {
             get { return _isRunning; }
@@ -30,8 +34,6 @@ namespace Fievel.Wpf.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        #region -- Observable Properties --
 
         public ObservableCollection<TailFile> Tails
         {
@@ -96,13 +98,18 @@ namespace Fievel.Wpf.ViewModels
         {
             Status = "Idle";
 
-            Groups = new ObservableCollection<LogGroup>(DemoLogSource.Instance.Logs.Groups);
-            SelectedGroup = DemoLogSource.Instance.Logs.Groups[0];
+            Groups = new ObservableCollection<LogGroup>(LogSource.Instance.Logs.Groups);
+            SelectedGroup = LogSource.Instance.Logs.Groups[0];
+
             ToggleTailingCommand = new ToggleTailingCommand(this);
             SelectGroupCommand = new SelectGroupCommand(this);
+            OpenLogPickerDialogCommand = new OpenLogPickerDialogCommand();
+
+            LogSource.Instance.LogCollectionChanged += LogsChangedHandler;
+
             BindGroups();
         }
-        
+
         public void StartTailing()
         {
             Trace.WriteLine("Starting tails...");
@@ -116,7 +123,6 @@ namespace Fievel.Wpf.ViewModels
             Trace.WriteLine("Stopping tails...");
             foreach (var tail in Tails)
             {
-                tail.RawContentChanged -= TailContentsChangedHandler;
                 tail.StopTailing();
             }
             Status = "Idle";
@@ -133,15 +139,8 @@ namespace Fievel.Wpf.ViewModels
 
             foreach (var tail in tails)
             {
-                tail.RawContentChanged += TailContentsChangedHandler;
                 Tails.Add(tail);
             }
-        }
-
-        private void TailContentsChangedHandler(object sender, RawContentsChangedEventArgs args)
-        {
-            
-            
         }
 
         public void SaveOrder()
@@ -151,10 +150,15 @@ namespace Fievel.Wpf.ViewModels
                 .Select(log => log.LogInfo)
                 .ToList();
 
-            DemoLogSource.Instance.Logs.Groups
+            LogSource.Instance.Logs.Groups
                 .Single(g => g.Id.Equals(SelectedGroup.Id)).Logs = logs;
 
-            DemoLogSource.Instance.SaveState();
+            LogSource.Instance.SaveState();
+        }
+
+        private void LogsChangedHandler(object sender, EventArgs args)
+        {
+            BindGroups();
         }
     }
 }
