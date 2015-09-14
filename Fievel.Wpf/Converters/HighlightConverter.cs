@@ -1,0 +1,21 @@
+﻿using System;
+using System.Globalization;
+using System.Windows.Data;
+using Fievel.Wpf.Models.Observable;
+
+namespace Fievel.Wpf.Converters
+{
+    public class HighlightConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var highlighter = (LogHighlight) value;
+            return highlighter.Category.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

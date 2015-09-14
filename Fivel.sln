@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fivel.Wpf", "Fivel.Wpf\Fivel.Wpf.csproj", "{1807679B-D621-4CE2-81FD-5744492B3FC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fievel.Wpf", "Fievel.Wpf\Fievel.Wpf.csproj", "{1807679B-D621-4CE2-81FD-5744492B3FC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
