@@ -55,7 +55,20 @@
         <TabControl ItemsSource="{Binding Tails}" Grid.Row="1" x:Name="SessionTabs">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" Tag="{Binding Id}" />
+                    <TextBlock Text="{Binding Name}" Tag="{Binding Id}">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <ContextMenu.Resources>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="IsCheckable" Value="False"/>
+                                    </Style>
+                                </ContextMenu.Resources>
+                                <MenuItem Header="Open in explorer" Command="{Binding OpenInExplorerCommand}" 
+                                          CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
+                                <MenuItem Header="Remove log from group"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>

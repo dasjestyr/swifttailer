@@ -76,22 +76,6 @@ namespace Fievel.Wpf.ViewModels
             }
         }
 
-        public string SearchPhrase
-        {
-            get { return _searchPhrase; }
-            set
-            {
-                _searchPhrase = value;
-                UpdateFilters();
-                OnPropertyChanged();
-            }
-        }
-
-        private void UpdateFilters()
-        {
-            
-        }
-
         #endregion
 
         public MainViewModel()
@@ -100,10 +84,9 @@ namespace Fievel.Wpf.ViewModels
 
             Groups = new ObservableCollection<LogGroup>(LogSource.Instance.Logs.Groups);
             SelectedGroup = LogSource.Instance.Logs.Groups[0];
-
+            OpenLogPickerDialogCommand = new OpenLogPickerDialogCommand();
             ToggleTailingCommand = new ToggleTailingCommand(this);
             SelectGroupCommand = new SelectGroupCommand(this);
-            OpenLogPickerDialogCommand = new OpenLogPickerDialogCommand();
 
             LogSource.Instance.LogCollectionChanged += LogsChangedHandler;
 
