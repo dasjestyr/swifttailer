@@ -123,6 +123,7 @@
       <DependentUpon>ViewSelectionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="Utility\Extensions.cs" />
     <Compile Include="ViewModels\LogConfigEditorViewModel.cs" />
     <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

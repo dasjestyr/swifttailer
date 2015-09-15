@@ -4,9 +4,9 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using Fievel.Wpf.Models.Observable;
 using Fievel.Wpf.Pages;
+using Fievel.Wpf.Utility;
 
 namespace Fievel.Wpf.Commands
 {
@@ -24,7 +24,7 @@ namespace Fievel.Wpf.Commands
 
             if (lbx == null)
             {
-                lbx = FindAncestor<ListBox>(lbi);
+                lbx = lbi.FindAncestor<ListBox>();
                 if (lbx == null) return;
             }
 
@@ -37,16 +37,6 @@ namespace Fievel.Wpf.Commands
 
             var viewer = new ViewSelectionWindow(sb.ToString());
             viewer.ShowDialog();
-        }
-
-        private T FindAncestor<T>(DependencyObject dependencyObject)
-            where T : DependencyObject
-        {
-            var parent = VisualTreeHelper.GetParent(dependencyObject);
-            if (parent == null) return null;
-
-            var parentT = parent as T;
-            return parentT ?? FindAncestor<T>(parent);
         }
 
         public event EventHandler CanExecuteChanged;
