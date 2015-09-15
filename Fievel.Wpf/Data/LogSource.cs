@@ -30,8 +30,9 @@ namespace Fievel.Wpf.Data
         {
             _objectLock = new object();
             var tempFileLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DesignTime", "DemoFiles.json");
-            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var userFilePath = Path.Combine(localAppDataPath, Path.GetFileNameWithoutExtension(AppDomain.CurrentDomain.FriendlyName));
+            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);            
+            
+            var userFilePath = Path.Combine(localAppDataPath, "Fievel");
 
             // if the app directory doesn't exist, create it
             if (!Directory.Exists(userFilePath))
@@ -44,7 +45,7 @@ namespace Fievel.Wpf.Data
             _logFileLocation = Path.Combine(userFilePath, "LogConfig.json");
             if (!File.Exists(_logFileLocation))
             {
-                Trace.WriteLine($"{_logFileLocation} did not exists. Creating file with a default config...");
+                Trace.WriteLine($"{_logFileLocation} did not exist. Creating file with a default config...");
                 File.Copy(tempFileLocation, _logFileLocation);
             }
 

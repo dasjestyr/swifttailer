@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Fievel.Wpf.Utility;
 
@@ -23,7 +19,7 @@ namespace Fievel.Wpf.Commands
             var content = parameter as string;
 
             var fileName = $"LogCapture_{DateTime.Now.ToString("yyyyMMdd")}_{DateTime.Now.ToString("HHmmss")}";
-            var tempPath = $"{Path.GetTempPath()}\\{fileName}.eml";
+            var tempPath = $"{Path.GetTempPath()}\\{fileName}.txt";
 
             File.WriteAllText(tempPath, content);
 
