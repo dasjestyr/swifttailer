@@ -92,6 +92,7 @@
     <Compile Include="Behaviors\ListboxBehaviors.cs" />
     <Compile Include="Behaviors\MenuItemExtensions.cs" />
     <Compile Include="Commands\CloseWindowCommand.cs" />
+    <Compile Include="Commands\OpenInExplorerCommand.cs" />
     <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />
     <Compile Include="Commands\PickLogCommand.cs" />
     <Compile Include="Commands\RemoveLogFromGroupCommand.cs" />

@@ -49,6 +49,8 @@ namespace Fievel.Wpf.Models.Observable
         /// </value>
         public ApplyHighlightingCommand ApplyHighlightingCommand { get; set; }
 
+        public OpenInExplorerCommand OpenInExplorerCommand { get; set; }
+
         #region -- Observable Properties --
 
         /// <summary>
@@ -126,6 +128,7 @@ namespace Fievel.Wpf.Models.Observable
             _cts = new CancellationTokenSource();
 
             ApplyHighlightingCommand = new ApplyHighlightingCommand(this);
+            OpenInExplorerCommand = new OpenInExplorerCommand();
             LogLines = new ObservableCollection<LogLine>();
 
             BindingOperations.EnableCollectionSynchronization(LogLines, _lockObject);
