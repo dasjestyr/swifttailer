@@ -3,21 +3,6 @@
     {
       "name": "AIB 144",
       "logs": [
-        {
-          "alias": "OAuth Audit",
-          "location": "C:\\Users\\jeremy\\Desktop\\tailing\\tester.txt",
-          "order" :  0
-        },
-        {
-          "alias": "Paylite - Unsecure",
-          "location": "\\\\aib144app2\\c$\\Apriva\\WebSites\\paylite.webservice\\log\\paylite_debug.log",
-          "order" :  1
-        },
-        {
-          "alias": "Paylite - Secure",
-          "location": "\\\\aib144app2\\c$\\Apriva\\WebSites\\paylite.webservice\\log\\b87f7954-1deb-4ceb-80af-16806630fa21paylite_debug.log",
-          "order" :  2
-        }
       ]
     },
     {

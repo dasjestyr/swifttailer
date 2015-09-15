@@ -94,6 +94,7 @@
     <Compile Include="Commands\CloseWindowCommand.cs" />
     <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />
     <Compile Include="Commands\PickLogCommand.cs" />
+    <Compile Include="Commands\RemoveLogFromGroupCommand.cs" />
     <Compile Include="Commands\SaveLogToGroupCommand.cs" />
     <Compile Include="Commands\SelectGroupCommand.cs" />
     <Compile Include="Commands\ApplyHighlightingCommand.cs" />

@@ -27,8 +27,16 @@ namespace Fievel.Wpf.Data
         /// <param name="log">The log.</param>
         public void AddLog(LogInfo log)
         {
-            var highestOrder = Logs.Max(l => l.Order);
-            log.Order = highestOrder + 1;
+            if (Logs.Any())
+            {
+                var highestOrder = Logs.Max(l => l.Order);
+                log.Order = highestOrder + 1;
+            }
+            else
+            {
+                log.Order = 0;
+            }
+            
             Logs.Add(log);
         }
     }
