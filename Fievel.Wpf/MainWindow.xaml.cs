@@ -7,9 +7,6 @@ using Fievel.Wpf.ViewModels;
 
 namespace Fievel.Wpf
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -36,7 +33,6 @@ namespace Fievel.Wpf
 
         private void TabItem_Drop(object sender, DragEventArgs e)
         {
-
             var itemTarget = e.Source as TabItem;
             var itemSource = e.Data.GetData(typeof (TabItem)) as TabItem;
 
@@ -72,11 +68,6 @@ namespace Fievel.Wpf
                 pageContext.BindGroups();
                 pageContext.SaveOrder();
             }
-        }
-
-        private void ViewSelected_Click(object sender, RoutedEventArgs e)
-        {
-            var selectedTab = SessionTabs.SelectedItem;
         }
     }
 }

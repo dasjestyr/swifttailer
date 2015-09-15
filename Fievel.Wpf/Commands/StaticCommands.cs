@@ -2,6 +2,9 @@
 
 namespace Fievel.Wpf.Commands
 {
+    /// <summary>
+    /// Use as static commands or as a bucket for when gaining context to the view model is too difficult.
+    /// </summary>
     public class StaticCommands
     {
         public static ICommand OpenLogLineCommand { get; set; }
