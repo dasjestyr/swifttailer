@@ -4,6 +4,8 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Fievel.Wpf.Models.Observable;
 using Fievel.Wpf.ViewModels;
+using System;
+using System.IO;
 
 namespace Fievel.Wpf
 {
@@ -17,6 +19,13 @@ namespace Fievel.Wpf
 
         private void DisplayException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
+            // log the error
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log", "error.log");
+            using(var sw = File.AppendText(path))
+            {
+                sw.WriteLine($"{DateTime.Now.ToLongDateString()} :: {e.Exception.Message} :: {e.Exception}");
+            }
+
             MessageBox.Show($"e.Exception.Message :: {e.Exception}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 

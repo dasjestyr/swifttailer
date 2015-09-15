@@ -149,33 +149,22 @@ namespace Fievel.Wpf.Models.Observable
                 log => log.Logs
                 .Any(l => l.Id.Equals(LogInfo.Id, StringComparison.OrdinalIgnoreCase)))
                 .Logs.Remove(LogInfo);
+                        
             LogSource.Instance.SaveState();
+            Trace.WriteLine($"Deleted {LogInfo.Alias} from configuration.");
         }
 
         /// <summary>
         /// Starts the tailing.
         /// </summary>
         /// <returns></returns>
-        public Task StartTailing()
-        {
-            Trace.WriteLine("Starting...");
-            return DoTail();
-        }
-
-        /// <summary>
-        /// Stops the tailing.
-        /// </summary>
-        public void StopTailing()
-        {
-            Trace.WriteLine("Called cancellation");
-            _cts.Cancel();
-        }
-
-        private async Task DoTail()
+        public async Task StartTailing()
         {
             _cts = new CancellationTokenSource();
+            
             if (File.Exists(LogInfo.Location))
             {
+                Trace.WriteLine($"Starting tail on {LogInfo.Alias}...");
                 await Task.Run(async () =>
                 {
                     while (!_cts.IsCancellationRequested)
@@ -193,8 +182,15 @@ namespace Fievel.Wpf.Models.Observable
                     LogText = $"File not found: {LogInfo.Location}";
                 });
             }
+        }
 
-            Trace.WriteLine($"Stopped tailing {LogInfo.Alias}");
+        /// <summary>
+        /// Stops the tailing.
+        /// </summary>
+        public void StopTailing()
+        {
+            Trace.WriteLine($"Called tail cancellation on {LogInfo.Alias}");
+            _cts.Cancel();
         }
         
         private async Task GetUpdates()
@@ -205,48 +201,49 @@ namespace Fievel.Wpf.Models.Observable
 
             try
             {
-                using (var fs = new FileStream(LogInfo.Location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                lock (_lockObject)
                 {
-                    if (fs.Length == 0 || !fs.CanRead || fs.Length == _lastIndex)
-                        return; // no change
-
-                    // avoid reading the entire file on startup
-                    var startAt = _lastIndex;
-                    if (startAt == 0 && fs.Length > _displayBuffer)
+                    using (var fs = new FileStream(LogInfo.Location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
-                        startAt = fs.Length - _displayBuffer;
-                        Trace.WriteLine(
-                            $"{LogInfo.Alias} file was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
+                        if (fs.Length == 0 || !fs.CanRead || fs.Length == _lastIndex)
+                            return; // no change
+
+                        // avoid reading the entire file on startup
+                        var startAt = _lastIndex;
+                        if (startAt == 0 && fs.Length > _displayBuffer)
+                        {
+                            startAt = fs.Length - _displayBuffer;
+                            Debug.WriteLine(
+                                $"{LogInfo.Alias} file was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
+                        }
+
+                        newContentSize = fs.Length - startAt;
+                        var newContent = new byte[newContentSize];
+                        Debug.WriteLine($"This chunk will be {newContent.Length} bytes.");
+
+                        fs.Seek(startAt, SeekOrigin.Begin);
+
+                        // read the new data
+                        messageSize = fs.Read(newContent, 0, newContent.Length);
+
+                        // trim off the front of the content if it exceeds the display buffer
+                        var trimmedContent = originalText + Encoding.UTF8.GetString(newContent);
+                        if (!string.IsNullOrEmpty(LogText) && trimmedContent.Length > _displayBuffer)
+                        {
+                            trimmedContent = new string(trimmedContent.Skip((int)(trimmedContent.Length - _displayBuffer)).ToArray());
+                        }
+
+                        // update the model
+                        LogText = trimmedContent;
+
+                        OnLogTextChanged(new RawContentsChangedEventArgs(originalText, LogText, Id));
+
+                        Debug.WriteLine($"{LogInfo.Alias} content is now {LogText.Length} characters.");
+                        _lastIndex = startAt;
+                        _lastIndex = fs.Position;
                     }
-
-                    newContentSize  = fs.Length - startAt;
-                    var newContent = new byte[newContentSize];
-                    Trace.WriteLine($"This chunk will be {newContent.Length} bytes.");
-
-                    fs.Seek(startAt, SeekOrigin.Begin); 
-
-                    // read the new data
-                    messageSize = await fs.ReadAsync(newContent, 0, newContent.Length);
-
-                    // trim off the front of the content if it exceeds the display buffer
-                    var trimmedContent = originalText + Encoding.UTF8.GetString(newContent);
-                    if (!string.IsNullOrEmpty(LogText) && trimmedContent.Length > _displayBuffer)
-                    {
-                        var oldBytes = Encoding.UTF8.GetBytes(trimmedContent);
-                        var newBytes = new byte[_displayBuffer];
-                        Array.Copy(oldBytes, trimmedContent.Length - _displayBuffer, newBytes, 0, _displayBuffer);
-                        trimmedContent = Encoding.UTF8.GetString(newBytes);
-                    }
-
-                    // update the model
-                    LogText = trimmedContent + Encoding.UTF8.GetString(newContent);
-
-                    OnLogTextChanged(new RawContentsChangedEventArgs(originalText, LogText, Id));
-
-                    Trace.WriteLine($"Content is now {LogText.Length} characters.");
-                    _lastIndex = startAt;
-                    _lastIndex = fs.Position;
                 }
+                
             }
             catch (IOException ex)
             {
@@ -257,7 +254,7 @@ namespace Fievel.Wpf.Models.Observable
 
         private void OnLogTextChanged(RawContentsChangedEventArgs args)
         {
-            Trace.WriteLine("RawContentChanged event fired");
+            Debug.WriteLine("RawContentChanged event fired");
 
             LogLines.Clear();
             LogLines.AddRange(args.NewText
