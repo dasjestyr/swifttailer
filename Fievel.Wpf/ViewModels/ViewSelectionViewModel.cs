@@ -9,6 +9,8 @@ namespace Fievel.Wpf.ViewModels
 
         public SaveToTextCommand SaveToTextCommand { get; set; }
 
+        public EmailAttachmentCommand EmailAttachmentCommand { get; set; }
+
         public string Content
         {
             get { return _content; }
@@ -22,6 +24,7 @@ namespace Fievel.Wpf.ViewModels
         public ViewSelectionViewModel()
         {
             SaveToTextCommand = new SaveToTextCommand();
+            EmailAttachmentCommand = new EmailAttachmentCommand();
         }
     }
 }
