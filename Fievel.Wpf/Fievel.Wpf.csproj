@@ -98,6 +98,7 @@
     <Compile Include="Commands\PickLogCommand.cs" />
     <Compile Include="Commands\RemoveLogFromGroupCommand.cs" />
     <Compile Include="Commands\SaveLogToGroupCommand.cs" />
+    <Compile Include="Commands\SaveToTextCommand.cs" />
     <Compile Include="Commands\SelectGroupCommand.cs" />
     <Compile Include="Commands\ApplyHighlightingCommand.cs" />
     <Compile Include="Commands\StaticCommands.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="ViewModels\LogConfigEditorViewModel.cs" />
     <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ViewSelectionViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

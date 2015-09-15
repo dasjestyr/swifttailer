@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Fievel.Wpf.ViewModels;
 
 namespace Fievel.Wpf.Pages
 {
@@ -10,7 +11,11 @@ namespace Fievel.Wpf.Pages
         public ViewSelectionWindow(string content)
         {
             InitializeComponent();
-            Content.Text = content;
+
+            var vm = new ViewSelectionViewModel();
+            DataContext = vm;
+
+            vm.Content = content;
         }
     }
 }
