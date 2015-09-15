@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
+using Fievel.Wpf.Data;
 using Fievel.Wpf.Models.Observable;
 using Fievel.Wpf.ViewModels;
 
@@ -14,9 +12,9 @@ namespace Fievel.Wpf.Commands
     /// </summary>
     public class RemoveLogFromGroupCommand : ICommand
     {
-        private readonly MainViewModel _vm;
+        private readonly TailFile _vm;
 
-        public RemoveLogFromGroupCommand(MainViewModel vm)
+        public RemoveLogFromGroupCommand(TailFile vm)
         {
             _vm = vm;
         }
@@ -28,7 +26,9 @@ namespace Fievel.Wpf.Commands
 
         public void Execute(object parameter)
         {
-            var tail = parameter as TailFile;
+            var item = parameter as MenuItem;
+            var file = item?.DataContext as TailFile;
+            file?.DeleteSelf();
         }
 
         public event EventHandler CanExecuteChanged;

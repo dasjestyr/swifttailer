@@ -93,12 +93,14 @@
     <Compile Include="Behaviors\MenuItemExtensions.cs" />
     <Compile Include="Commands\CloseWindowCommand.cs" />
     <Compile Include="Commands\OpenInExplorerCommand.cs" />
+    <Compile Include="Commands\OpenLogLineCommand.cs" />
     <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />
     <Compile Include="Commands\PickLogCommand.cs" />
     <Compile Include="Commands\RemoveLogFromGroupCommand.cs" />
     <Compile Include="Commands\SaveLogToGroupCommand.cs" />
     <Compile Include="Commands\SelectGroupCommand.cs" />
     <Compile Include="Commands\ApplyHighlightingCommand.cs" />
+    <Compile Include="Commands\StaticCommands.cs" />
     <Compile Include="Commands\ToggleTailingCommand.cs" />
     <Compile Include="Converters\HighlightConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
@@ -116,6 +118,9 @@
     </Compile>
     <Compile Include="Pages\LogPicker.xaml.cs">
       <DependentUpon>LogPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ViewSelectionWindow.xaml.cs">
+      <DependentUpon>ViewSelectionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModels\LogConfigEditorViewModel.cs" />
@@ -139,6 +144,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\LogPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ViewSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -166,7 +175,7 @@
     <Resource Include="Assets\icon_head.png" />
     <Resource Include="Assets\icon_head.ico" />
     <Content Include="DesignTime\DemoFiles.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

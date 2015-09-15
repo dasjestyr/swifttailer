@@ -51,6 +51,8 @@ namespace Fievel.Wpf.Models.Observable
 
         public OpenInExplorerCommand OpenInExplorerCommand { get; set; }
 
+        public RemoveLogFromGroupCommand RemoveLogFromGroupCommand { get; set; }
+
         #region -- Observable Properties --
 
         /// <summary>
@@ -128,10 +130,25 @@ namespace Fievel.Wpf.Models.Observable
             _cts = new CancellationTokenSource();
 
             ApplyHighlightingCommand = new ApplyHighlightingCommand(this);
+            RemoveLogFromGroupCommand = new RemoveLogFromGroupCommand(this);
             OpenInExplorerCommand = new OpenInExplorerCommand();
             LogLines = new ObservableCollection<LogLine>();
 
             BindingOperations.EnableCollectionSynchronization(LogLines, _lockObject);
+        }
+
+        public void DeleteSelf()
+        {
+            // make sure this isn't running
+            _cts.Cancel();
+
+            // this tail has a unique id generated on startup so
+            // just ask the singleton to blow it away
+            LogSource.Instance.Logs.Groups.First(
+                log => log.Logs
+                .Any(l => l.Id.Equals(LogInfo.Id, StringComparison.OrdinalIgnoreCase)))
+                .Logs.Remove(LogInfo);
+            LogSource.Instance.SaveState();
         }
 
         /// <summary>

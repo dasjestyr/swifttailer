@@ -74,9 +74,9 @@ namespace Fievel.Wpf
             }
         }
 
-        private void LogFilter_OnTextChanged(object sender, TextChangedEventArgs e)
+        private void ViewSelected_Click(object sender, RoutedEventArgs e)
         {
-            
+            var selectedTab = SessionTabs.SelectedItem;
         }
     }
 }

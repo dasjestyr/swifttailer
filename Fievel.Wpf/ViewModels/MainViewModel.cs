@@ -16,7 +16,7 @@ namespace Fievel.Wpf.ViewModels
         private ObservableCollection<LogGroup> _groups;
         private ObservableCollection<TailFile> _tails = new ObservableCollection<TailFile>();
         private bool _isRunning;
-        private string _searchPhrase;
+        private ObservableCollection<LogLine> _selectedLines;
 
         #region -- Commands --
         public SelectGroupCommand SelectGroupCommand { get; private set; }
@@ -25,6 +25,17 @@ namespace Fievel.Wpf.ViewModels
         #endregion
 
         #region -- Observable Properties --
+
+        public ObservableCollection<LogLine> SelectedLines
+        {
+            get { return _selectedLines; }
+            set
+            {
+                _selectedLines = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsRunning
         {
             get { return _isRunning; }
@@ -88,7 +99,9 @@ namespace Fievel.Wpf.ViewModels
             ToggleTailingCommand = new ToggleTailingCommand(this);
             SelectGroupCommand = new SelectGroupCommand(this);
 
-            LogSource.Instance.LogCollectionChanged += LogsChangedHandler;
+            LogSource.Instance.LogCollectionChanged += LogSourceChanged;
+
+            StaticCommands.OpenLogLineCommand = new OpenLogLineCommand();
 
             BindGroups();
         }
@@ -139,7 +152,7 @@ namespace Fievel.Wpf.ViewModels
             LogSource.Instance.SaveState();
         }
 
-        private void LogsChangedHandler(object sender, EventArgs args)
+        private void LogSourceChanged(object sender, EventArgs args)
         {
             BindGroups();
         }
