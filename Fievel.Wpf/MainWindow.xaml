@@ -11,11 +11,10 @@
         xmlns:wpf="clr-namespace:Fievel.Wpf"
         xmlns:commands="clr-namespace:Fievel.Wpf.Commands"
         mc:Ignorable="d" x:Name="ThisWindow"
-        Title="Fievel" Height="600" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Fievel" Height="800" Width="800" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
         <converters:HighlightConverter x:Key="HighlightConverter"/>
-        
         <Style TargetType="ListBoxItem" x:Key="HighlightItemStyle">
             <Setter Property="ContextMenu">
                 <Setter.Value>
@@ -35,6 +34,11 @@
         <Style TargetType="StatusBarItem">
             <Setter Property="Margin" Value="10 0"/>
         </Style>
+        <Style TargetType="Button" x:Key="ToolbarIconStyle">
+            <Setter Property="Width" Value="25" />
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Margin" Value="2 0" />
+        </Style>
     </Window.Resources>
     <Window.DataContext>
         <viewModels:MainViewModel />
@@ -44,24 +48,28 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
-            <MenuItem Header="_Settings">
-                <MenuItem Header="_Add Group..." />
-                <MenuItem Header="Add _Log to Group..." Command="{Binding OpenLogPickerDialogCommand}"/>
-                <Separator />
-                <MenuItem Header="Tailing _Groups" ItemsSource="{Binding Groups}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}">
-                    <MenuItem.ItemTemplate>
-                        <DataTemplate>
-                            <MenuItem Header="{Binding Name}" IsCheckable="True" HorizontalContentAlignment="Left" behaviors:MenuItemExtensions.GroupName="SelectedGroup"  Template="{DynamicResource MenuItemNoIcons}"
-                                      Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SelectGroupCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}" />
-                        </DataTemplate>
-                    </MenuItem.ItemTemplate>
-                </MenuItem>
-            </MenuItem>
-        </Menu>
+        <ToolBarTray Grid.Row="0">
+            <ToolBar>
+                <ComboBox Width="200" ItemsSource="{Binding Groups}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGroup}" Margin="0 0 5 0" />
+                <Button ToolTip="Add new group..."  Style="{StaticResource ToolbarIconStyle}">
+                    <Image Source="Assets/add.png"/>
+                </Button>
+                <Button ToolTip="Delete this group..." Style="{StaticResource ToolbarIconStyle}">
+                    <Image Source="Assets/trash.png" />
+                </Button>
+                <Button ToolTip="Duplicate this group..." Style="{StaticResource ToolbarIconStyle}">
+                    <Image Source="Assets/copy.png" />
+                </Button>
+                <Button ToolTip="Add log to this group..." Style="{StaticResource ToolbarIconStyle}" 
+                    Command="{Binding OpenLogPickerDialogCommand}" CommandParameter="{Binding SelectedGroup}">
+                    <Image Source="Assets/document.png"/>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
         
         <TabControl ItemsSource="{Binding Tails}" Grid.Row="1" x:Name="SessionTabs">
             <TabControl.ItemTemplate>
@@ -89,6 +97,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <ListBox x:Name="LogList" ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" SelectionMode="Extended" 
                                  ItemContainerStyle="{StaticResource HighlightItemStyle}">
@@ -103,7 +112,12 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
-                        <DockPanel LastChildFill="True" Grid.Row="1" Margin="5 0">
+                        
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                            <!-- reserved for tab options? -->
+                        </StackPanel>
+                        
+                        <DockPanel LastChildFill="True" Grid.Row="2" Margin="5 10 5 5">
                             <Label Content="Search:"/>
                             <TextBox x:Name="LogFilter" HorizontalAlignment="Stretch" BorderBrush="Gray" Margin="3" FontSize="12" 
                      Text="{Binding SearchPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -114,10 +128,12 @@
                                 </i:Interaction.Triggers>
                             </TextBox>
                         </DockPanel>
+                        
                     </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
+        
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
             <Button x:Name="StartButton" Content="Run" Command="{Binding ToggleTailingCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}" Width="120" Margin="5"
                     IsEnabled="{Binding ElementName=StopButton, Path=IsEnabled, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}"/>
@@ -125,7 +141,7 @@
                     IsEnabled="{Binding ElementName=StartButton, Path=IsEnabled, Converter={StaticResource InverseBoolConverter}}"/>
         </StackPanel>
         
-        <StatusBar Grid.Row="3" MinHeight="20">
+        <StatusBar Grid.Row="4" MinHeight="20">
             <StatusBarItem Content="{Binding Status, FallbackValue=Idle}" HorizontalAlignment="Left" />
             <StatusBarItem Content="{Binding SelectedGroup.Name, FallbackValue='Group 1'}" HorizontalAlignment="Left" />
         </StatusBar>

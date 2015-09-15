@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using Fievel.Wpf.Data;
 using Fievel.Wpf.Pages;
 
 namespace Fievel.Wpf.Commands
@@ -13,7 +14,10 @@ namespace Fievel.Wpf.Commands
 
         public void Execute(object parameter)
         {
-            var dialog = new LogPicker();
+            var selectedGroup = parameter as LogGroup;
+            if (selectedGroup == null) return;
+
+            var dialog = new LogPicker(selectedGroup);
             dialog.ShowDialog();
         }
 

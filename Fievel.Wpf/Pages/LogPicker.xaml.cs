@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Fievel.Wpf.Data;
+using Fievel.Wpf.ViewModels;
 
 namespace Fievel.Wpf.Pages
 {
@@ -22,6 +13,16 @@ namespace Fievel.Wpf.Pages
         public LogPicker()
         {
             InitializeComponent();
+        }
+
+        public LogPicker(LogGroup selectedGroup)
+            : this()
+        {
+            var vm = DataContext as LogPickerDialogViewModel;
+            if(vm == null)
+                throw new InvalidOperationException("Group context not found!");
+
+            vm.SelectedGroup = selectedGroup;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Fievel.Wpf.Commands;
+﻿using Fievel.Wpf.Commands;
 using Fievel.Wpf.Data;
 using Fievel.Wpf.Models;
 
@@ -9,18 +8,8 @@ namespace Fievel.Wpf.ViewModels
     {
         private string _fileLocation;
         private LogGroup _selectedGroup;
-        private ObservableCollection<LogGroup> _availableGroups;
         private string _alias;
-
-        public ObservableCollection<LogGroup> AvailableGroups
-        {
-            get { return _availableGroups; }
-            set
-            {
-                _availableGroups = value;
-                OnPropertyChanged();
-            }
-        }
+        
 
         public LogGroup SelectedGroup
         {
@@ -62,7 +51,6 @@ namespace Fievel.Wpf.ViewModels
         {
             CloseWindowCommand = new CloseWindowCommand();
             PickLogCommand = new PickLogCommand(this);
-            AvailableGroups = new ObservableCollection<LogGroup>(LogSource.Instance.Logs.Groups);
             SaveLogToGroupCommand = new SaveLogToGroupCommand(this);
         }
     }
