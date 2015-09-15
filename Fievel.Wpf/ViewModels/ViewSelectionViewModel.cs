@@ -1,5 +1,5 @@
 ﻿using Fievel.Wpf.Commands;
-using Provausio.Common.Portable;
+using ModelBase = Fievel.Wpf.Models.ModelBase;
 
 namespace Fievel.Wpf.ViewModels
 {

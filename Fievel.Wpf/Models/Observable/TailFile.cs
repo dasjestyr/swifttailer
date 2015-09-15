@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using Fievel.Wpf.Commands;
 using Fievel.Wpf.Data;
-using Provausio.Common.Portable;
 using System.Windows;
 
 namespace Fievel.Wpf.Models.Observable

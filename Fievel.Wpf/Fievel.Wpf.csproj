@@ -62,7 +62,7 @@
     <ApplicationIcon>Assets\icon_head.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>7E230BA365B4FB9373056B4D2E4F2844BF5A3D5D</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>15759D52EDF1FA44F30968D99E7C47B891E985FB</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>Fievel.Wpf_TemporaryKey.pfx</ManifestKeyFile>
@@ -93,9 +93,6 @@
     <Reference Include="Prism.Wpf, Version=6.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Wpf.6.0.1\lib\net45\Prism.Wpf.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Provausio.Common.Portable">
-      <HintPath>..\..\..\git\provausio.common\Provausio.Common.Portable\bin\Release\Provausio.Common.Portable.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -144,10 +141,15 @@
     <Compile Include="Data\LogInfo.cs" />
     <Compile Include="Data\Logs.cs" />
     <Compile Include="DelegateDefinitions.cs" />
+    <Compile Include="Models\BindableBase.cs" />
+    <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\IProperty.cs" />
+    <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\Observable\LogHighlight.cs" />
     <Compile Include="Models\Observable\LogLine.cs" />
     <Compile Include="Models\Observable\RawContentsChangedEventArgs.cs" />
     <Compile Include="Models\Observable\TailFile.cs" />
+    <Compile Include="Models\Property.cs" />
     <Compile Include="Pages\LogFileConfig.xaml.cs">
       <DependentUpon>LogFileConfig.xaml</DependentUpon>
     </Compile>

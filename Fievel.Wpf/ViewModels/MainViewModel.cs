@@ -5,7 +5,7 @@ using System.Linq;
 using Fievel.Wpf.Commands;
 using Fievel.Wpf.Data;
 using Fievel.Wpf.Models.Observable;
-using Provausio.Common.Portable;
+using ModelBase = Fievel.Wpf.Models.ModelBase;
 
 namespace Fievel.Wpf.ViewModels
 {

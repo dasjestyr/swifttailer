@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Fievel.Wpf.Data;
 using Fievel.Wpf.Pages;
-using Provausio.Common.Portable;
+using ModelBase = Fievel.Wpf.Models.ModelBase;
 
 namespace Fievel.Wpf.ViewModels
 {

@@ -1,5 +1,3 @@
-using Provausio.Common.Portable;
-
 namespace Fievel.Wpf.Models.Observable
 {
     public class LogLine : ModelBase
