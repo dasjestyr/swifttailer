@@ -17,7 +17,7 @@ namespace Fievel.Wpf
 
         private void DisplayException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"e.Exception.Message :: {e.Exception}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)

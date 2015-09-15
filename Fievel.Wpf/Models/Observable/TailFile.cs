@@ -10,6 +10,7 @@ using System.Windows.Data;
 using Fievel.Wpf.Commands;
 using Fievel.Wpf.Data;
 using Provausio.Common.Portable;
+using System.Windows;
 
 namespace Fievel.Wpf.Models.Observable
 {
@@ -199,6 +200,8 @@ namespace Fievel.Wpf.Models.Observable
         private async Task GetUpdates()
         {
             var originalText = LogText;
+            long messageSize = 0;
+            long newContentSize = 0;
 
             try
             {
@@ -216,22 +219,22 @@ namespace Fievel.Wpf.Models.Observable
                             $"{LogInfo.Alias} file was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
                     }
 
-                    var contentLength = fs.Length - startAt;
-                    var newContent = new byte[contentLength];
+                    newContentSize  = fs.Length - startAt;
+                    var newContent = new byte[newContentSize];
                     Trace.WriteLine($"This chunk will be {newContent.Length} bytes.");
 
-                    fs.Seek(startAt, SeekOrigin.Begin);
+                    fs.Seek(startAt, SeekOrigin.Begin); 
 
                     // read the new data
-                    await fs.ReadAsync(newContent, 0, newContent.Length);
+                    messageSize = await fs.ReadAsync(newContent, 0, newContent.Length);
 
                     // trim off the front of the content if it exceeds the display buffer
-                    var trimmedContent = originalText;
-                    if (!string.IsNullOrEmpty(LogText) && LogText.Length > _displayBuffer)
+                    var trimmedContent = originalText + Encoding.UTF8.GetString(newContent);
+                    if (!string.IsNullOrEmpty(LogText) && trimmedContent.Length > _displayBuffer)
                     {
-                        var contentBytes = Encoding.UTF8.GetBytes(LogText);
+                        var oldBytes = Encoding.UTF8.GetBytes(trimmedContent);
                         var newBytes = new byte[_displayBuffer];
-                        Array.Copy(contentBytes, contentBytes.Length - _displayBuffer, newBytes, 0, _displayBuffer);
+                        Array.Copy(oldBytes, trimmedContent.Length - _displayBuffer, newBytes, 0, _displayBuffer);
                         trimmedContent = Encoding.UTF8.GetString(newBytes);
                     }
 
@@ -245,7 +248,11 @@ namespace Fievel.Wpf.Models.Observable
                     _lastIndex = fs.Position;
                 }
             }
-            catch (IOException) {}
+            catch (IOException ex)
+            {
+                
+                MessageBox.Show($"Message size: {messageSize} New Content Size: {newContentSize} :: " + ex.Message, "Read Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void OnLogTextChanged(RawContentsChangedEventArgs args)

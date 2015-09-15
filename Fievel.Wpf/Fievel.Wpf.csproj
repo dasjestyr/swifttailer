@@ -62,7 +62,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Provausio.Common.Portable">
-      <HintPath>..\..\provausio.common\Provausio.Common.Portable\bin\Release\Provausio.Common.Portable.dll</HintPath>
+      <HintPath>..\..\..\git\provausio.common\Provausio.Common.Portable\bin\Release\Provausio.Common.Portable.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -178,9 +178,7 @@
     <SplashScreen Include="Assets\icon_full.png" />
     <Resource Include="Assets\icon_head.png" />
     <Resource Include="Assets\icon_head.ico" />
-    <Content Include="DesignTime\DemoFiles.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="DesignTime\DemoFiles.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
