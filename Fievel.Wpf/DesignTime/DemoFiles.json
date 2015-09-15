@@ -1,33 +1,8 @@
 ﻿{
   "groups": [
     {
-      "name": "AIB 144",
+      "name": "Logging Group",
       "logs": [
-      ]
-    },
-    {
-      "name": "AIB 168",
-      "logs": [
-        {
-          "alias": "OAuth Audit 2",
-          "location": "c:\\test\\oauth_audit.log",
-          "order" :  0
-        },
-        {
-          "alias": "Paylite - Unsecure",
-          "location": "c:\\test\\paylite\\paylite_debug.log",
-          "order" :  1
-        },
-        {
-          "alias": "Paylite - Secure",
-          "location": "c:\\test\\paylite.x509\\paylite_debug.log",
-          "order" :  2
-        },
-        {
-          "alias": "Test Alias",
-          "location":  "c:\\test\\paylite.x509\\paylite_debug.log",
-          "order" :  3
-        }
       ]
     }
   ]

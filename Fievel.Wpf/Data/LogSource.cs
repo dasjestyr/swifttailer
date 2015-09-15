@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Fievel.Wpf.Data
 {
@@ -28,7 +29,25 @@ namespace Fievel.Wpf.Data
         private LogSource()
         {
             _objectLock = new object();
-            _logFileLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DesignTime", "DemoFiles.json");
+            var tempFileLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DesignTime", "DemoFiles.json");
+            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var userFilePath = Path.Combine(localAppDataPath, Path.GetFileNameWithoutExtension(AppDomain.CurrentDomain.FriendlyName));
+
+            // if the app directory doesn't exist, create it
+            if (!Directory.Exists(userFilePath))
+            {
+                Trace.WriteLine($"{userFilePath} did not exist. Creating...");
+                Directory.CreateDirectory(userFilePath);
+            }
+
+            // if the file doesn't already exist, create it
+            _logFileLocation = Path.Combine(userFilePath, "LogConfig.json");
+            if (!File.Exists(_logFileLocation))
+            {
+                Trace.WriteLine($"{_logFileLocation} did not exists. Creating file with a default config...");
+                File.Copy(tempFileLocation, _logFileLocation);
+            }
+
             LoadLogs(_logFileLocation);
         }
 
