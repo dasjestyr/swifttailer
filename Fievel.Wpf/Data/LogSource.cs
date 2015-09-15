@@ -34,7 +34,7 @@ namespace Fievel.Wpf.Data
 
         public void SaveState()
         {
-            var logsJson = JsonConvert.SerializeObject(Logs);
+            var logsJson = JsonConvert.SerializeObject(Logs, Formatting.Indented);
             lock (_objectLock)
             {
                 WriteToFile(_logFileLocation, logsJson);
