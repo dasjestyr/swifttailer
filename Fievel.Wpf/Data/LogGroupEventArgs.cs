@@ -2,11 +2,11 @@ using System;
 
 namespace Fievel.Wpf.Data
 {
-    public class LogGroupAddedEventArgs : EventArgs
+    public class LogGroupEventArgs : EventArgs
     {
         public LogGroup NewGroup { get; set; }
 
-        public LogGroupAddedEventArgs(LogGroup newGroup)
+        public LogGroupEventArgs(LogGroup newGroup)
         {
             NewGroup = newGroup;
         }

@@ -1,10 +1,13 @@
 ﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace Fievel.Wpf.Data
 {
     public class LogInfo
     {
+        private string _alias;
+
         [JsonIgnore]
         public string Id { get; private set; }
 
@@ -12,7 +15,16 @@ namespace Fievel.Wpf.Data
         public int Order { get; set; }
 
         [JsonProperty("alias")]
-        public string Alias { get; set; }
+        public string Alias
+        {
+            get
+            {
+                return string.IsNullOrEmpty(_alias) 
+                    ? Path.GetFileName(Location) 
+                    : _alias;
+            }
+            set { _alias = value; }
+        }
 
         [JsonProperty("location")]
         public string Location { get; set; }

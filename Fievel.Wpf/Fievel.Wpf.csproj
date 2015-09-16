@@ -125,6 +125,7 @@
     <Compile Include="Commands\CloseWindowCommand.cs" />
     <Compile Include="Commands\CreateGroupCommand.cs" />
     <Compile Include="Commands\DeleteGroupCommand.cs" />
+    <Compile Include="Commands\EditGroupCommand.cs" />
     <Compile Include="Commands\EmailAttachmentCommand.cs" />
     <Compile Include="Commands\OpenInExplorerCommand.cs" />
     <Compile Include="Commands\OpenLogLineCommand.cs" />
@@ -141,7 +142,7 @@
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Data\ILogSource.cs" />
     <Compile Include="Data\LogGroup.cs" />
-    <Compile Include="Data\LogGroupAddedEventArgs.cs" />
+    <Compile Include="Data\LogGroupEventArgs.cs" />
     <Compile Include="Data\LogInfo.cs" />
     <Compile Include="Data\Logs.cs" />
     <Compile Include="DelegateDefinitions.cs" />
@@ -154,6 +155,9 @@
     <Compile Include="Models\Observable\RawContentsChangedEventArgs.cs" />
     <Compile Include="Models\Observable\TailFile.cs" />
     <Compile Include="Models\Property.cs" />
+    <Compile Include="Pages\EditGroupWindow.xaml.cs">
+      <DependentUpon>EditGroupWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\AddGroupWindow.xaml.cs">
       <DependentUpon>AddGroupWindow.xaml</DependentUpon>
     </Compile>
@@ -186,6 +190,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\EditGroupWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\AddGroupWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -270,6 +278,7 @@
     <Resource Include="Assets\wrench.png" />
     <Resource Include="Assets\zoom-in.png" />
     <Resource Include="Assets\zoom-out.png" />
+    <Resource Include="Assets\grid.png" />
     <Content Include="DesignTime\DemoFiles.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

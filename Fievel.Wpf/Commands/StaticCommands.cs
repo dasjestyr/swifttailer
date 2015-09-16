@@ -12,5 +12,7 @@ namespace Fievel.Wpf.Commands
         public static ICommand CloseWindowCommand = new CloseWindowCommand();
 
         public static ICommand DeleteGroupCommand = new DeleteGroupCommand();
+
+        public static ICommand EditGroupCommand = new EditGroupCommand();
     }
 }

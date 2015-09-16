@@ -13,7 +13,7 @@ namespace Fievel.Wpf.Commands
 
         public void Execute(object parameter)
         {
-            var window = new AddGroupWindow();
+            var window = new EditGroupWindow();
             window.ShowDialog();
         }
 

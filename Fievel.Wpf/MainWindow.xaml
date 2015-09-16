@@ -38,6 +38,7 @@
             <Setter Property="Width" Value="25" />
             <Setter Property="Height" Value="25"/>
             <Setter Property="Margin" Value="2 0" />
+            <Setter Property="IsEnabled" Value="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"/>
         </Style>
     </Window.Resources>
     <Window.DataContext>
@@ -58,7 +59,11 @@
                 <Button ToolTip="Add new group..."  Style="{StaticResource ToolbarIconStyle}" Command="{Binding AddGroupDialogCommand}">
                     <Image Source="Assets/add.png"/>
                 </Button>
-                <Button ToolTip="Duplicate this group..." Style="{StaticResource ToolbarIconStyle}">
+                <Button ToolTip="Rename this group..." Style="{StaticResource ToolbarIconStyle}"
+                        Command="commands:StaticCommands.EditGroupCommand" CommandParameter="{Binding SelectedGroup}">
+                    <Image Source="Assets/edit.png" />
+                </Button>
+                <Button ToolTip="Clone this group..." Style="{StaticResource ToolbarIconStyle}">
                     <Image Source="Assets/copy.png" />
                 </Button>
                 <Button ToolTip="Add log to this group..." Style="{StaticResource ToolbarIconStyle}" 
@@ -70,8 +75,14 @@
                     <Image Source="Assets/trash.png" />
                 </Button>
             </ToolBar>
+            <ToolBar>
+                <Button ToolTip="Gridulate" Style="{StaticResource ToolbarIconStyle}" Width="Auto">
+                    <Image Source="Assets/grid.png" />
+                </Button>
+            </ToolBar>
         </ToolBarTray>
         
+        <!-- TAB CONTROL -->
         <TabControl ItemsSource="{Binding Tails}" Grid.Row="1" x:Name="SessionTabs">
             <TabControl.ItemTemplate>
                 <DataTemplate>
@@ -83,6 +94,7 @@
                                         <Setter Property="IsCheckable" Value="False"/>
                                     </Style>
                                 </ContextMenu.Resources>
+                                <MenuItem Header="Change log path..." />
                                 <MenuItem Header="Open in explorer" Command="{Binding OpenInExplorerCommand}" 
                                           CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
                                 <MenuItem Header="Remove log from group" Command="{Binding RemoveLogFromGroupCommand}" 
@@ -118,6 +130,7 @@
                             <!-- reserved for tab options? -->
                         </StackPanel>
                         
+                        <!-- SEARCH PANEL -->
                         <DockPanel LastChildFill="True" Grid.Row="2" Margin="5 10 2 5">
                             <Label Content="Search:"/>
                             <TextBox x:Name="LogFilter" HorizontalAlignment="Stretch" BorderBrush="Gray" Margin="0" FontSize="12" 
@@ -129,12 +142,12 @@
                                 </i:Interaction.Triggers>
                             </TextBox>
                         </DockPanel>
-                        
                     </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
         
+        <!-- RUN BUTTONS -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
             <Button x:Name="StartButton" Content="Run" Command="{Binding ToggleTailingCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}" Width="120" Margin="5"
                     IsEnabled="{Binding ElementName=StopButton, Path=IsEnabled, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}"/>
@@ -142,6 +155,7 @@
                     IsEnabled="{Binding ElementName=StartButton, Path=IsEnabled, Converter={StaticResource InverseBoolConverter}}"/>
         </StackPanel>
         
+        <!-- STATUS BAR -->
         <StatusBar Grid.Row="4" MinHeight="20">
             <StatusBarItem Content="{Binding Status, FallbackValue=Idle}" HorizontalAlignment="Left" />
             <StatusBarItem Content="{Binding SelectedGroup.Name, FallbackValue='Group 1'}" HorizontalAlignment="Left" />

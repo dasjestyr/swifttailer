@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using Fievel.Wpf.Commands;
 using Fievel.Wpf.Data;
+using Fievel.Wpf.Models;
 using Fievel.Wpf.Models.Observable;
-using ModelBase = Fievel.Wpf.Models.ModelBase;
 
 namespace Fievel.Wpf.ViewModels
 {
@@ -26,6 +26,7 @@ namespace Fievel.Wpf.ViewModels
         public OpenLogPickerDialogCommand OpenLogPickerDialogCommand { get; set; }
 
         public AddGroupDialogCommand AddGroupDialogCommand { get; set; }
+        
         #endregion
 
         #region -- Observable Properties --
@@ -109,6 +110,7 @@ namespace Fievel.Wpf.ViewModels
             LogSource.Instance.LogCollectionChanged += LogSourceChanged;
             LogSource.Instance.LogGroupCollectionChanged += LogGroupSourceChanged;
             LogSource.Instance.LogGroupAdded += LogGroupAdded;
+            LogSource.Instance.LogGroupEdited += LogGroupEdited;
             LogSource.Instance.LogGroupDeleted += LogGroupDeleted;
 
             StaticCommands.OpenLogLineCommand = new OpenLogLineCommand();
@@ -150,18 +152,17 @@ namespace Fievel.Wpf.ViewModels
         {
             Trace.WriteLine("Rebinding log tails...");
 
-            if (SelectedGroup != null)
+            if (SelectedGroup == null) return;
+
+            Tails.Clear();
+
+            var tails = SelectedGroup.Logs
+                .OrderBy(l => l.Order)
+                .Select(t => new TailFile(t));
+
+            foreach (var tail in tails)
             {
-                Tails.Clear();
-
-                var tails = SelectedGroup.Logs
-                    .OrderBy(l => l.Order)
-                    .Select(t => new TailFile(t));
-
-                foreach (var tail in tails)
-                {
-                    Tails.Add(tail);
-                }
+                Tails.Add(tail);
             }
         }
 
@@ -174,7 +175,12 @@ namespace Fievel.Wpf.ViewModels
             }
         }
 
-        private void LogGroupAdded(object sender, LogGroupAddedEventArgs args)
+        private void LogGroupAdded(object sender, LogGroupEventArgs args)
+        {
+            SelectedGroup = args.NewGroup;
+        }
+
+        private void LogGroupEdited(object sender, LogGroupEventArgs args)
         {
             SelectedGroup = args.NewGroup;
         }
