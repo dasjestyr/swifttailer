@@ -141,6 +141,7 @@
     <Compile Include="Converters\HighlightConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Data\ILogSource.cs" />
+    <Compile Include="Data\LogEventArgs.cs" />
     <Compile Include="Data\LogGroup.cs" />
     <Compile Include="Data\LogGroupEventArgs.cs" />
     <Compile Include="Data\LogInfo.cs" />

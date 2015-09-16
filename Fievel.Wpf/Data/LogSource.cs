@@ -13,6 +13,7 @@ namespace Fievel.Wpf.Data
         public event LogGroupAddedHandler LogGroupAdded;
         public event LogGroupDeletedHandler LogGroupDeleted;
         public event LogGroupEditedHandler LogGroupEdited;
+        public event LogAddedHandler LogAdded;
 
         private readonly string _logFileLocation;
         private readonly object _objectLock;
@@ -82,6 +83,7 @@ namespace Fievel.Wpf.Data
             Logs.Groups.First(group => group.Id.Equals(groupId)).Logs.Add(log);
             SaveState();
             OnLogCollectionChanged();
+            OnLogAdded(log, groupId);
         }
 
         public void RemoveLog(LogInfo log)
@@ -150,6 +152,12 @@ namespace Fievel.Wpf.Data
             LogGroupDeleted?.Invoke(this, new EventArgs());
         }
 
+        private void OnLogAdded(LogInfo log, Guid logId)
+        {
+            Debug.WriteLine("OnLogAdded fired (LogSource)");
+            LogAdded?.Invoke(this, new LogEventArgs(log, logId));
+        }
+
         private static void WriteToFile(string path, string content)
         {
             File.WriteAllText(path, content);
@@ -158,6 +166,8 @@ namespace Fievel.Wpf.Data
     }
 
     public delegate void LogCollectionChangedHandler(object sender, EventArgs args);
+
+    public delegate void LogAddedHandler(object sender, LogEventArgs args);
 
     public delegate void LogGroupCollectionChangedHandler(object sender, EventArgs args);
 

@@ -119,6 +119,7 @@ namespace Fievel.Wpf.ViewModels
             SelectGroupCommand = new SelectGroupCommand(this);
 
             LogSource.Instance.LogCollectionChanged += LogSourceChanged;
+            LogSource.Instance.LogAdded += LogAdded;
             LogSource.Instance.LogGroupCollectionChanged += LogGroupSourceChanged;
             LogSource.Instance.LogGroupAdded += LogGroupAdded;
             LogSource.Instance.LogGroupEdited += LogGroupEdited;
@@ -184,6 +185,11 @@ namespace Fievel.Wpf.ViewModels
             {
                 Groups.Add(group);
             }
+        }
+
+        private void LogAdded(object sender, LogEventArgs args)
+        {
+            SelectedTail = Tails.First(tail => tail.Id.Equals(args.Log.Id));
         }
 
         private void LogGroupAdded(object sender, LogGroupEventArgs args)
