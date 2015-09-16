@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace Fievel.Wpf.Pages
 {
     /// <summary>
-    /// Interaction logic for LogEntryViewer.xaml
+    /// Interaction logic for AddGroupWindow.xaml
     /// </summary>
-    public partial class LogEntryViewer : Window
+    public partial class AddGroupWindow : Window
     {
-        public LogEntryViewer()
+        public AddGroupWindow()
         {
             InitializeComponent();
         }

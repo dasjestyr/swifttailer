@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace Fievel.Wpf.Data
@@ -14,30 +13,26 @@ namespace Fievel.Wpf.Data
         public string Name { get; set; }
 
         [JsonProperty("logs")]
-        public List<LogInfo> Logs { get; set; }
+        public List<LogInfo> Logs { get; set; } = new List<LogInfo>();
 
         public LogGroup()
         {
             Id = Guid.NewGuid();
         }
 
+        public LogGroup(string name)
+            : this()
+        {
+            Name = name;
+        }
+
         /// <summary>
-        /// Adds the log. The order will be set automatically.
+        /// Adds the log through the LogSource singleton.
         /// </summary>
         /// <param name="log">The log.</param>
         public void AddLog(LogInfo log)
         {
-            if (Logs.Any())
-            {
-                var highestOrder = Logs.Max(l => l.Order);
-                log.Order = highestOrder + 1;
-            }
-            else
-            {
-                log.Order = 0;
-            }
-            
-            Logs.Add(log);
+            LogSource.Instance.AddLog(Id, log);
         }
     }
 }

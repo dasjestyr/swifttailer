@@ -20,8 +20,12 @@ namespace Fievel.Wpf.ViewModels
 
         #region -- Commands --
         public SelectGroupCommand SelectGroupCommand { get; private set; }
+
         public ToggleTailingCommand ToggleTailingCommand { get; private set; }
+
         public OpenLogPickerDialogCommand OpenLogPickerDialogCommand { get; set; }
+
+        public AddGroupDialogCommand AddGroupDialogCommand { get; set; }
         #endregion
 
         #region -- Observable Properties --
@@ -73,7 +77,7 @@ namespace Fievel.Wpf.ViewModels
             {
                 _selectedGroup = value;
                 OnPropertyChanged();
-                BindGroups();
+                LogSourceChanged(this, new EventArgs());
             }
         }
 
@@ -94,16 +98,20 @@ namespace Fievel.Wpf.ViewModels
             Status = "Idle";
 
             Groups = new ObservableCollection<LogGroup>(LogSource.Instance.Logs.Groups);
+            SelectedGroup = Groups[0];
+
             SelectedGroup = LogSource.Instance.Logs.Groups[0];
             OpenLogPickerDialogCommand = new OpenLogPickerDialogCommand();
+            AddGroupDialogCommand = new AddGroupDialogCommand();
             ToggleTailingCommand = new ToggleTailingCommand(this);
             SelectGroupCommand = new SelectGroupCommand(this);
 
             LogSource.Instance.LogCollectionChanged += LogSourceChanged;
+            LogSource.Instance.LogGroupCollectionChanged += LogGroupSourceChanged;
+            LogSource.Instance.LogGroupAdded += LogGroupAdded;
+            LogSource.Instance.LogGroupDeleted += LogGroupDeleted;
 
             StaticCommands.OpenLogLineCommand = new OpenLogLineCommand();
-
-            BindGroups();
         }
 
         public void StartTailing()
@@ -125,20 +133,6 @@ namespace Fievel.Wpf.ViewModels
             IsRunning = false;
         }
 
-        public void BindGroups()
-        {
-            Trace.WriteLine("Rebinding log tails...");
-            Tails.Clear();
-            var tails = SelectedGroup.Logs
-                .OrderBy(l => l.Order)
-                .Select(t => new TailFile(t));
-
-            foreach (var tail in tails)
-            {
-                Tails.Add(tail);
-            }
-        }
-
         public void SaveOrder()
         {
             var logs = Tails
@@ -154,7 +148,40 @@ namespace Fievel.Wpf.ViewModels
 
         private void LogSourceChanged(object sender, EventArgs args)
         {
-            BindGroups();
+            Trace.WriteLine("Rebinding log tails...");
+
+            if (SelectedGroup != null)
+            {
+                Tails.Clear();
+
+                var tails = SelectedGroup.Logs
+                    .OrderBy(l => l.Order)
+                    .Select(t => new TailFile(t));
+
+                foreach (var tail in tails)
+                {
+                    Tails.Add(tail);
+                }
+            }
+        }
+
+        private void LogGroupSourceChanged(object sender, EventArgs args)
+        {
+            Groups.Clear();
+            foreach (var group in LogSource.Instance.Logs.Groups)
+            {
+                Groups.Add(group);
+            }
+        }
+
+        private void LogGroupAdded(object sender, LogGroupAddedEventArgs args)
+        {
+            SelectedGroup = args.NewGroup;
+        }
+
+        private void LogGroupDeleted(object sender, EventArgs args)
+        {
+            SelectedGroup = Groups.Any() ? Groups[0] : null;
         }
     }
 }

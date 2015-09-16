@@ -8,5 +8,9 @@ namespace Fievel.Wpf.Commands
     public class StaticCommands
     {
         public static ICommand OpenLogLineCommand { get; set; }
+        
+        public static ICommand CloseWindowCommand = new CloseWindowCommand();
+
+        public static ICommand DeleteGroupCommand = new DeleteGroupCommand();
     }
 }

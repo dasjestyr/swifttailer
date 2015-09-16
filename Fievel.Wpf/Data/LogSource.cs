@@ -2,12 +2,16 @@
 using System.IO;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Fievel.Wpf.Data
 {
     public class LogSource : ILogSource
     {
         public event LogCollectionChangedHandler LogCollectionChanged;
+        public event LogGroupCollectionChangedHandler LogGroupCollectionChanged;
+        public event LogGroupAddedHandler LogGroupAdded;
+        public event LogGroupDeletedHandler LogGroupDeleted;
 
         private readonly string _logFileLocation;
         private readonly object _objectLock;
@@ -58,7 +62,6 @@ namespace Fievel.Wpf.Data
             lock (_objectLock)
             {
                 WriteToFile(_logFileLocation, logsJson);
-                OnLogCollectionChanged();
             }
         }
 
@@ -73,16 +76,76 @@ namespace Fievel.Wpf.Data
             }
         }
 
+        public void AddLog(Guid groupId, LogInfo log)
+        {
+            Logs.Groups.First(group => group.Id.Equals(groupId)).Logs.Add(log);
+            SaveState();
+            OnLogCollectionChanged();
+        }
+
+        public void RemoveLog(LogInfo log)
+        {
+            // brute force
+            foreach (var group in Logs.Groups)
+            {
+                group.Logs.RemoveAll(l => l.Id.Equals(log.Id));
+            }
+            SaveState();
+            OnLogCollectionChanged();
+        }
+
+        public void AddGroup(LogGroup group)
+        {
+            Logs.Groups.Add(group);
+            SaveState();
+            OnLogGroupCollectionChanged();
+            OnLogGroupAdded(group);
+        }
+
+        public void RemoveGroup(LogGroup group)
+        {
+            Logs.Groups.RemoveAll(g => g.Id.Equals(group.Id));
+            SaveState();
+            OnLogGroupCollectionChanged();
+            OnLogGroupDeleted();
+        }
+
         private void OnLogCollectionChanged()
         {
+            Debug.WriteLine("OnLogCollectionChanged fired (LogSource)");
             LogCollectionChanged?.Invoke(this, new EventArgs());
+        }
+
+        private void OnLogGroupCollectionChanged()
+        {
+            Debug.WriteLine("OnLogGroupCollectionChanged fired (LogSource)");
+            LogGroupCollectionChanged?.Invoke(this, new EventArgs());
+        }
+
+        private void OnLogGroupAdded(LogGroup newGroup)
+        {
+            Debug.WriteLine("OnLogAdded fired (LogSource)");
+            LogGroupAdded?.Invoke(this, new LogGroupAddedEventArgs(newGroup));
+        }
+
+        private void OnLogGroupDeleted()
+        {
+            Debug.WriteLine("OnLogGroupDeleted fired (LogSource)");
+            LogGroupDeleted?.Invoke(this, new EventArgs());
         }
 
         private static void WriteToFile(string path, string content)
         {
             File.WriteAllText(path, content);
         }
+        
     }
 
     public delegate void LogCollectionChangedHandler(object sender, EventArgs args);
+
+    public delegate void LogGroupCollectionChangedHandler(object sender, EventArgs args);
+
+    public delegate void LogGroupAddedHandler(object sender, LogGroupAddedEventArgs args);
+
+    public delegate void LogGroupDeletedHandler(object sender, EventArgs args);
 }

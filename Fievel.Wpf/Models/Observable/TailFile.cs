@@ -144,12 +144,7 @@ namespace Fievel.Wpf.Models.Observable
 
             // this tail has a unique id generated on startup so
             // just ask the singleton to blow it away
-            LogSource.Instance.Logs.Groups.First(
-                log => log.Logs
-                .Any(l => l.Id.Equals(LogInfo.Id, StringComparison.OrdinalIgnoreCase)))
-                .Logs.Remove(LogInfo);
-                        
-            LogSource.Instance.SaveState();
+            LogSource.Instance.RemoveLog(LogInfo);
             Trace.WriteLine($"Deleted {LogInfo.Alias} from configuration.");
         }
 

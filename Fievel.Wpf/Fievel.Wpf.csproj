@@ -121,7 +121,10 @@
     <Compile Include="Behaviors\AutoScrollBehavior.cs" />
     <Compile Include="Behaviors\ListboxBehaviors.cs" />
     <Compile Include="Behaviors\MenuItemExtensions.cs" />
+    <Compile Include="Commands\AddGroupDialogCommand.cs" />
     <Compile Include="Commands\CloseWindowCommand.cs" />
+    <Compile Include="Commands\CreateGroupCommand.cs" />
+    <Compile Include="Commands\DeleteGroupCommand.cs" />
     <Compile Include="Commands\EmailAttachmentCommand.cs" />
     <Compile Include="Commands\OpenInExplorerCommand.cs" />
     <Compile Include="Commands\OpenLogLineCommand.cs" />
@@ -138,6 +141,7 @@
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Data\ILogSource.cs" />
     <Compile Include="Data\LogGroup.cs" />
+    <Compile Include="Data\LogGroupAddedEventArgs.cs" />
     <Compile Include="Data\LogInfo.cs" />
     <Compile Include="Data\Logs.cs" />
     <Compile Include="DelegateDefinitions.cs" />
@@ -150,6 +154,9 @@
     <Compile Include="Models\Observable\RawContentsChangedEventArgs.cs" />
     <Compile Include="Models\Observable\TailFile.cs" />
     <Compile Include="Models\Property.cs" />
+    <Compile Include="Pages\AddGroupWindow.xaml.cs">
+      <DependentUpon>AddGroupWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LogFileConfig.xaml.cs">
       <DependentUpon>LogFileConfig.xaml</DependentUpon>
     </Compile>
@@ -161,6 +168,7 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\Extensions.cs" />
+    <Compile Include="ViewModels\AddGroupViewModel.cs" />
     <Compile Include="ViewModels\LogConfigEditorViewModel.cs" />
     <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -178,6 +186,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\AddGroupWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\LogFileConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

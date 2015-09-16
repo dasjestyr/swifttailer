@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using Fievel.Wpf.Data;
@@ -26,8 +27,10 @@ namespace Fievel.Wpf.Commands
             if (w == null) return;
 
             var newLog = new LogInfo(_vm.FileLocation, _vm.Alias);
-            _vm.SelectedGroup.AddLog(newLog);
-            LogSource.Instance.SaveState();
+            LogSource.Instance.Logs.Groups
+                .First(group => group.Id.Equals(_vm.SelectedGroup.Id))
+                .AddLog(newLog);
+
             w.Hide();
             w.Close();
         }

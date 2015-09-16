@@ -54,12 +54,9 @@
         </Grid.RowDefinitions>
         <ToolBarTray Grid.Row="0">
             <ToolBar>
-                <ComboBox Width="200" ItemsSource="{Binding Groups}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGroup}" Margin="0 0 5 0" />
-                <Button ToolTip="Add new group..."  Style="{StaticResource ToolbarIconStyle}">
+                <ComboBox Width="200" ItemsSource="{Binding Groups}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGroup}" Margin="0 0 5 0" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}" />
+                <Button ToolTip="Add new group..."  Style="{StaticResource ToolbarIconStyle}" Command="{Binding AddGroupDialogCommand}">
                     <Image Source="Assets/add.png"/>
-                </Button>
-                <Button ToolTip="Delete this group..." Style="{StaticResource ToolbarIconStyle}">
-                    <Image Source="Assets/trash.png" />
                 </Button>
                 <Button ToolTip="Duplicate this group..." Style="{StaticResource ToolbarIconStyle}">
                     <Image Source="Assets/copy.png" />
@@ -67,6 +64,10 @@
                 <Button ToolTip="Add log to this group..." Style="{StaticResource ToolbarIconStyle}" 
                     Command="{Binding OpenLogPickerDialogCommand}" CommandParameter="{Binding SelectedGroup}">
                     <Image Source="Assets/document.png"/>
+                </Button>
+                <Button ToolTip="Delete this group..." Style="{StaticResource ToolbarIconStyle}"
+                        Command="commands:StaticCommands.DeleteGroupCommand" CommandParameter="{Binding SelectedGroup}">
+                    <Image Source="Assets/trash.png" />
                 </Button>
             </ToolBar>
         </ToolBarTray>
@@ -117,9 +118,9 @@
                             <!-- reserved for tab options? -->
                         </StackPanel>
                         
-                        <DockPanel LastChildFill="True" Grid.Row="2" Margin="5 10 5 5">
+                        <DockPanel LastChildFill="True" Grid.Row="2" Margin="5 10 2 5">
                             <Label Content="Search:"/>
-                            <TextBox x:Name="LogFilter" HorizontalAlignment="Stretch" BorderBrush="Gray" Margin="3" FontSize="12" 
+                            <TextBox x:Name="LogFilter" HorizontalAlignment="Stretch" BorderBrush="Gray" Margin="0" FontSize="12" 
                      Text="{Binding SearchPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="TextChanged">
