@@ -256,4 +256,6 @@ namespace Fievel.Wpf.Models.Observable
             RawContentChanged?.Invoke(this, args);
         }
     }
+
+    public delegate void RawContentsChangedHandler(object sender, RawContentsChangedEventArgs args);
 }

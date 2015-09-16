@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Fievel.Wpf.Models
+namespace Fievel.Wpf.Models.Observable
 {
     public abstract class ModelBase : BindableBase, IModel
     {

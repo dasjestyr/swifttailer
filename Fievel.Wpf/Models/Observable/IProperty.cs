@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace Fievel.Wpf.Models
+namespace Fievel.Wpf.Models.Observable
 {
     public interface IProperty : INotifyPropertyChanged
     {

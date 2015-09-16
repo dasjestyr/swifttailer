@@ -11,11 +11,11 @@ namespace Fievel.Wpf.ViewModels
 {
     public class MainViewModel : ModelBase
     {
-        private string _status;
+        private bool _isRunning;
+        private string _status = "Idle";
         private LogGroup _selectedGroup;
         private ObservableCollection<LogGroup> _groups;
         private ObservableCollection<TailFile> _tails = new ObservableCollection<TailFile>();
-        private bool _isRunning;
         private ObservableCollection<LogLine> _selectedLines;
         private TailFile _selectedTail;
 
@@ -44,7 +44,7 @@ namespace Fievel.Wpf.ViewModels
 
         public bool IsRunning
         {
-            get { return _isRunning; }
+            get { return _isRunning; } 
             set
             {
                 _isRunning = value;
@@ -107,8 +107,6 @@ namespace Fievel.Wpf.ViewModels
 
         public MainViewModel()
         {
-            Status = "Idle";
-
             Groups = new ObservableCollection<LogGroup>(LogSource.Instance.Logs.Groups);
             SelectedGroup = Groups[0];
 
@@ -133,7 +131,10 @@ namespace Fievel.Wpf.ViewModels
             Trace.WriteLine("Starting tails...");
             Status = "Running";
             IsRunning = true;
-            var tailingTasks = Tails.Select(t => t.StartTailing()).ToList();
+
+            // iterate in order to fire off tailing tasks
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            Tails.Select(t => t.StartTailing()).ToList();
         }
         
         public void StopTailing()
@@ -149,21 +150,24 @@ namespace Fievel.Wpf.ViewModels
 
         public void SaveOrder()
         {
-            var logs = Tails
-                .ToList()
-                .Select(log => log.LogInfo)
-                .ToList();
+            // this was used to work with tab re-ordering which is currently disabled
 
-            LogSource.Instance.Logs.Groups
-                .Single(g => g.Id.Equals(SelectedGroup.Id)).Logs = logs;
+            //var logs = Tails
+            //    .ToList()
+            //    .Select(log => log.LogInfo)
+            //    .ToList();
 
-            LogSource.Instance.SaveState();
+            //LogSource.Instance.Logs.Groups
+            //    .Single(g => g.Id.Equals(SelectedGroup.Id)).Logs = logs;
+
+            //LogSource.Instance.SaveState();
         }
+
+        #region -- Event Handlers --
 
         private void LogSourceChanged(object sender, EventArgs args)
         {
-            Trace.WriteLine("Rebinding log tails...");
-
+            Debug.WriteLine("Rebinding log tails...");
             if (SelectedGroup == null) return;
 
             Tails.Clear();
@@ -180,6 +184,7 @@ namespace Fievel.Wpf.ViewModels
 
         private void LogGroupSourceChanged(object sender, EventArgs args)
         {
+            Debug.WriteLine("Updating groups...");
             Groups.Clear();
             foreach (var group in LogSource.Instance.Logs.Groups)
             {
@@ -189,22 +194,28 @@ namespace Fievel.Wpf.ViewModels
 
         private void LogAdded(object sender, LogEventArgs args)
         {
+            Debug.WriteLine("Setting selected tail...");
             SelectedTail = Tails.First(tail => tail.Id.Equals(args.Log.Id));
         }
 
         private void LogGroupAdded(object sender, LogGroupEventArgs args)
         {
+            Debug.WriteLine("Setting selected group...");
             SelectedGroup = args.NewGroup;
         }
 
         private void LogGroupEdited(object sender, LogGroupEventArgs args)
         {
+            Debug.WriteLine("Setting selected group...");
             SelectedGroup = args.NewGroup;
         }
 
         private void LogGroupDeleted(object sender, EventArgs args)
         {
+            Debug.WriteLine("Setting selected group...");
             SelectedGroup = Groups.Any() ? Groups[0] : null;
         }
+
+        #endregion
     }
 }

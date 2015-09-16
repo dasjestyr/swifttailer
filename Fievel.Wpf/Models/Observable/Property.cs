@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Fievel.Wpf.Models
+namespace Fievel.Wpf.Models.Observable
 {
     public class Property<T> : BindableBase, IProperty
     {

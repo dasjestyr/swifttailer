@@ -146,16 +146,15 @@
     <Compile Include="Data\LogGroupEventArgs.cs" />
     <Compile Include="Data\LogInfo.cs" />
     <Compile Include="Data\Logs.cs" />
-    <Compile Include="DelegateDefinitions.cs" />
-    <Compile Include="Models\BindableBase.cs" />
-    <Compile Include="Models\IModel.cs" />
-    <Compile Include="Models\IProperty.cs" />
-    <Compile Include="Models\ModelBase.cs" />
+    <Compile Include="Models\Observable\BindableBase.cs" />
+    <Compile Include="Models\Observable\IModel.cs" />
+    <Compile Include="Models\Observable\IProperty.cs" />
     <Compile Include="Models\Observable\LogHighlight.cs" />
     <Compile Include="Models\Observable\LogLine.cs" />
+    <Compile Include="Models\Observable\ModelBase.cs" />
+    <Compile Include="Models\Observable\Property.cs" />
     <Compile Include="Models\Observable\RawContentsChangedEventArgs.cs" />
     <Compile Include="Models\Observable\TailFile.cs" />
-    <Compile Include="Models\Property.cs" />
     <Compile Include="Pages\EditGroupWindow.xaml.cs">
       <DependentUpon>EditGroupWindow.xaml</DependentUpon>
     </Compile>
@@ -302,9 +301,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Domain\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

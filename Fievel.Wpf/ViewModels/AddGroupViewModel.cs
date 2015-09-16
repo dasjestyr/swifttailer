@@ -1,6 +1,7 @@
 ﻿using Fievel.Wpf.Commands;
 using Fievel.Wpf.Data;
 using Fievel.Wpf.Models;
+using Fievel.Wpf.Models.Observable;
 
 namespace Fievel.Wpf.ViewModels
 {

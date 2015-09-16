@@ -1,9 +1,9 @@
 ﻿using Fievel.Wpf.Commands;
-using ModelBase = Fievel.Wpf.Models.ModelBase;
+using ModelBase = Fievel.Wpf.Models.Observable.ModelBase;
 
 namespace Fievel.Wpf.ViewModels
 {
-    public class ViewSelectionViewModel : ModelBase
+    public class ViewSelectionViewModel : Models.Observable.ModelBase
     {
         private string _content;
 

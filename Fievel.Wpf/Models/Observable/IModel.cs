@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 
-namespace Fievel.Wpf.Models
+namespace Fievel.Wpf.Models.Observable
 {
     public interface IModel
     {

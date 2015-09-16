@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Fievel.Wpf.Models
+namespace Fievel.Wpf.Models.Observable
 {
     public class BindableBase : INotifyPropertyChanged
     {
