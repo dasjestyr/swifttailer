@@ -279,6 +279,11 @@
     <Resource Include="Assets\zoom-in.png" />
     <Resource Include="Assets\zoom-out.png" />
     <Resource Include="Assets\grid.png" />
+    <Resource Include="Assets\folder_plus.png" />
+    <Resource Include="Assets\playback_pause.png" />
+    <Resource Include="Assets\playback_play.png" />
+    <Resource Include="Assets\doc_plus.png" />
+    <Resource Include="Assets\folder_minus.png" />
     <Content Include="DesignTime\DemoFiles.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

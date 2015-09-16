@@ -17,6 +17,7 @@ namespace Fievel.Wpf.ViewModels
         private ObservableCollection<TailFile> _tails = new ObservableCollection<TailFile>();
         private bool _isRunning;
         private ObservableCollection<LogLine> _selectedLines;
+        private TailFile _selectedTail;
 
         #region -- Commands --
         public SelectGroupCommand SelectGroupCommand { get; private set; }
@@ -79,6 +80,16 @@ namespace Fievel.Wpf.ViewModels
                 _selectedGroup = value;
                 OnPropertyChanged();
                 LogSourceChanged(this, new EventArgs());
+            }
+        }
+
+        public TailFile SelectedTail
+        {
+            get { return _selectedTail; }
+            set
+            {
+                _selectedTail = value;
+                OnPropertyChanged();
             }
         }
 
