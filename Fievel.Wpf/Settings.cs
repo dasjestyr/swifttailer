@@ -1,4 +1,6 @@
-﻿namespace Fievel.Wpf
+﻿using System.Windows.Media;
+
+namespace Fievel.Wpf
 {
     public class Settings
     {
@@ -11,5 +13,10 @@
         /// Polling interval in seconds. Default = 1000
         /// </summary>
         public static int PollingInterval { get; set; } = 1000; // Do NOT change this to use a timespan!
+
+        /// <summary>
+        /// The font face that will be used in log windows
+        /// </summary>
+        public static FontFamily LogWindowFontFamily = new FontFamily("Courier New");
     }
 }

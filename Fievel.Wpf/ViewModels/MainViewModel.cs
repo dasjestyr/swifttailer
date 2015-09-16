@@ -118,6 +118,7 @@ namespace Fievel.Wpf.ViewModels
 
             LogSource.Instance.LogCollectionChanged += LogSourceChanged;
             LogSource.Instance.LogAdded += LogAdded;
+            LogSource.Instance.LogRemoved += LogRemoved;
             LogSource.Instance.LogGroupCollectionChanged += LogGroupSourceChanged;
             LogSource.Instance.LogGroupAdded += LogGroupAdded;
             LogSource.Instance.LogGroupEdited += LogGroupEdited;
@@ -196,6 +197,12 @@ namespace Fievel.Wpf.ViewModels
         {
             Debug.WriteLine("Setting selected tail...");
             SelectedTail = Tails.First(tail => tail.Id.Equals(args.Log.Id));
+        }
+
+        private void LogRemoved(object sender, LogEventArgs args)
+        {
+            Debug.WriteLine("Setting selected tail...");
+            SelectedTail = Tails.FirstOrDefault();
         }
 
         private void LogGroupAdded(object sender, LogGroupEventArgs args)

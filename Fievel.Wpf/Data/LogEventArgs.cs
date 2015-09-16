@@ -8,9 +8,14 @@ namespace Fievel.Wpf.Data
 
         public Guid GroupId { get; set; }
 
-        public LogEventArgs(LogInfo log, Guid groupId)
+        public LogEventArgs(LogInfo log)
         {
             Log = log;
+        }
+
+        public LogEventArgs(LogInfo log, Guid groupId)
+            : this(log)
+        {
             GroupId = groupId;
         }
     }
