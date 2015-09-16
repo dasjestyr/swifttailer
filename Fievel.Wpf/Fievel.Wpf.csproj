@@ -284,6 +284,9 @@
     <Resource Include="Assets\playback_play.png" />
     <Resource Include="Assets\doc_plus.png" />
     <Resource Include="Assets\folder_minus.png" />
+    <Resource Include="Assets\doc_export.png" />
+    <Resource Include="Assets\doc_import.png" />
+    <Resource Include="Assets\doc_minus.png" />
     <Content Include="DesignTime\DemoFiles.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

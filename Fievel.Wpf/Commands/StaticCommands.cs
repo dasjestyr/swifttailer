@@ -14,5 +14,7 @@ namespace Fievel.Wpf.Commands
         public static ICommand DeleteGroupCommand = new DeleteGroupCommand();
 
         public static ICommand EditGroupCommand = new EditGroupCommand();
+
+        public static ICommand RemoveLogCommand = new RemoveLogFromGroupCommand();
     }
 }
