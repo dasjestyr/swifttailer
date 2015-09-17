@@ -30,7 +30,7 @@
     <ProductName>Fievel</ProductName>
     <PublisherName>Jeremy Stafford</PublisherName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationRevision>13</ApplicationRevision>
     <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -127,6 +127,7 @@
     <Compile Include="Commands\DeleteGroupCommand.cs" />
     <Compile Include="Commands\EditGroupCommand.cs" />
     <Compile Include="Commands\EmailAttachmentCommand.cs" />
+    <Compile Include="Commands\FeatureStubCommand.cs" />
     <Compile Include="Commands\OpenInExplorerCommand.cs" />
     <Compile Include="Commands\OpenLogLineCommand.cs" />
     <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />

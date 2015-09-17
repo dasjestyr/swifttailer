@@ -73,8 +73,9 @@
                         Command="commands:StaticCommands.EditGroupCommand" CommandParameter="{Binding SelectedGroup}">
                     <Image Source="Assets/edit.png" />
                 </Button>
-                <Button ToolTip="Clone this group..." Style="{StaticResource ToolbarIconStyle}">
-                    <Image Source="Assets/copy.png" />
+                <Button ToolTip="Clone this group..." Style="{StaticResource ToolbarIconStyle}" 
+                        Command="commands:StaticCommands.FeatureStubCommand" CommandParameter="Clone feature coming soon!">
+                    <Image Source="Assets/copy.png"/>
                 </Button>
                 <Button ToolTip="Add log to this group..." Style="{StaticResource ToolbarIconStyle}" 
                     Command="{Binding OpenLogPickerDialogCommand}" CommandParameter="{Binding SelectedGroup}">
@@ -86,15 +87,18 @@
                 </Button>
             </ToolBar>
             <ToolBar ToolTip="View Options" BandIndex="1">
-                <Button ToolTip="Gridulate" Style="{StaticResource ToolbarIconStyle}">
+                <Button ToolTip="Gridulate" Style="{StaticResource ToolbarIconStyle}"
+                        Command="commands:StaticCommands.FeatureStubCommand" CommandParameter="Gridulator coming soon!">
                     <Image Source="Assets/grid.png" />
                 </Button>
             </ToolBar>
             <ToolBar ToolTip="Config Options" BandIndex="2">
-                <Button ToolTip="Export Log Config" Style="{StaticResource ToolbarIconStyle}">
+                <Button ToolTip="Export Log Config" Style="{StaticResource ToolbarIconStyle}"
+                        Command="commands:StaticCommands.FeatureStubCommand" CommandParameter="Config export coming soon!">
                     <Image Source="Assets/doc_export.png" />
                 </Button>
-                <Button ToolTip="Import Log Config" Style="{StaticResource ToolbarIconStyle}">
+                <Button ToolTip="Import Log Config" Style="{StaticResource ToolbarIconStyle}"
+                        Command="commands:StaticCommands.FeatureStubCommand" CommandParameter="Config import coming soon!">
                     <Image Source="Assets/doc_import.png" />
                 </Button>
             </ToolBar>
