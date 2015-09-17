@@ -8,6 +8,8 @@ namespace Fievel.Wpf
         /// The display buffer in kilobytes (i.e. 1 = 1000 bytes). Default 255. This will control how many kilobytes will be displayed in the log window.
         /// </summary>
         public static int DisplayBufferSize { get; set; } = 255;
+
+        public static int MaxDisplayLogLines = 5000;
         
         /// <summary>
         /// Polling interval in seconds. Default = 1000

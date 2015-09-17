@@ -23,6 +23,21 @@ namespace Fievel.Wpf.Utility
                 obj = parent;
             }
         }
+
+        public static T FindDescendant<T>(this DependencyObject obj)
+            where T : DependencyObject
+        {
+            // done as a loop to avoid explicit recursion
+            while (true)
+            {
+                var parent = VisualTreeHelper.GetChild(obj, 0);
+                if (parent == null) return null;
+
+                var parentT = parent as T;
+                if (parentT != null) return parentT;
+                obj = parent;
+            }
+        }
     }
 
     public static class MailUtility

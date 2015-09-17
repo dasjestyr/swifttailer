@@ -2,6 +2,9 @@
 using System.Windows.Threading;
 using System;
 using System.IO;
+using System.Windows.Controls;
+using Fievel.Wpf.Models.Observable;
+using Fievel.Wpf.ViewModels;
 
 namespace Fievel.Wpf
 {
@@ -23,6 +26,20 @@ namespace Fievel.Wpf
             }
 
             MessageBox.Show($"e.Exception.Message :: {e.Exception}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void LogList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var lbx = sender as ListBox;
+            if (lbx == null) return;
+
+            var vm = DataContext as MainViewModel;
+            var tail = vm.SelectedTail;
+
+            if (tail == null) return;
+
+            if(tail.FollowTail)
+                lbx.ScrollIntoView(lbx.SelectedItem);
         }
 
         //private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)

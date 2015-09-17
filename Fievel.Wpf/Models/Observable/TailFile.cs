@@ -10,6 +10,7 @@ using System.Windows.Data;
 using Fievel.Wpf.Commands;
 using Fievel.Wpf.Data;
 using System.Windows;
+using System.Collections.Generic;
 
 namespace Fievel.Wpf.Models.Observable
 {
@@ -22,8 +23,12 @@ namespace Fievel.Wpf.Models.Observable
         private long _lastIndex;
         private ObservableCollection<LogLine> _logLines;
         private string _searchPhrase;
+        private int _lineCount;
+        private int _selectedLineIndex;
+        private bool _followTail;
 
         public event RawContentsChangedHandler RawContentChanged;
+        public event NewContentAddedHandler NewLinesAdded;
 
         /// <summary>
         /// Gets or sets the log name.
@@ -107,6 +112,36 @@ namespace Fievel.Wpf.Models.Observable
             }
         }
 
+        public int LineCount
+        {
+            get { return _lineCount; }
+            set
+            {
+                _lineCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int SelectedLine
+        {
+            get { return _selectedLineIndex; }
+            set
+            {
+                _selectedLineIndex = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool FollowTail
+        {
+            get { return _followTail; }
+            set
+            {
+                _followTail = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
         
         /// <summary>
@@ -132,6 +167,7 @@ namespace Fievel.Wpf.Models.Observable
             LogLines = new ObservableCollection<LogLine>();
 
             BindingOperations.EnableCollectionSynchronization(LogLines, _lockObject);
+            
         }
 
         public void DeleteSelf()
@@ -160,7 +196,11 @@ namespace Fievel.Wpf.Models.Observable
                 {
                     while (!_cts.IsCancellationRequested)
                     {
-                        await GetUpdates();
+                        GetUpdates();
+
+                        if(FollowTail)
+                            SelectedLine = LogLines.Count - 1;
+
                         await Task.Delay(Settings.PollingInterval);
                     }
                 }, _cts.Token);
@@ -184,7 +224,7 @@ namespace Fievel.Wpf.Models.Observable
             _cts.Cancel();
         }
         
-        private async Task GetUpdates()
+        private void GetUpdates()
         {
             var originalText = LogText;
             long messageSize = 0;
@@ -194,10 +234,29 @@ namespace Fievel.Wpf.Models.Observable
             {
                 lock (_lockObject)
                 {
+                    // handle case where file may have been deleted while tailing
+                    if (!File.Exists(LogInfo.Location))
+                    {
+                        // we want to keep tailing for now in case it was just a case of the file be republished, for example
+                        // so just skip
+                        Trace.WriteLine("File disappeared. Ignoring until next pass.");
+                        return;
+                    }                  
+                    
+
                     using (var fs = new FileStream(LogInfo.Location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
+                        // handle case where the file may have been reset (e.g. republished)
+                        if (_lastIndex > fs.Length)
+                        {
+                            Trace.WriteLine("File shrank. Assuming it's new and reseting lastIndex to zero!");
+                            _lastIndex = 0;
+                        }
+
+                        // fs.Length == 0 is just handling a case where filestream returns 0 for no apparent reason
                         if (fs.Length == 0 || !fs.CanRead || fs.Length == _lastIndex)
                             return; // no change
+                                               
 
                         // avoid reading the entire file on startup
                         var startAt = _lastIndex;
@@ -217,19 +276,33 @@ namespace Fievel.Wpf.Models.Observable
                         // read the new data
                         messageSize = fs.Read(newContent, 0, newContent.Length);
 
-                        // trim off the front of the content if it exceeds the display buffer
-                        var trimmedContent = originalText + Encoding.UTF8.GetString(newContent);
-                        if (!string.IsNullOrEmpty(LogText) && trimmedContent.Length > _displayBuffer)
+                        // detect new lines before attempting to update
+                        // if not, leave the last index alone
+                        var newContentString = Encoding.UTF8.GetString(newContent);
+                        if (LogLines.Count > 1 && newContentString.IndexOf(Environment.NewLine) == -1)
+                            return;
+
+                        var newLines = newContentString
+                            .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(line => new LogLine(line, LogHighlight.None))
+                            .ToList();
+
+                        LogLines.AddRange(newLines);
+
+                        if ((LogLines.Count + newLines.Count) >= Settings.MaxDisplayLogLines
+                            && LogLines.Count > newLines.Count)
                         {
-                            trimmedContent = new string(trimmedContent.Skip((int)(trimmedContent.Length - _displayBuffer)).ToArray());
+                            // trim off the top
+                            for (var i = 0; i <= LogLines.Count || i < newLines.Count; i++)
+                            {
+                                LogLines.RemoveAt(i);
+                            }
                         }
 
-                        // update the model
-                        LogText = trimmedContent;
+                        LineCount = LogLines.Count;
+                        
+                        OnPropertyChanged("LogLines");
 
-                        OnLogTextChanged(new RawContentsChangedEventArgs(originalText, LogText, Id));
-
-                        Debug.WriteLine($"{LogInfo.Alias} content is now {LogText.Length} characters.");
                         _lastIndex = startAt;
                         _lastIndex = fs.Position;
                     }
@@ -255,7 +328,30 @@ namespace Fievel.Wpf.Models.Observable
             // trigger listeners
             RawContentChanged?.Invoke(this, args);
         }
+
+        private void OnNewContentedAdded(NewContentEventArgs args)
+        {
+            Debug.WriteLine($"OnNewContentAdded fired (TailFile: {LogInfo.Alias})");
+            NewLinesAdded?.Invoke(this, args);
+        }
     }
 
     public delegate void RawContentsChangedHandler(object sender, RawContentsChangedEventArgs args);
+    public delegate void NewContentAddedHandler(object sender, NewContentEventArgs args);
+
+    public class NewContentEventArgs : EventArgs
+    {
+        public TailFile Context { get; private set; }
+
+        public IEnumerable<string> NewLines { get; private set; }
+
+        public int NewLineCount { get; private set; }
+
+        public NewContentEventArgs(TailFile context, IEnumerable<string> newLines)
+        {
+            Context = context;
+            NewLines = newLines;
+            NewLineCount = newLines.Count();
+        }
+    }
 }

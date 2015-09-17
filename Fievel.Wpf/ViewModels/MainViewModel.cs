@@ -171,7 +171,7 @@ namespace Fievel.Wpf.ViewModels
         }
 
         #region -- Event Handlers --
-
+        
         private void LogSourceChanged(object sender, EventArgs args)
         {
             Debug.WriteLine("Rebinding log tails...");

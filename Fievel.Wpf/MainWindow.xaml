@@ -10,11 +10,14 @@
         xmlns:behaviors="clr-namespace:Fievel.Wpf.Behaviors"
         xmlns:wpf="clr-namespace:Fievel.Wpf"
         xmlns:commands="clr-namespace:Fievel.Wpf.Commands"
+        xmlns:listboxBehaviors="clr-namespace:Fievel.Wpf.Behaviors"
         mc:Ignorable="d" x:Name="ThisWindow"
         Title="Fievel" Height="800" Width="800" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
         <converters:HighlightConverter x:Key="HighlightConverter"/>
+        <converters:LineCountDisplayConverter x:Key="LineCountDisplayConverter" />
+        <CollectionViewSource x:Key="cvs" x:Name="cvs" Source="{Binding}" />
         <Style TargetType="ListBoxItem" x:Key="HighlightItemStyle">
             <Setter Property="ContextMenu">
                 <Setter.Value>
@@ -150,7 +153,8 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <ListBox x:Name="LogList" ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" SelectionMode="Extended" 
-                                 ItemContainerStyle="{StaticResource HighlightItemStyle}" FontFamily="{x:Static wpf:Settings.LogWindowFontFamily}">
+                                 ItemContainerStyle="{StaticResource HighlightItemStyle}" FontFamily="{x:Static wpf:Settings.LogWindowFontFamily}"
+                                 SelectedIndex="{Binding SelectedLine}" SelectionChanged="LogList_SelectionChanged">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseDoubleClick">
                                     <i:InvokeCommandAction Command="commands:StaticCommands.OpenLogLineCommand" CommandParameter="{Binding ElementName=LogList}"/>
@@ -163,8 +167,8 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                         
-                        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                            <!-- reserved for tab options? -->
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="5 5 5 0">
+                            <CheckBox Content="Follow Tail" IsChecked="{Binding FollowTail}" />
                         </StackPanel>
                         
                         <!-- SEARCH PANEL -->
@@ -188,6 +192,7 @@
         <StatusBar Grid.Row="4" MinHeight="20">
             <StatusBarItem Content="{Binding Status, FallbackValue=Idle}" HorizontalAlignment="Left" />
             <StatusBarItem Content="{Binding SelectedGroup.Name, FallbackValue='Group 1'}" HorizontalAlignment="Left" />
+            <StatusBarItem Content="{Binding SelectedTail.LineCount, Converter={StaticResource LineCountDisplayConverter}}" />
         </StatusBar>
     </Grid>
 </Window>
