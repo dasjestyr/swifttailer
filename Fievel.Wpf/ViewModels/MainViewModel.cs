@@ -6,6 +6,7 @@ using Fievel.Wpf.Commands;
 using Fievel.Wpf.Data;
 using Fievel.Wpf.Models;
 using Fievel.Wpf.Models.Observable;
+using System.Windows.Input;
 
 namespace Fievel.Wpf.ViewModels
 {
@@ -22,7 +23,9 @@ namespace Fievel.Wpf.ViewModels
         #region -- Commands --
         public SelectGroupCommand SelectGroupCommand { get; private set; }
 
-        public ToggleTailingCommand ToggleTailingCommand { get; private set; }
+        public StartTailingCommand StartTailingCommand { get; private set; }
+
+        public StopTailingCommand StopTailingCommand { get; private set; }
 
         public OpenLogPickerDialogCommand OpenLogPickerDialogCommand { get; set; }
 
@@ -113,9 +116,10 @@ namespace Fievel.Wpf.ViewModels
             SelectedGroup = LogSource.Instance.Logs.Groups[0];
             OpenLogPickerDialogCommand = new OpenLogPickerDialogCommand();
             AddGroupDialogCommand = new AddGroupDialogCommand();
-            ToggleTailingCommand = new ToggleTailingCommand(this);
+            StopTailingCommand = new StopTailingCommand(this);
+            StartTailingCommand = new StartTailingCommand(this);            
             SelectGroupCommand = new SelectGroupCommand(this);
-
+            
             LogSource.Instance.LogCollectionChanged += LogSourceChanged;
             LogSource.Instance.LogAdded += LogAdded;
             LogSource.Instance.LogRemoved += LogRemoved;
@@ -136,6 +140,7 @@ namespace Fievel.Wpf.ViewModels
             // iterate in order to fire off tailing tasks
             // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
             Tails.Select(t => t.StartTailing()).ToList();
+            CommandManager.InvalidateRequerySuggested();
         }
         
         public void StopTailing()
@@ -147,6 +152,7 @@ namespace Fievel.Wpf.ViewModels
             }
             Status = "Idle";
             IsRunning = false;
+            CommandManager.InvalidateRequerySuggested();
         }
 
         public void SaveOrder()

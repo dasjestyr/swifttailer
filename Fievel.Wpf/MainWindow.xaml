@@ -40,6 +40,11 @@
             <Setter Property="Margin" Value="2 0" />
             <Setter Property="IsEnabled" Value="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"/>
         </Style>
+        <Style TargetType="Button" x:Key="TransportControlButtons">
+            <Setter Property="Width" Value="25" />
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Margin" Value="2 0" />
+        </Style>
     </Window.Resources>
     <Window.DataContext>
         <viewModels:MainViewModel />
@@ -91,6 +96,22 @@
                 </Button>
                 <Button ToolTip="Import Log Config" Style="{StaticResource ToolbarIconStyle}">
                     <Image Source="Assets/doc_import.png" />
+                </Button>
+            </ToolBar>
+            <ToolBar ToolTip="Tailing Options" Band="2">
+                <Button ToolTip="Start tailing" x:Name="StartButton" Style="{StaticResource TransportControlButtons}" 
+                        Command="{Binding StartTailingCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Assets/playback_play.png" />
+                        <TextBlock Text="Start" />
+                    </StackPanel>
+                </Button>
+                <Button ToolTip="Stop tailing" x:Name="PauseButton" Style="{StaticResource TransportControlButtons}" 
+                        Command="{Binding StopTailingCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Assets/playback_pause.png" />
+                        <TextBlock  />
+                    </StackPanel>
                 </Button>
             </ToolBar>
         </ToolBarTray>
@@ -158,14 +179,6 @@
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
-        
-        <!-- RUN BUTTONS -->
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
-            <Button x:Name="StartButton" Content="Run" Command="{Binding ToggleTailingCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}" Width="120" Margin="5"
-                    IsEnabled="{Binding ElementName=StopButton, Path=IsEnabled, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}"/>
-            <Button x:Name="StopButton" Content="Pause" Width="120" Margin="5" Command="{Binding ToggleTailingCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
-                    IsEnabled="{Binding ElementName=StartButton, Path=IsEnabled, Converter={StaticResource InverseBoolConverter}}"/>
-        </StackPanel>
         
         <!-- STATUS BAR -->
         <StatusBar Grid.Row="4" MinHeight="20">
