@@ -3,7 +3,7 @@ using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Filters
 {
-    public class SearchHilightFilter : ILogLineFilter
+    public class SearchHighlightFilter : ILogLineFilter
     {
         private readonly string _searchPhrase;
         private readonly StringComparison _comparisonRule;
@@ -11,13 +11,13 @@ namespace SwiftTailer.Wpf.Filters
         public string Description => "Applies highlight to log lines that contain the specified search term";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SearchHilightFilter" /> class.
+        /// Initializes a new instance of the <see cref="SearchHighlightFilter" /> class.
         /// </summary>
         /// <param name="searchPhrase">The search phrase.</param>
-        public SearchHilightFilter(string searchPhrase)
+        public SearchHighlightFilter(string searchPhrase)
         {
             // TODO: get from settings
-            _comparisonRule = StringComparison.InvariantCultureIgnoreCase;
+            _comparisonRule = StringComparison.OrdinalIgnoreCase;
             _searchPhrase = searchPhrase;
         }
 

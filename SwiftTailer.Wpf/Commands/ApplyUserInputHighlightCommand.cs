@@ -34,13 +34,12 @@ namespace SwiftTailer.Wpf.Commands
 
         private async Task ClearHighlights()
         {
-            await Task.Run(() =>
-            {
-                foreach (var item in _vm.LogLines)
-                {
-                    item.Highlight = LogHighlight.None;
-                }
-            });
+            await Task.Run(() => 
+                HighlightApplicator.Apply(
+                    new ClearHighlitersFilter(), 
+                    _vm.LogLines, 
+                    false));
+            
         }
 
         private async Task SetHighlights(string phrase)
@@ -49,9 +48,11 @@ namespace SwiftTailer.Wpf.Commands
 
             // this might be a bit contrived for one filter, 
             // but it is just to show the future usage of the filter chain
-             var chain = new LogLineFilterChain(new SearchHilightFilter(phrase));
-
-            await Task.Run(() => chain.ApplyFilterChain(_vm.LogLines, false));
+            
+            await Task.Run(() => HighlightApplicator.Apply(
+                new SearchHighlightFilter(phrase),  
+                _vm.LogLines, 
+                false));
         }
 
         public event EventHandler CanExecuteChanged;

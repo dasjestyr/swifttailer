@@ -25,7 +25,15 @@ namespace SwiftTailer.Wpf.Filters
         /// </value>
         public static LogHighlight Error => new LogHighlight(HighlightCategory.Error);
 
-        
+        /// <summary>
+        /// Indicates that the object should be hidden.
+        /// </summary>
+        /// <value>
+        /// The hide.
+        /// </value>
+        public static LogHighlight Hide => new LogHighlight(HighlightCategory.Hide);
+
+
 
         /// <summary>
         /// Gets or sets the category.
