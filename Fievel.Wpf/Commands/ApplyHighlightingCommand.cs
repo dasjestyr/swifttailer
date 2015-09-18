@@ -46,6 +46,7 @@ namespace Fievel.Wpf.Commands
 
             await Task.Run(() =>
             {
+                // verified this is twice as fast as using AsParallel
                 foreach (var line in _vm.LogLines
                     .Where(line => line.Content.IndexOf(phrase, StringComparison.OrdinalIgnoreCase) != -1)) // TODO: make case sensitivity optional
                 {
