@@ -52,7 +52,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// <value>
         /// The text changed command.
         /// </value>
-        public ApplyHighlightingCommand ApplyHighlightingCommand { get; set; }
+        public ApplyUserInputHighlightCommand ApplyUserInputHighlightCommand { get; set; }
 
         public OpenInExplorerCommand OpenInExplorerCommand { get; set; }
 
@@ -162,7 +162,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             _displayBuffer = Settings.DisplayBufferSize * 0x400;
             _cts = new CancellationTokenSource();
 
-            ApplyHighlightingCommand = new ApplyHighlightingCommand(this);
+            ApplyUserInputHighlightCommand = new ApplyUserInputHighlightCommand(this);
             OpenInExplorerCommand = new OpenInExplorerCommand();
             LogLines = new ObservableCollection<LogLine>();
 

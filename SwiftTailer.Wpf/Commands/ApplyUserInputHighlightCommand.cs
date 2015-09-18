@@ -3,15 +3,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using SwiftTailer.Wpf.Filters;
 using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Commands
 {
-    public class ApplyHighlightingCommand : ICommand
+    public class ApplyUserInputHighlightCommand : ICommand
     {
         private readonly TailFile _vm;
 
-        public ApplyHighlightingCommand(TailFile vm)
+        public ApplyUserInputHighlightCommand(TailFile vm)
         {
             _vm = vm;
         }
@@ -23,6 +24,8 @@ namespace SwiftTailer.Wpf.Commands
 
         public async void Execute(object parameter)
         {
+            // TODO: maybe clear and apply at the same time?
+            // Right now, this isn't a performance hit (2000 lines in 3ms)
             await ClearHighlights();
             await SetHighlights(_vm.SearchPhrase);
          
@@ -44,15 +47,11 @@ namespace SwiftTailer.Wpf.Commands
         {
             if (string.IsNullOrEmpty(phrase)) return;
 
-            await Task.Run(() =>
-            {
-                // verified this is twice as fast as using AsParallel
-                foreach (var line in _vm.LogLines
-                    .Where(line => line.Content.IndexOf(phrase, StringComparison.OrdinalIgnoreCase) != -1)) // TODO: make case sensitivity optional
-                {
-                    line.Highlight = LogHighlight.Find;
-                }
-            });
+            // this might be a bit contrived for one filter, 
+            // but it is just to show the future usage of the filter chain
+             var chain = new LogLineFilterChain(new SearchHilightFilter(phrase));
+
+            await Task.Run(() => chain.ApplyFilterChain(_vm.LogLines, false));
         }
 
         public event EventHandler CanExecuteChanged;
