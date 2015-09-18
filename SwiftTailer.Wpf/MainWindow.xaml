@@ -9,7 +9,7 @@
         xmlns:wpf="clr-namespace:SwiftTailer.Wpf"
         xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
         mc:Ignorable="d" x:Name="ThisWindow"
-        Title="Fievel" Height="800" Width="800" WindowStartupLocation="CenterScreen">
+        Title="SwiftTailer" Height="800" Width="800" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
         <converters:HighlightConverter x:Key="HighlightConverter"/>

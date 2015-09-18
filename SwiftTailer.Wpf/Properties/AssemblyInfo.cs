@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Fievel.Wpf")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SwiftTailer.Wpf")]
+[assembly: AssemblyDescription("A lightweight log tailing application")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Fievel.Wpf")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("Provausio")]
+[assembly: AssemblyProduct("SwiftTailer")]
+[assembly: AssemblyCopyright("Copyright © 2015 Jeremy Stafford")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
