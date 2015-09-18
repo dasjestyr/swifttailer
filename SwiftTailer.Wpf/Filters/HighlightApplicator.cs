@@ -15,7 +15,7 @@ namespace SwiftTailer.Wpf.Filters
         /// <value>
         /// The filters.
         /// </value>
-        public static IReadOnlyCollection<ILogLineFilter> Filters => new ReadOnlyCollection<ILogLineFilter>(_filters);
+        public static IReadOnlyCollection<ILogLineFilter> GlobalFilters => new ReadOnlyCollection<ILogLineFilter>(_filters);
 
         /// <summary>
         /// Applies the global filter chain to the each log line.
@@ -32,6 +32,16 @@ namespace SwiftTailer.Wpf.Filters
             }
         }
 
+
+        public static void Apply(IEnumerable<LogLine> logLines, bool breakOnFirst, params ILogLineFilter[] filters)
+        {
+            // TODO: maybe there's a decent way to run this in parallel?
+            var logLineList = logLines.ToList();
+            foreach (var filter in filters)
+            {
+                Apply(filter, logLineList, breakOnFirst);
+            }
+        }
 
         /// <summary>
         /// Helper method. Applies a single filter to a collection of log lines.

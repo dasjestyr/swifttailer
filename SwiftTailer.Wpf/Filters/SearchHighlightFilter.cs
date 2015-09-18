@@ -28,8 +28,10 @@ namespace SwiftTailer.Wpf.Filters
         /// <returns></returns>
         public bool ApplyFilter(LogLine logLine)
         {
-            if (string.IsNullOrEmpty(logLine.Content) || logLine.Content.IndexOf(_searchPhrase, _comparisonRule) == -1)
-                return false;
+            if (string.IsNullOrEmpty(_searchPhrase) || // search for spaces is for the birds
+                string.IsNullOrEmpty(logLine.Content) || // if a man can't see, he can't fight
+                logLine.Content.IndexOf(_searchPhrase, _comparisonRule) == -1) // not droids you're looking for
+                    return false;
 
             logLine.Highlight = LogHighlight.Find;
             return true;

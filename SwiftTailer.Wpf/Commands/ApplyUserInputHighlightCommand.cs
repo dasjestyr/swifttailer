@@ -24,35 +24,19 @@ namespace SwiftTailer.Wpf.Commands
 
         public async void Execute(object parameter)
         {
-            // TODO: maybe clear and apply at the same time?
-            // Right now, this isn't a performance hit (2000 lines in 3ms)
-            await ClearHighlights();
             await SetHighlights(_vm.SearchPhrase);
          
             Trace.WriteLine($"Found {_vm.LogLines.Count(line => line.Highlight.Category == HighlightCategory.Find)} results!");
         }
 
-        private async Task ClearHighlights()
-        {
-            await Task.Run(() => 
-                HighlightApplicator.Apply(
-                    new ClearHighlitersFilter(), 
-                    _vm.LogLines, 
-                    false));
-            
-        }
-
         private async Task SetHighlights(string phrase)
         {
-            if (string.IsNullOrEmpty(phrase)) return;
-
-            // this might be a bit contrived for one filter, 
-            // but it is just to show the future usage of the filter chain
-            
+            // this should clear the highligh before applying a new one
             await Task.Run(() => HighlightApplicator.Apply(
-                new SearchHighlightFilter(phrase),  
                 _vm.LogLines, 
-                false));
+                false,
+                new ClearHighlitersFilter(),
+                new SearchHighlightFilter(phrase)));
         }
 
         public event EventHandler CanExecuteChanged;
