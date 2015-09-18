@@ -1,3 +1,5 @@
+using SwiftTailer.Wpf.Filters;
+
 namespace SwiftTailer.Wpf.Models.Observable
 {
     public class LogLine : ModelBase

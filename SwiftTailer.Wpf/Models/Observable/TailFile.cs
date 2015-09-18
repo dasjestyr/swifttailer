@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
+using SwiftTailer.Wpf.Filters;
 
 namespace SwiftTailer.Wpf.Models.Observable
 {

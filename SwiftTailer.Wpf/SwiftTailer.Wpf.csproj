@@ -146,13 +146,14 @@
     <Compile Include="Data\LogGroupEventArgs.cs" />
     <Compile Include="Data\LogInfo.cs" />
     <Compile Include="Data\Logs.cs" />
+    <Compile Include="Filters\HighlightCategory.cs" />
     <Compile Include="Filters\ILogLineFilter.cs" />
+    <Compile Include="Filters\LogHighlight.cs" />
     <Compile Include="Filters\LogLineFilterChain.cs" />
     <Compile Include="Filters\SearchHilightFilter.cs" />
     <Compile Include="Models\Observable\BindableBase.cs" />
     <Compile Include="Models\Observable\IModel.cs" />
     <Compile Include="Models\Observable\IProperty.cs" />
-    <Compile Include="Models\Observable\LogHighlight.cs" />
     <Compile Include="Models\Observable\LogLine.cs" />
     <Compile Include="Models\Observable\ModelBase.cs" />
     <Compile Include="Models\Observable\Property.cs" />

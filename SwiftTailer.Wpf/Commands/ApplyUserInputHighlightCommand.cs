@@ -29,7 +29,7 @@ namespace SwiftTailer.Wpf.Commands
             await ClearHighlights();
             await SetHighlights(_vm.SearchPhrase);
          
-            Trace.WriteLine($"Found {_vm.LogLines.Count(line => line.Highlight.Category == LogHighlight.HighlightCategory.Find)} results!");
+            Trace.WriteLine($"Found {_vm.LogLines.Count(line => line.Highlight.Category == HighlightCategory.Find)} results!");
         }
 
         private async Task ClearHighlights()
