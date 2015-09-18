@@ -36,7 +36,7 @@ namespace SwiftTailer.Wpf
         {
             var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-            WorkingDirectory = Path.Combine(localAppDataPath, "Fievel");
+            WorkingDirectory = Path.Combine(localAppDataPath, "SwiftTailer");
 
             // if the app directory doesn't exist, create it
             if (!Directory.Exists(WorkingDirectory))
