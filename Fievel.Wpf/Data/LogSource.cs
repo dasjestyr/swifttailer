@@ -23,6 +23,8 @@ namespace Fievel.Wpf.Data
 
         public static LogSource Instance => _instance ?? (_instance = new LogSource());
 
+        public string ApplicationWorkingDirectory => _logFileLocation;
+
         public Logs Logs
         {
             get { return _logs; }
@@ -37,19 +39,9 @@ namespace Fievel.Wpf.Data
         {
             _objectLock = new object();
             var tempFileLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DesignTime", "DemoFiles.json");
-            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);            
             
-            var userFilePath = Path.Combine(localAppDataPath, "Fievel");
-
-            // if the app directory doesn't exist, create it
-            if (!Directory.Exists(userFilePath))
-            {
-                Trace.WriteLine($"{userFilePath} did not exist. Creating...");
-                Directory.CreateDirectory(userFilePath);
-            }
-
             // if the file doesn't already exist, create it
-            _logFileLocation = Path.Combine(userFilePath, "LogConfig.json");
+            _logFileLocation = Path.Combine(Settings.WorkingDirectory, "LogConfig.json");
             if (!File.Exists(_logFileLocation))
             {
                 Trace.WriteLine($"{_logFileLocation} did not exist. Creating file with a default config...");

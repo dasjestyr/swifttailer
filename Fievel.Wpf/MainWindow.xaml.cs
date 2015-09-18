@@ -3,7 +3,6 @@ using System.Windows.Threading;
 using System;
 using System.IO;
 using System.Windows.Controls;
-using Fievel.Wpf.Models.Observable;
 using Fievel.Wpf.ViewModels;
 
 namespace Fievel.Wpf
@@ -18,9 +17,13 @@ namespace Fievel.Wpf
 
         private void DisplayException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            // log the error
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log", "error.log");
-            using(var sw = File.AppendText(path))
+            // Global error catch 
+            // Doesn't really allow the app to resume, but it's better than logs
+            // for now
+            // var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log", "error.log");
+            var logPath = Path.Combine(Settings.WorkingDirectory, "error.log");
+
+            using(var sw = File.AppendText(logPath))
             {
                 sw.WriteLine($"{DateTime.Now.ToLongDateString()} :: {e.Exception.Message} :: {e.Exception}");
             }
@@ -30,6 +33,10 @@ namespace Fievel.Wpf
 
         private void LogList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // The selection gets changed throught it's SelectedItem binding
+            // This old school sauce is to deal with the fact that custom 
+            // behaviors just weren't having me 
+
             var lbx = sender as ListBox;
             if (lbx == null) return;
 

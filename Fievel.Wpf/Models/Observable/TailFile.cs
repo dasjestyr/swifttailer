@@ -22,6 +22,7 @@ namespace Fievel.Wpf.Models.Observable
         private string _logText;
         private long _lastIndex;
         private ObservableCollection<LogLine> _logLines;
+        private bool _lastLineIsDirty;
         private string _searchPhrase;
         private int _lineCount;
         private int _selectedLineIndex;
@@ -190,21 +191,7 @@ namespace Fievel.Wpf.Models.Observable
             _cts = new CancellationTokenSource();
             
             if (File.Exists(LogInfo.Location))
-            {
-                Trace.WriteLine($"Starting tail on {LogInfo.Alias}...");
-                await Task.Run(async () =>
-                {
-                    while (!_cts.IsCancellationRequested)
-                    {
-                        GetUpdates();
-
-                        if(FollowTail)
-                            SelectedLine = LogLines.Count - 1;
-
-                        await Task.Delay(Settings.PollingInterval);
-                    }
-                }, _cts.Token);
-            }
+                await RunUpdates();            
             else
             {
                 await Task.Run(() =>
@@ -223,97 +210,115 @@ namespace Fievel.Wpf.Models.Observable
             Trace.WriteLine($"Called tail cancellation on {LogInfo.Alias}");
             _cts.Cancel();
         }
+
+        private async Task RunUpdates()
+        {
+            Trace.WriteLine($"Starting tail on {LogInfo.Alias}...");
+            await Task.Run(async () =>
+            {
+                while (!_cts.IsCancellationRequested)
+                {
+                    GetUpdates();
+
+                    if (FollowTail && _lastLineIsDirty)
+                    {
+                        SelectedLine = LogLines.Count - 1;
+                        _lastLineIsDirty = false;
+                    }
+
+                    await Task.Delay(Settings.PollingInterval);
+                }
+            }, _cts.Token);
+        }
         
         private void GetUpdates()
         {
-            var originalText = LogText;
             long messageSize = 0;
             long newContentSize = 0;
-
-            try
+            
+            // lock this or else you'll run into internal array sizing issues with the bounded ItemSource
+            lock (_lockObject)
             {
-                lock (_lockObject)
+                // handle case where file may have been deleted while tailing
+                if (!File.Exists(LogInfo.Location))
                 {
-                    // handle case where file may have been deleted while tailing
-                    if (!File.Exists(LogInfo.Location))
-                    {
-                        // we want to keep tailing for now in case it was just a case of the file be republished, for example
-                        // so just skip
-                        Trace.WriteLine("File disappeared. Ignoring until next pass.");
-                        return;
-                    }                  
-                    
+                    // we want to keep tailing for now in case it was just a case of the file be republished, for example
+                    // so just skip
+                    Trace.WriteLine("File disappeared. Ignoring until next pass.");
+                    return;
+                }                    
 
-                    using (var fs = new FileStream(LogInfo.Location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var fs = new FileStream(LogInfo.Location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    // handle case where the file may have been reset (e.g. republished)
+                    if (_lastIndex > fs.Length)
                     {
-                        // handle case where the file may have been reset (e.g. republished)
-                        if (_lastIndex > fs.Length)
-                        {
-                            Trace.WriteLine("File shrank. Assuming it's new and reseting lastIndex to zero!");
-                            _lastIndex = 0;
-                        }
+                        Trace.WriteLine("File shrank. Assuming it's new and reseting lastIndex to zero!");
+                        _lastIndex = 0;
+                    }
 
-                        // fs.Length == 0 is just handling a case where filestream returns 0 for no apparent reason
-                        if (fs.Length == 0 || !fs.CanRead || fs.Length == _lastIndex)
-                            return; // no change
+                    // fs.Length == 0 is just handling a case where filestream returns 0 for no apparent reason
+                    if (fs.Length == 0 || !fs.CanRead || fs.Length == _lastIndex)
+                        return; // no change
                                                
 
-                        // avoid reading the entire file on startup
-                        var startAt = _lastIndex;
-                        if (startAt == 0 && fs.Length > _displayBuffer)
-                        {
-                            startAt = fs.Length - _displayBuffer;
-                            Debug.WriteLine(
-                                $"{LogInfo.Alias} file was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
-                        }
-
-                        newContentSize = fs.Length - startAt;
-                        var newContent = new byte[newContentSize];
-                        Debug.WriteLine($"This chunk will be {newContent.Length} bytes.");
-
-                        fs.Seek(startAt, SeekOrigin.Begin);
-
-                        // read the new data
-                        messageSize = fs.Read(newContent, 0, newContent.Length);
-
-                        // detect new lines before attempting to update
-                        // if not, leave the last index alone
-                        var newContentString = Encoding.UTF8.GetString(newContent);
-                        if (LogLines.Count > 1 && newContentString.IndexOf(Environment.NewLine) == -1)
-                            return;
-
-                        var newLines = newContentString
-                            .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(line => new LogLine(line, LogHighlight.None))
-                            .ToList();
-
-                        LogLines.AddRange(newLines);
-
-                        if ((LogLines.Count + newLines.Count) >= Settings.MaxDisplayLogLines
-                            && LogLines.Count > newLines.Count)
-                        {
-                            // trim off the top
-                            for (var i = 0; i <= LogLines.Count || i < newLines.Count; i++)
-                            {
-                                LogLines.RemoveAt(i);
-                            }
-                        }
-
-                        LineCount = LogLines.Count;
-                        
-                        OnPropertyChanged("LogLines");
-
-                        _lastIndex = startAt;
-                        _lastIndex = fs.Position;
+                    // avoid reading the entire file on startup
+                    var startAt = _lastIndex;
+                    if (startAt == 0 && fs.Length > _displayBuffer)
+                    {
+                        startAt = fs.Length - _displayBuffer;
+                        Debug.WriteLine(
+                            $"{LogInfo.Alias} file was larger than buffer ({_displayBuffer}). Starting at i={startAt} instead of beginning.");
                     }
+
+                    // create a container for the new data
+                    newContentSize = fs.Length - startAt;
+                    var newContent = new byte[newContentSize];
+                    Debug.WriteLine($"This chunk will be {newContent.Length} bytes.");
+
+                    // fast forward to our starting point
+                    fs.Seek(startAt, SeekOrigin.Begin);
+
+                    // read the new data
+                    messageSize = fs.Read(newContent, 0, newContent.Length);
+                        
+                    // detect new lines before attempting to update
+                    // if there aren't any, treat it as if the file is untouched
+                    var newContentString = Encoding.UTF8.GetString(newContent);
+                    if (LogLines.Count > 1 && newContentString.IndexOf(Environment.NewLine) == -1)
+                        return;
+
+                    // get the new lines
+                    var newLines = newContentString
+                        .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(line => new LogLine(line, LogHighlight.None))
+                        .ToList();
+
+
+                    // update the log collection
+                    LogLines.AddRange(newLines);
+                    _lastLineIsDirty = true;
+
+                    // trim the log if necessary
+                    TrimLog(newLines);                        
+                        
+                    _lastIndex = startAt;
+                    _lastIndex = fs.Position;
                 }
-                
-            }
-            catch (IOException ex)
+            }                       
+        }
+
+        private void TrimLog(List<LogLine> newLines)
+        {
+            if ((LogLines.Count + newLines.Count) >= Settings.MaxDisplayLogLines
+                            && LogLines.Count > newLines.Count)
             {
-                
-                MessageBox.Show($"Message size: {messageSize} New Content Size: {newContentSize} :: " + ex.Message, "Read Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                for (var i = 0; i <= LogLines.Count || i < newLines.Count; i++)
+                {
+                    LogLines.RemoveAt(i);
+                }
             }
+            LineCount = LogLines.Count;
         }
 
         private void OnLogTextChanged(RawContentsChangedEventArgs args)

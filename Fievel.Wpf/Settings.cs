@@ -1,4 +1,7 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Windows.Media;
 
 namespace Fievel.Wpf
 {
@@ -9,6 +12,9 @@ namespace Fievel.Wpf
         /// </summary>
         public static int DisplayBufferSize { get; set; } = 255;
 
+        /// <summary>
+        /// The maximum number of lines to display in the log tailing window.
+        /// </summary>
         public static int MaxDisplayLogLines = 5000;
         
         /// <summary>
@@ -20,5 +26,24 @@ namespace Fievel.Wpf
         /// The font face that will be used in log windows
         /// </summary>
         public static FontFamily LogWindowFontFamily = new FontFamily("Courier New");
+
+        /// <summary>
+        /// The directory in which all supporting files should be stored (e.g. logs, user configurations, etc)
+        /// </summary>
+        public static readonly string WorkingDirectory;
+
+        static Settings()
+        {
+            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+            WorkingDirectory = Path.Combine(localAppDataPath, "Fievel");
+
+            // if the app directory doesn't exist, create it
+            if (!Directory.Exists(WorkingDirectory))
+            {
+                Trace.WriteLine($"{WorkingDirectory} did not exist. Creating...");
+                Directory.CreateDirectory(WorkingDirectory);
+            }
+        }
     }
 }
