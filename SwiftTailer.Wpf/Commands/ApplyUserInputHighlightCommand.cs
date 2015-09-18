@@ -31,7 +31,10 @@ namespace SwiftTailer.Wpf.Commands
 
         private async Task SetHighlights(string phrase)
         {
-            // this should clear the highligh before applying a new one
+            // this should clear the highlight before applying new ones
+
+            // optional filters should be captured and dynamically
+            // added to this list. How do we determine precedence?
             await Task.Run(() => HighlightApplicator.Apply(
                 _vm.LogLines, 
                 false,

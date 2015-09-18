@@ -9,6 +9,9 @@ namespace SwiftTailer.Wpf.Filters
     {
         private static readonly List<ILogLineFilter> _filters = new List<ILogLineFilter>();
         
+        // TODO: global filters are half-baked at the moment. How should they work? Maybe user settings determine whether they're
+        // applied before or after explicit rules?
+
         /// <summary>
         /// Gets the loaded filters.
         /// </summary>
@@ -33,6 +36,12 @@ namespace SwiftTailer.Wpf.Filters
         }
 
 
+        /// <summary>
+        /// Applies the specified log lines.
+        /// </summary>
+        /// <param name="logLines">The log lines.</param>
+        /// <param name="breakOnFirst">if set to <c>true</c> [break on first].</param>
+        /// <param name="filters">The filters to be applied in order. The last rule that applies will be the rule applied. For example, if a line matches 'dog' and then 'cat' then the rule for 'cat' will be applied.</param>
         public static void Apply(IEnumerable<LogLine> logLines, bool breakOnFirst, params ILogLineFilter[] filters)
         {
             // TODO: maybe there's a decent way to run this in parallel?
