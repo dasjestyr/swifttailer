@@ -1,0 +1,28 @@
+﻿<Window x:Class="SwiftTailer.Wpf.Pages.EditGroupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:SwiftTailer.Wpf.ViewModels"
+        mc:Ignorable="d" x:Name="ThisWindow"
+        Title="Rename Group" Height="119.632" Width="297" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+
+    <Window.DataContext>
+        <viewModels:AddGroupViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="68*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <TextBlock Text="Group Name" Margin="5 5 5 0" FontSize="10" />
+            <TextBox x:Name="NameTextBox" Margin="5 0 5 0" Text="{Binding GroupName, Mode=TwoWay}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+            <Button Content="Save" Margin="3" Width="75" Command="{Binding EditGroupCommand}" CommandParameter="{Binding ElementName=ThisWindow}"/>
+            <Button Content="Cancel" Margin="3" Width="75" Command="cmd:StaticCommands.CloseWindowCommand" CommandParameter="{Binding ElementName=ThisWindow}"/>
+        </StackPanel>
+    </Grid>
+</Window>
