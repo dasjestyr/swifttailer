@@ -82,6 +82,7 @@ namespace SwiftTailer.Wpf.ViewModels
                 _selectedGroup = value;
                 OnPropertyChanged();
                 SetTails();
+                SelectedTail = Tails.FirstOrDefault();
             }
         }
 
@@ -125,8 +126,8 @@ namespace SwiftTailer.Wpf.ViewModels
             LogSource.Instance.LogAdded += LogAdded;
             LogSource.Instance.LogRemoved += LogRemoved;
             LogSource.Instance.LogGroupCollectionChanged += LogGroupSourceChanged;
-            LogSource.Instance.LogGroupAdded += LogGroupAdded;
-            LogSource.Instance.LogGroupEdited += LogGroupEdited;
+            LogSource.Instance.LogGroupAdded += SetSelectedGroup;
+            LogSource.Instance.LogGroupEdited += SetSelectedGroup;
             LogSource.Instance.LogGroupDeleted += LogGroupDeleted;
         }
 
@@ -217,6 +218,12 @@ namespace SwiftTailer.Wpf.ViewModels
             }
         }
 
+        private void SetSelectedGroup(object sender, LogGroupEventArgs args)
+        {
+            Debug.WriteLine("Setting selected group...");
+            SelectedGroup = args.NewGroup;
+        }
+
         private void LogAdded(object sender, LogEventArgs args)
         {
             Debug.WriteLine("Setting selected tail...");
@@ -231,18 +238,6 @@ namespace SwiftTailer.Wpf.ViewModels
             Debug.WriteLine("Setting selected tail...");
             SetTails();
             SelectedTail = Tails.LastOrDefault();
-        }
-
-        private void LogGroupAdded(object sender, LogGroupEventArgs args)
-        {
-            Debug.WriteLine("Setting selected group...");
-            SelectedGroup = args.NewGroup;
-        }
-
-        private void LogGroupEdited(object sender, LogGroupEventArgs args)
-        {
-            Debug.WriteLine("Setting selected group...");
-            SelectedGroup = args.NewGroup;
         }
 
         private void LogGroupDeleted(object sender, EventArgs args)

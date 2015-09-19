@@ -33,11 +33,11 @@
         </DockPanel>
         <DockPanel Grid.Row="2" LastChildFill="True">
             <TextBlock Text="Alias" VerticalAlignment="Center" Margin="5 0 0 0" Width="75"/>
-            <TextBox Text="{Binding Alias, Mode=TwoWay}" Margin="5"/>
+            <TextBox Text="{Binding Alias, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
         </DockPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,20,5,5" HorizontalAlignment="Right" Grid.ColumnSpan="2">
-            <Button Content="Save" Style="{StaticResource ActionButtons}" Command="{Binding SaveLogToGroupCommand}" CommandParameter="{Binding ElementName=DialogWindow}"/>
-            <Button Content="Cancel" Style="{StaticResource ActionButtons}" Command="{Binding CloseWindowCommand}" CommandParameter="{Binding ElementName=DialogWindow}"/>
+            <Button Content="Save" Style="{StaticResource ActionButtons}" Command="{Binding SaveLogToGroupCommand}" CommandParameter="{Binding ElementName=DialogWindow}" IsDefault="True"/>
+            <Button Content="Cancel" Style="{StaticResource ActionButtons}" Command="{Binding CloseWindowCommand}" CommandParameter="{Binding ElementName=DialogWindow}" IsCancel="True"/>
         </StackPanel>
     </Grid>
 </Window>
