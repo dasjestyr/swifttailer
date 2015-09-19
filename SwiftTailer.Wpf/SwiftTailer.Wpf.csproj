@@ -127,9 +127,10 @@
     <Compile Include="Commands\EmailAttachmentCommand.cs" />
     <Compile Include="Commands\ExportLogConfigCommand.cs" />
     <Compile Include="Commands\FeatureStubCommand.cs" />
-    <Compile Include="Commands\OpenInExplorerCommand.cs" />
+    <Compile Include="Commands\OpenMenuItemInExplorerCommand.cs" />
     <Compile Include="Commands\OpenLogLineCommand.cs" />
     <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />
+    <Compile Include="Commands\OpenPathInExplorerCommand.cs" />
     <Compile Include="Commands\PickLogCommand.cs" />
     <Compile Include="Commands\RemoveLogFromGroupCommand.cs" />
     <Compile Include="Commands\SaveLogToGroupCommand.cs" />
@@ -170,9 +171,6 @@
     <Compile Include="Pages\AddGroupWindow.xaml.cs">
       <DependentUpon>AddGroupWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\LogFileConfig.xaml.cs">
-      <DependentUpon>LogFileConfig.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\LogPicker.xaml.cs">
       <DependentUpon>LogPicker.xaml</DependentUpon>
     </Compile>
@@ -182,7 +180,6 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\Extensions.cs" />
     <Compile Include="ViewModels\AddGroupViewModel.cs" />
-    <Compile Include="ViewModels\LogConfigEditorViewModel.cs" />
     <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewSelectionViewModel.cs" />
@@ -204,10 +201,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\AddGroupWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\LogFileConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

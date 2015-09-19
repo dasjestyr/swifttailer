@@ -54,7 +54,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         public SearchOptions SearchOptions { get; set; }
 
 
-        public OpenInExplorerCommand OpenInExplorerCommand { get; set; }
+        public OpenMenuItemInExplorerCommand OpenMenuItemInExplorerCommand { get; set; }
 
 
         #region -- Observable Properties --
@@ -175,7 +175,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             _displayBuffer = Settings.DisplayBufferSize * 0x400;
             _cts = new CancellationTokenSource();
             
-            OpenInExplorerCommand = new OpenInExplorerCommand();
+            OpenMenuItemInExplorerCommand = new OpenMenuItemInExplorerCommand();
             
             BindingOperations.EnableCollectionSynchronization(LogLines, _lockObject);
         }

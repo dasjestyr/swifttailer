@@ -8,7 +8,7 @@ using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Commands
 {
-    public class OpenInExplorerCommand : ICommand
+    public class OpenMenuItemInExplorerCommand : ICommand
     {
         public bool CanExecute(object parameter)
         {

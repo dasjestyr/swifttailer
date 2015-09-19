@@ -84,6 +84,7 @@ namespace SwiftTailer.Wpf.Data
             if (addTo.Logs.Any())
             {
                 var highestOrder = addTo.Logs.Max(l => l.Order);
+                log.Order = highestOrder + 1;
             }
             
             addTo.Logs.Add(log);

@@ -8,6 +8,7 @@
         xmlns:viewModels="clr-namespace:SwiftTailer.Wpf.ViewModels"
         xmlns:wpf="clr-namespace:SwiftTailer.Wpf"
         xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
+        xmlns:data="clr-namespace:SwiftTailer.Wpf.Data"
         mc:Ignorable="d" x:Name="ThisWindow"
         Title="SwiftTailer" Height="800" Width="800" WindowStartupLocation="CenterScreen">
     <Window.Resources>
@@ -110,6 +111,10 @@
                         Command="commands:StaticCommands.ImportLogConfigCommand">
                     <Image Source="Assets/doc_import.png" />
                 </Button>
+                <Button ToolTip="Manually edit config" Style="{StaticResource ToolbarIconStyle}"
+                        Command="commands:StaticCommands.OpenLogConfigInExplorerCommand">
+                    <Image Source="Assets/edit.png" />
+                </Button>
             </ToolBar>
             <ToolBar ToolTip="Tailing Options" Band="2">
                 <Button ToolTip="Start tailing" x:Name="StartButton" Style="{StaticResource TransportControlButtons}" 
@@ -143,7 +148,7 @@
                                 </ContextMenu.Resources>
                                 <MenuItem Header="Rename tab..." />
                                 <MenuItem Header="Change log path..." />
-                                <MenuItem Header="Open in explorer" Command="{Binding OpenInExplorerCommand}" 
+                                <MenuItem Header="Open in explorer" Command="{Binding OpenMenuItemInExplorerCommand}" 
                                           CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
                             </ContextMenu>
                         </TextBlock.ContextMenu>

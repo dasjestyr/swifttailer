@@ -22,5 +22,9 @@ namespace SwiftTailer.Wpf.Commands
         public static ICommand ExportLogConfigCommand = new ExportLogConfigCommand();
 
         public static ICommand ImportLogConfigCommand = new ImportLogConfigCommand();
+
+        public static ICommand OpenPathInExplorerCommand = new OpenPathInExplorerCommand();
+
+        public static ICommand OpenLogConfigInExplorerCommand = new OpenLogConfigInExplorerCommand();
     }
 }
