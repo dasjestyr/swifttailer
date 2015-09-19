@@ -6,7 +6,7 @@ namespace SwiftTailer.Wpf.Filters
 {
     public class SearchHighlightFilter : ILogLineFilter
     {
-        private readonly string _searchPhrase;
+        private readonly ISearchSource _source;
         private readonly StringComparison _comparisonRule;
 
         public string Description => "Applies highlight to log lines that contain the specified search term";
@@ -14,12 +14,12 @@ namespace SwiftTailer.Wpf.Filters
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchHighlightFilter" /> class.
         /// </summary>
-        /// <param name="searchPhrase">The search phrase.</param>
-        public SearchHighlightFilter(string searchPhrase)
+        /// <param name="source">The source.</param>
+        /// <param name="comparisoneRule">The comparisone rule.</param>
+        public SearchHighlightFilter(ISearchSource source, StringComparison comparisoneRule)
         {
-            // TODO: get from settings
-            _comparisonRule = StringComparison.OrdinalIgnoreCase;
-            _searchPhrase = searchPhrase;
+            _source = source;
+            _comparisonRule = comparisoneRule;
         }
 
         /// <summary>
@@ -29,9 +29,9 @@ namespace SwiftTailer.Wpf.Filters
         /// <returns></returns>
         public bool ApplyFilter(LogLine logLine)
         {
-            if (string.IsNullOrEmpty(_searchPhrase) || // search for spaces is for the birds
+            if (string.IsNullOrEmpty(_source.SearchPhrase) || // search for spaces is for the birds
                 string.IsNullOrEmpty(logLine.Content) || // if a man can't see, he can't fight
-                logLine.Content.IndexOf(_searchPhrase, _comparisonRule) == -1) // not droids you're looking for
+                logLine.Content.IndexOf(_source.SearchPhrase, _comparisonRule) == -1) // not droids you're looking for
             {
                 Debug.WriteLine($"Skipped {logLine.Content}");
                 return false;

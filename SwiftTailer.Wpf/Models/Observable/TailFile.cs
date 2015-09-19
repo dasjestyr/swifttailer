@@ -18,16 +18,15 @@ namespace SwiftTailer.Wpf.Models.Observable
     {
         private readonly object _lockObject = new object();
         private readonly long _displayBuffer;
-        private CancellationTokenSource _cts;
         private string _logText;
         private long _lastIndex;
-        private ObservableCollection<LogLine> _logLines;
         private bool _lastLineIsDirty;
-        private string _searchPhrase;
         private int _lineCount;
         private int _selectedLineIndex;
         private bool _followTail;
-
+        private SearchOptions _searchOptions;
+        private ObservableCollection<LogLine> _logLines = new ObservableCollection<LogLine>();
+        private CancellationTokenSource _cts;
         public event RawContentsChangedHandler RawContentChanged;
         public event NewContentAddedHandler NewLinesAdded;
 
@@ -46,18 +45,20 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// The identifier.
         /// </value>
         public Guid Id => LogInfo.Id;
-
-        /// <summary>
-        /// Gets or sets the text changed command. Used to apply highlighting.
-        /// </summary>
-        /// <value>
-        /// The text changed command.
-        /// </value>
-        public ApplyUserInputHighlightCommand ApplyUserInputHighlightCommand { get; set; }
-
+        
         public OpenInExplorerCommand OpenInExplorerCommand { get; set; }
 
         #region -- Observable Properties --
+
+        public SearchOptions SearchOptions
+        {
+            get { return _searchOptions; }
+            set
+            {
+                _searchOptions = value;
+                OnPropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the raw contents.
@@ -89,16 +90,6 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _logLines = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string SearchPhrase
-        {
-            get { return _searchPhrase; }
-            set
-            {
-                _searchPhrase = value;
                 OnPropertyChanged();
             }
         }
@@ -162,11 +153,11 @@ namespace SwiftTailer.Wpf.Models.Observable
             LogInfo = logInfo;
             _displayBuffer = Settings.DisplayBufferSize * 0x400;
             _cts = new CancellationTokenSource();
-
-            ApplyUserInputHighlightCommand = new ApplyUserInputHighlightCommand(this);
+            _searchOptions = new SearchOptions(this);
+            
             OpenInExplorerCommand = new OpenInExplorerCommand();
             LogLines = new ObservableCollection<LogLine>();
-
+            
             BindingOperations.EnableCollectionSynchronization(LogLines, _lockObject);
             
         }
@@ -296,9 +287,9 @@ namespace SwiftTailer.Wpf.Models.Observable
                     // run them through the filter
                     // TODO: figure out some sort of live filter collection that updates
                     // with the UI so that they can be applied as the new lines come in
-                    HighlightApplicator.Apply(newLines,
-                        new ClearHighlitersFilter(),
-                        new SearchHighlightFilter(SearchPhrase));
+                    //HighlightApplicator.Apply(newLines,
+                    //    new ClearHighlitersFilter(),
+                    //    new SearchHighlightFilter(SearchOptions.SearchPhrase));
 
                     // update the log collection
                     LogLines.AddRange(newLines);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using SwiftTailer.Wpf.Models.Observable;
 
@@ -7,7 +8,7 @@ namespace SwiftTailer.Wpf.Filters
 {
     public static class HighlightApplicator
     {
-        private static readonly List<ILogLineFilter> _filters = new List<ILogLineFilter>();
+        private static readonly List<ILogLineFilter> _globalFilters = new List<ILogLineFilter>();
         
         // TODO: global filters are half-baked at the moment. How should they work? Maybe user settings determine whether they're
         // applied before or after explicit rules?
@@ -18,7 +19,16 @@ namespace SwiftTailer.Wpf.Filters
         /// <value>
         /// The filters.
         /// </value>
-        public static IReadOnlyCollection<ILogLineFilter> GlobalFilters => new ReadOnlyCollection<ILogLineFilter>(_filters);
+        public static IReadOnlyCollection<ILogLineFilter> GlobalFilters => new ReadOnlyCollection<ILogLineFilter>(_globalFilters);
+
+        /// <summary>
+        /// Clears the global filters.
+        /// </summary>
+        public static void ClearGlobalFilters()
+        {
+            _globalFilters.Clear();
+            _globalFilters.Add(new ClearHighlitersFilter()); // always needs to be first
+        }
 
         /// <summary>
         /// Applies the global filter chain to the each log line.
@@ -28,12 +38,11 @@ namespace SwiftTailer.Wpf.Filters
         {
             // TODO: maybe there's a decent way to run this in parallel?
             var logLineList = logLines.ToList();
-            foreach (var filter in _filters)
+            foreach (var filter in _globalFilters)
             {
                 Apply(filter, logLineList);
             }
         }
-
 
         /// <summary>
         /// Applies the specified log lines.
@@ -69,7 +78,7 @@ namespace SwiftTailer.Wpf.Filters
         /// <param name="filter">The filter.</param>
         public static void AddFilter(ILogLineFilter filter)
         {
-            _filters.Add(filter);
+            _globalFilters.Add(filter);
         }
 
         /// <summary>
@@ -78,7 +87,17 @@ namespace SwiftTailer.Wpf.Filters
         /// <param name="filters">The filters.</param>
         public static void AddFilter(IEnumerable<ILogLineFilter> filters)
         {
-            _filters.AddRange(filters);
+            _globalFilters.AddRange(filters);
+        }
+
+        /// <summary>
+        /// Removes the filter from the global set.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        public static void RemoveFilter(ILogLineFilter filter)
+        {
+            _globalFilters.Remove(filter);
+            Debug.WriteLine($"Removed {filter.Description} from global set");
         }
     }
 }

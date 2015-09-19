@@ -135,9 +135,9 @@
     <Compile Include="Commands\SaveLogToGroupCommand.cs" />
     <Compile Include="Commands\SaveToTextCommand.cs" />
     <Compile Include="Commands\SelectGroupCommand.cs" />
-    <Compile Include="Commands\ApplyUserInputHighlightCommand.cs" />
     <Compile Include="Commands\StaticCommands.cs" />
     <Compile Include="Commands\ToggleTailingCommand.cs" />
+    <Compile Include="Converters\EnumBoolConverter.cs" />
     <Compile Include="Converters\HighlightConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Converters\LineCountDisplayConverter.cs" />
@@ -161,6 +161,7 @@
     <Compile Include="Models\Observable\ModelBase.cs" />
     <Compile Include="Models\Observable\Property.cs" />
     <Compile Include="Models\Observable\RawContentsChangedEventArgs.cs" />
+    <Compile Include="Models\Observable\SearchOptions.cs" />
     <Compile Include="Models\Observable\TailFile.cs" />
     <Compile Include="Pages\EditGroupWindow.xaml.cs">
       <DependentUpon>EditGroupWindow.xaml</DependentUpon>
@@ -294,6 +295,10 @@
     <Resource Include="Assets\doc_export.png" />
     <Resource Include="Assets\doc_import.png" />
     <Resource Include="Assets\doc_minus.png" />
+    <Resource Include="Assets\zip.png" />
+    <Resource Include="Assets\packaging.png" />
+    <Resource Include="Assets\packages.png" />
+    <Resource Include="Assets\compress.png" />
     <Content Include="DesignTime\DemoFiles.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

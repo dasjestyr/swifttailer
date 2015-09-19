@@ -14,11 +14,12 @@
         <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
         <converters:HighlightConverter x:Key="HighlightConverter"/>
         <converters:LineCountDisplayConverter x:Key="LineCountDisplayConverter" />
+        <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
         <Style TargetType="ListBoxItem" x:Key="HighlightItemStyle">
             <Setter Property="ContextMenu">
                 <Setter.Value>
                     <ContextMenu>
-                        <MenuItem Header="View Selected" Command="commands:StaticCommands.OpenLogLineCommand" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
+                        <MenuItem Header="View Selected" Command="commands:StaticCommands.OpenLogLineCommand" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />-
                     </ContextMenu>
                 </Setter.Value>
             </Setter>
@@ -34,8 +35,8 @@
             <Setter Property="Margin" Value="10 0"/>
         </Style>
         <Style TargetType="Button" x:Key="ToolbarIconStyle">
-            <Setter Property="Width" Value="25" />
-            <Setter Property="Height" Value="25"/>
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30"/>
             <Setter Property="Margin" Value="2 0" />
             <Setter Property="IsEnabled" Value="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"/>
         </Style>
@@ -83,6 +84,12 @@
                 <Button ToolTip="Remove this log from group..." Style="{StaticResource ToolbarIconStyle}"
                         Command="commands:StaticCommands.RemoveLogCommand" CommandParameter="{Binding SelectedTail}">
                     <Image Source="Assets/doc_minus.png" />
+                </Button>
+                <Button ToolTip="Zip the current state of the group..." Style="{StaticResource ToolbarIconStyle}">
+                    <Image Source="Assets/compress.png" />
+                </Button>
+                <Button ToolTip="Zip the current state of the group and email it..." Style="{StaticResource ToolbarIconStyle}">
+                    <Image Source="Assets/packages.png"/>
                 </Button>
             </ToolBar>
             <ToolBar ToolTip="View Options" BandIndex="1">
@@ -163,17 +170,43 @@
                         </StackPanel>
                         
                         <!-- SEARCH PANEL -->
-                        <DockPanel LastChildFill="True" Grid.Row="2" Margin="5 10 2 5">
-                            <Label Content="Search:"/>
-                            <TextBox x:Name="LogFilter" HorizontalAlignment="Stretch" BorderBrush="Gray" Margin="0" FontSize="12" 
-                     Text="{Binding SearchPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding ApplyUserInputHighlightCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
-                        </DockPanel>
+                        <Expander Grid.Row="2" Margin="5 10 2 5" Style="{DynamicResource ExpanderStretchHeader}">
+                            <Expander.Header>
+                                <DockPanel LastChildFill="True">
+                                    <Label Content="Search:"/>
+                                    <TextBox x:Name="LogFilter" HorizontalAlignment="Stretch" BorderBrush="Gray" VerticalContentAlignment="Center"
+                                        Text="{Binding SearchOptions.SearchPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Phrase'}">
+                                        <!--<i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="TextChanged">
+                                                <i:InvokeCommandAction Command="{Binding ApplyUserInputHighlightCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>-->
+                                    </TextBox>
+                                </DockPanel>
+                            </Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <GroupBox Header="Case Sensitivity" Padding="5 5 5 0" Margin="2">
+                                    <StackPanel Orientation="Vertical">
+                                        <RadioButton GroupName="CaseSensitivity" Content="On" IsChecked="{Binding SearchOptions.CaseSensitive, Mode=TwoWay}"/>
+                                        <RadioButton GroupName="CaseSensitivity" Content="Off" IsChecked="{Binding SearchOptions.CaseSensitive, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}" />
+                                    </StackPanel>
+                                </GroupBox>
+
+                                <GroupBox Header="Search Mode" Padding="5 5 5 0" Margin="2">
+                                    <StackPanel Orientation="Vertical">
+                                        <RadioButton GroupName="SearchMode" Content="Find" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Find}" />
+                                        <RadioButton GroupName="SearchMode" Content="Filter" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Filter}"/>
+                                    </StackPanel>
+                                </GroupBox>
+
+                                <GroupBox Header="Phrase Type" Padding="5 5 5 0" Margin="2">
+                                    <StackPanel Orientation="Vertical">
+                                        <RadioButton GroupName="PhraseType" Content="Literal" IsChecked="{Binding SearchOptions.PhraseType, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Literal, Mode=TwoWay}" />
+                                        <RadioButton GroupName="PhraseType" Content="Regex" IsChecked="{Binding SearchOptions.PhraseType, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Regex, Mode=TwoWay}"/>
+                                    </StackPanel>
+                                </GroupBox>
+                            </StackPanel>
+                        </Expander>
                     </Grid>
                 </DataTemplate>
             </TabControl.ContentTemplate>
