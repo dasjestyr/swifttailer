@@ -19,12 +19,12 @@ namespace SwiftTailer.Wpf.Filters
         public static IReadOnlyCollection<ILogLineFilter> GlobalFilters => new ReadOnlyCollection<ILogLineFilter>(_globalFilters);
 
         /// <summary>
-        /// Clears the global filters.
+        /// Clears the global filters. This will also insert the ClearFilter rule at the top of the collection
         /// </summary>
         public static void ClearGlobalFilters()
         {
             _globalFilters.Clear();
-            _globalFilters.Add(new ClearHighlitersFilter()); // always needs to be first
+            _globalFilters.Add(new ClearFiltersRule()); // always needs to be first
         }
 
         /// <summary>

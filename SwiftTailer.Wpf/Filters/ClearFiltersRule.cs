@@ -2,7 +2,7 @@
 
 namespace SwiftTailer.Wpf.Filters
 {
-    public class ClearHighlitersFilter : ILogLineFilter
+    public class ClearFiltersRule : ILogLineFilter
     {
         public bool ApplyFilter(LogLine logLine)
         {

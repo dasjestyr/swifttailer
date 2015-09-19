@@ -74,8 +74,13 @@ namespace SwiftTailer.Wpf.Models.Observable
         {
             HighlightApplicator.ClearGlobalFilters();
 
+            /* I feel like this could be handled cleaner with something like a factory */
+
             if(SearchMode == SearchMode.Find)
-                HighlightApplicator.AddFilter(new FindHighlightFilter(this, CompareRule));
+                HighlightApplicator.AddFilter(new FindHighlightRule(this, PhraseType, CompareRule));
+
+            if(SearchMode == SearchMode.Filter)
+                HighlightApplicator.AddFilter(new HideLineRule(this, PhraseType, CompareRule));
 
             Trace.WriteLine("Applicator was reconfigured!");
             ApplyFilters();
