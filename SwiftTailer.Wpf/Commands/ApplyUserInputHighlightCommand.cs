@@ -36,8 +36,7 @@ namespace SwiftTailer.Wpf.Commands
             // optional filters should be captured and dynamically
             // added to this list. How do we determine precedence?
             await Task.Run(() => HighlightApplicator.Apply(
-                _vm.LogLines, 
-                false,
+                _vm.LogLines,
                 new ClearHighlitersFilter(),
                 new SearchHighlightFilter(phrase)));
         }

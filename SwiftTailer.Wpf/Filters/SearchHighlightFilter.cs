@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Filters
@@ -31,9 +32,13 @@ namespace SwiftTailer.Wpf.Filters
             if (string.IsNullOrEmpty(_searchPhrase) || // search for spaces is for the birds
                 string.IsNullOrEmpty(logLine.Content) || // if a man can't see, he can't fight
                 logLine.Content.IndexOf(_searchPhrase, _comparisonRule) == -1) // not droids you're looking for
-                    return false;
+            {
+                Debug.WriteLine($"Skipped {logLine.Content}");
+                return false;
+            }
 
             logLine.Highlight = LogHighlight.Find;
+            Debug.WriteLine($"Highlighted {logLine.Content}");
             return true;
         }
     }

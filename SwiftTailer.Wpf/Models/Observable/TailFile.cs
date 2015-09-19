@@ -231,11 +231,9 @@ namespace SwiftTailer.Wpf.Models.Observable
             }, _cts.Token);
         }
         
+        // TODO: this method is getting a bit fat. Break it down...
         private void GetUpdates()
         {
-            long messageSize = 0;
-            long newContentSize = 0;
-            
             // lock this or else you'll run into internal array sizing issues with the bounded ItemSource
             lock (_lockObject)
             {
@@ -272,7 +270,7 @@ namespace SwiftTailer.Wpf.Models.Observable
                     }
 
                     // create a container for the new data
-                    newContentSize = fs.Length - startAt;
+                    var newContentSize = fs.Length - startAt;
                     var newContent = new byte[newContentSize];
                     Debug.WriteLine($"This chunk will be {newContent.Length} bytes.");
 
@@ -280,12 +278,13 @@ namespace SwiftTailer.Wpf.Models.Observable
                     fs.Seek(startAt, SeekOrigin.Begin);
 
                     // read the new data
-                    messageSize = fs.Read(newContent, 0, newContent.Length);
+                    fs.Read(newContent, 0, newContent.Length);
                         
                     // detect new lines before attempting to update
                     // if there aren't any, treat it as if the file is untouched
                     var newContentString = Encoding.UTF8.GetString(newContent);
-                    if (LogLines.Count > 1 && newContentString.IndexOf(Environment.NewLine) == -1)
+                    if (LogLines.Count > 1 && 
+                        newContentString.IndexOf(Environment.NewLine, StringComparison.OrdinalIgnoreCase) == -1)
                         return;
 
                     // get the new lines
@@ -294,13 +293,20 @@ namespace SwiftTailer.Wpf.Models.Observable
                         .Select(line => new LogLine(line, LogHighlight.None))
                         .ToList();
 
+                    // run them through the filter
+                    // TODO: figure out some sort of live filter collection that updates
+                    // with the UI so that they can be applied as the new lines come in
+                    HighlightApplicator.Apply(newLines,
+                        new ClearHighlitersFilter(),
+                        new SearchHighlightFilter(SearchPhrase));
 
                     // update the log collection
                     LogLines.AddRange(newLines);
+                    OnNewContentedAdded(new NewContentEventArgs(this, newLines));
                     _lastLineIsDirty = true;
 
                     // trim the log if necessary
-                    TrimLog(newLines);                        
+                    TrimLog(newLines.Count);                        
                         
                     _lastIndex = startAt;
                     _lastIndex = fs.Position;
@@ -308,12 +314,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }                       
         }
 
-        private void TrimLog(List<LogLine> newLines)
+        private void TrimLog(int newLineCount)
         {
-            if ((LogLines.Count + newLines.Count) >= Settings.MaxDisplayLogLines
-                            && LogLines.Count > newLines.Count)
+            if ((LogLines.Count + newLineCount) >= Settings.MaxDisplayLogLines
+                            && LogLines.Count > newLineCount)
             {
-                for (var i = 0; i <= LogLines.Count || i < newLines.Count; i++)
+                for (var i = 0; i <= LogLines.Count || i < newLineCount; i++)
                 {
                     LogLines.RemoveAt(i);
                 }
@@ -348,15 +354,17 @@ namespace SwiftTailer.Wpf.Models.Observable
     {
         public TailFile Context { get; private set; }
 
-        public IEnumerable<string> NewLines { get; private set; }
+        public IEnumerable<LogLine> NewLines { get; private set; }
 
         public int NewLineCount { get; private set; }
 
-        public NewContentEventArgs(TailFile context, IEnumerable<string> newLines)
+        public NewContentEventArgs(TailFile context, IEnumerable<LogLine> newLines)
         {
+            var lines = newLines.ToList();
+
             Context = context;
-            NewLines = newLines;
-            NewLineCount = newLines.Count();
+            NewLines = lines;
+            NewLineCount = lines.Count();
         }
     }
 }

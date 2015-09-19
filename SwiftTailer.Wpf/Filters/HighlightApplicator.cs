@@ -24,14 +24,13 @@ namespace SwiftTailer.Wpf.Filters
         /// Applies the global filter chain to the each log line.
         /// </summary>
         /// <param name="logLines">The log lines.</param>
-        /// <param name="breakOnFirst">If true, the filter chain will stop processing when any rule gets applied.</param>
-        public static void Apply(IEnumerable<LogLine> logLines, bool breakOnFirst)
+        public static void Apply(IEnumerable<LogLine> logLines)
         {
             // TODO: maybe there's a decent way to run this in parallel?
             var logLineList = logLines.ToList();
             foreach (var filter in _filters)
             {
-                Apply(filter, logLineList, breakOnFirst);
+                Apply(filter, logLineList);
             }
         }
 
@@ -40,15 +39,14 @@ namespace SwiftTailer.Wpf.Filters
         /// Applies the specified log lines.
         /// </summary>
         /// <param name="logLines">The log lines.</param>
-        /// <param name="breakOnFirst">if set to <c>true</c> [break on first].</param>
         /// <param name="filters">The filters to be applied in order. The last rule that applies will be the rule applied. For example, if a line matches 'dog' and then 'cat' then the rule for 'cat' will be applied.</param>
-        public static void Apply(IEnumerable<LogLine> logLines, bool breakOnFirst, params ILogLineFilter[] filters)
+        public static void Apply(IEnumerable<LogLine> logLines, params ILogLineFilter[] filters)
         {
             // TODO: maybe there's a decent way to run this in parallel?
             var logLineList = logLines.ToList();
             foreach (var filter in filters)
             {
-                Apply(filter, logLineList, breakOnFirst);
+                Apply(filter, logLineList);
             }
         }
 
@@ -57,13 +55,11 @@ namespace SwiftTailer.Wpf.Filters
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <param name="logLines">The log lines.</param>
-        /// <param name="breakOnFirst">If true, the filter chain will stop processing when any rule gets applied.</param>
-        public static void Apply(ILogLineFilter filter, IEnumerable<LogLine> logLines, bool breakOnFirst)
+        public static void Apply(ILogLineFilter filter, IEnumerable<LogLine> logLines)
         {
             foreach (var line in logLines)
             {
-                if (filter.ApplyFilter(line) && breakOnFirst)
-                    break;
+                filter.ApplyFilter(line);
             }
         }
 

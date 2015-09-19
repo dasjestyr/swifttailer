@@ -51,5 +51,10 @@ namespace SwiftTailer.Wpf.Filters
         {
             Category = category;
         }
+
+        public override string ToString()
+        {
+            return Category.ToString();
+        }
     }
 }
