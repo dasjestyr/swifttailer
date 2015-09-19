@@ -45,7 +45,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// <value>
         /// The identifier.
         /// </value>
-        public string Id => LogInfo.Id;
+        public Guid Id => LogInfo.Id;
 
         /// <summary>
         /// Gets or sets the text changed command. Used to apply highlighting.

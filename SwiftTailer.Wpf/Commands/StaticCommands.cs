@@ -18,5 +18,9 @@ namespace SwiftTailer.Wpf.Commands
         public static ICommand RemoveLogCommand = new RemoveLogFromGroupCommand();
 
         public static ICommand FeatureStubCommand = new FeatureStubCommand();
+
+        public static ICommand ExportLogConfigCommand = new ExportLogConfigCommand();
+
+        public static ICommand ImportLogConfigCommand = new ImportLogConfigCommand();
     }
 }

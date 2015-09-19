@@ -14,9 +14,9 @@ namespace SwiftTailer.Wpf.ViewModels
         private bool _isRunning;
         private string _status = "Idle";
         private LogGroup _selectedGroup;
-        private ObservableCollection<LogGroup> _groups;
+        private ObservableCollection<LogGroup> _groups = new ObservableCollection<LogGroup>();
         private ObservableCollection<TailFile> _tails = new ObservableCollection<TailFile>();
-        private ObservableCollection<LogLine> _selectedLines;
+        private ObservableCollection<LogLine> _selectedLines = new ObservableCollection<LogLine>();
         private TailFile _selectedTail;
 
         #region -- Commands --
@@ -81,7 +81,7 @@ namespace SwiftTailer.Wpf.ViewModels
             {
                 _selectedGroup = value;
                 OnPropertyChanged();
-                LogSourceChanged(this, new EventArgs());
+                SetTails();
             }
         }
 
@@ -109,17 +109,19 @@ namespace SwiftTailer.Wpf.ViewModels
 
         public MainViewModel()
         {
-            Groups = new ObservableCollection<LogGroup>(LogSource.Instance.Logs.Groups);
-            SelectedGroup = Groups[0];
+            //Groups = new ObservableCollection<LogGroup>(LogSource.Instance.Logs.Groups);
+            //SelectedGroup = Groups.Count > 0 ? Groups[0] : new LogGroup();
 
-            SelectedGroup = LogSource.Instance.Logs.Groups[0];
+            //SelectedGroup = LogSource.Instance.Logs.Groups[0];
+            LogSourceBound(this, new EventArgs());
+
             OpenLogPickerDialogCommand = new OpenLogPickerDialogCommand();
             AddGroupDialogCommand = new AddGroupDialogCommand();
             StopTailingCommand = new StopTailingCommand(this);
             StartTailingCommand = new StartTailingCommand(this);            
             SelectGroupCommand = new SelectGroupCommand(this);
-            
-            LogSource.Instance.LogCollectionChanged += LogSourceChanged;
+
+            LogSource.Instance.LogSourceBound += LogSourceBound;
             LogSource.Instance.LogAdded += LogAdded;
             LogSource.Instance.LogRemoved += LogRemoved;
             LogSource.Instance.LogGroupCollectionChanged += LogGroupSourceChanged;
@@ -167,23 +169,41 @@ namespace SwiftTailer.Wpf.ViewModels
             //LogSource.Instance.SaveState();
         }
 
-        #region -- Event Handlers --
-        
-        private void LogSourceChanged(object sender, EventArgs args)
+        private void SetTails()
         {
-            Debug.WriteLine("Rebinding log tails...");
-            if (SelectedGroup == null) return;
-
+            // explicit set for safety
             Tails.Clear();
-
-            var tails = SelectedGroup.Logs
-                .OrderBy(l => l.Order)
-                .Select(t => new TailFile(t));
-
-            foreach (var tail in tails)
+            if (SelectedGroup != null && SelectedGroup.Logs.Any())
             {
-                Tails.Add(tail);
+                foreach (var tail in SelectedGroup.Logs
+                    .Select(log => new TailFile(log)))
+                {
+                    Tails.Add(tail);
+                }
             }
+        }
+
+        #region -- Event Handlers --
+
+        private void LogSourceBound(object sender, EventArgs args)
+        {
+            // update the groups
+            Groups.Clear();
+            foreach (var group in LogSource.Instance.Logs.Groups)
+            {
+                Groups.Add(group);
+            }
+
+            // set the selected group
+            if (Groups.Any())
+                SelectedGroup = Groups[0];
+
+            // update tails
+            SetTails();
+                
+            // set the selected tail
+            if (Tails.Any())
+                SelectedTail = Tails[0];
         }
 
         private void LogGroupSourceChanged(object sender, EventArgs args)
@@ -199,7 +219,9 @@ namespace SwiftTailer.Wpf.ViewModels
         private void LogAdded(object sender, LogEventArgs args)
         {
             Debug.WriteLine("Setting selected tail...");
-            SelectedTail = Tails.First(tail => tail.Id.Equals(args.Log.Id));
+            var tail = Tails.FirstOrDefault(t => t.Id.Equals(args.Log.Id));
+            if (tail != null)
+                SelectedTail = tail;
         }
 
         private void LogRemoved(object sender, LogEventArgs args)

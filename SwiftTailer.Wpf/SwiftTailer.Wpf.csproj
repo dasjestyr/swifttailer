@@ -125,6 +125,7 @@
     <Compile Include="Commands\DeleteGroupCommand.cs" />
     <Compile Include="Commands\EditGroupCommand.cs" />
     <Compile Include="Commands\EmailAttachmentCommand.cs" />
+    <Compile Include="Commands\ExportLogConfigCommand.cs" />
     <Compile Include="Commands\FeatureStubCommand.cs" />
     <Compile Include="Commands\OpenInExplorerCommand.cs" />
     <Compile Include="Commands\OpenLogLineCommand.cs" />

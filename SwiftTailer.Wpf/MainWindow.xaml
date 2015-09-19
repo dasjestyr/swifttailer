@@ -93,11 +93,11 @@
             </ToolBar>
             <ToolBar ToolTip="Config Options" BandIndex="2">
                 <Button ToolTip="Export Log Config" Style="{StaticResource ToolbarIconStyle}"
-                        Command="commands:StaticCommands.FeatureStubCommand" CommandParameter="Config export coming soon!">
+                        Command="commands:StaticCommands.ExportLogConfigCommand">
                     <Image Source="Assets/doc_export.png" />
                 </Button>
                 <Button ToolTip="Import Log Config" Style="{StaticResource ToolbarIconStyle}"
-                        Command="commands:StaticCommands.FeatureStubCommand" CommandParameter="Config import coming soon!">
+                        Command="commands:StaticCommands.ImportLogConfigCommand">
                     <Image Source="Assets/doc_import.png" />
                 </Button>
             </ToolBar>

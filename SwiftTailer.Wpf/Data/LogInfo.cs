@@ -9,7 +9,7 @@ namespace SwiftTailer.Wpf.Data
         private string _alias;
 
         [JsonIgnore]
-        public string Id { get; private set; }
+        public Guid Id { get; private set; }
 
         [JsonProperty("order")]
         public int Order { get; set; }
@@ -43,7 +43,7 @@ namespace SwiftTailer.Wpf.Data
 
         public LogInfo(string location, string alias)
         {
-            Id = Guid.NewGuid().ToString("N");
+            Id = Guid.NewGuid();
             Location = location;
             Alias = alias;
         }

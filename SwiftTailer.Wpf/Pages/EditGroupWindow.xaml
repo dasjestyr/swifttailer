@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:SwiftTailer.Wpf.ViewModels"
+        xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
         mc:Ignorable="d" x:Name="ThisWindow"
         Title="Rename Group" Height="119.632" Width="297" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
 
@@ -22,7 +23,7 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
             <Button Content="Save" Margin="3" Width="75" Command="{Binding EditGroupCommand}" CommandParameter="{Binding ElementName=ThisWindow}"/>
-            <Button Content="Cancel" Margin="3" Width="75" Command="cmd:StaticCommands.CloseWindowCommand" CommandParameter="{Binding ElementName=ThisWindow}"/>
+            <Button Content="Cancel" Margin="3" Width="75" Command="commands:StaticCommands.CloseWindowCommand" CommandParameter="{Binding ElementName=ThisWindow}"/>
         </StackPanel>
     </Grid>
 </Window>

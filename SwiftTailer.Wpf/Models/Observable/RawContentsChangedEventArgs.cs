@@ -26,14 +26,15 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// <value>
         /// The tail identifier.
         /// </value>
-        public string TailId { get; set; }
+        public Guid TailId { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RawContentsChangedEventArgs" /> class.
         /// </summary>
         /// <param name="previousText">The previous text.</param>
         /// <param name="newText">The new text.</param>
-        public RawContentsChangedEventArgs(string previousText, string newText, string tailId)
+        /// <param name="tailId">The tail identifier.</param>
+        public RawContentsChangedEventArgs(string previousText, string newText, Guid tailId)
         {
             PreviousText = previousText;
             NewText = newText;

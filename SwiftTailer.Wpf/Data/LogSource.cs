@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace SwiftTailer.Wpf.Data
 {
     public class LogSource : ILogSource
     {
-        public event LogCollectionChangedHandler LogCollectionChanged;
+        public event LogSourceBoundHandler LogSourceBound;
         public event LogGroupCollectionChangedHandler LogGroupCollectionChanged;
         public event LogGroupAddedHandler LogGroupAdded;
         public event LogGroupDeletedHandler LogGroupDeleted;
@@ -16,24 +17,14 @@ namespace SwiftTailer.Wpf.Data
         public event LogAddedHandler LogAdded;
         public event LogRemovedHandler LogRemoved;
 
-        private readonly string _logFileLocation;
         private readonly object _objectLock;
-        private Logs _logs;
         private static LogSource _instance;
 
         public static LogSource Instance => _instance ?? (_instance = new LogSource());
 
-        public string ApplicationWorkingDirectory => _logFileLocation;
+        public string LogFileLocation { get; }
 
-        public Logs Logs
-        {
-            get { return _logs; }
-            private set
-            {
-                _logs = value;
-                OnLogCollectionChanged();
-            }
-        }
+        public Logs Logs { get; private set; }
 
         private LogSource()
         {
@@ -41,14 +32,20 @@ namespace SwiftTailer.Wpf.Data
             var tempFileLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DesignTime", "DemoFiles.json");
             
             // if the file doesn't already exist, create it
-            _logFileLocation = Path.Combine(Settings.WorkingDirectory, "LogConfig.json");
-            if (!File.Exists(_logFileLocation))
+            LogFileLocation = Path.Combine(Settings.WorkingDirectory, "LogConfig.json");
+            if (!File.Exists(LogFileLocation))
             {
-                Trace.WriteLine($"{_logFileLocation} did not exist. Creating file with a default config...");
-                File.Copy(tempFileLocation, _logFileLocation);
+                Trace.WriteLine($"{LogFileLocation} did not exist. Creating file with a default config...");
+                File.Copy(tempFileLocation, LogFileLocation);
             }
 
-            LoadLogs(_logFileLocation);
+            LoadLogs(LogFileLocation);
+        }
+
+        public void ReplaceConfig(Logs logs)
+        {
+            Logs = logs;
+            SaveState();
         }
 
         public void SaveState()
@@ -56,8 +53,10 @@ namespace SwiftTailer.Wpf.Data
             var logsJson = JsonConvert.SerializeObject(Logs, Formatting.Indented);
             lock (_objectLock)
             {
-                WriteToFile(_logFileLocation, logsJson);
+                WriteToFile(LogFileLocation, logsJson);
             }
+            Trace.WriteLine("Saved config state!");
+            OnLogSourceBound();
         }
 
         private void LoadLogs(string path)
@@ -67,16 +66,41 @@ namespace SwiftTailer.Wpf.Data
             {
                 var json = fs.ReadToEnd();
                 Logs = JsonConvert.DeserializeObject<Logs>(json);
-                OnLogCollectionChanged();
+                OnLogSourceBound();
             }
         }
 
         public void AddLog(Guid groupId, LogInfo log)
         {
-            Logs.Groups.First(group => group.Id.Equals(groupId)).Logs.Add(log);
+            var addTo = Logs.Groups
+                .First(group => group.Id.Equals(groupId));
+
+            if (addTo.Logs.Any(l => l.Alias.Equals(log.Alias, StringComparison.OrdinalIgnoreCase)))
+            {
+                Trace.WriteLine($"A log with the alias {log.Alias} already exists in the group {addTo.Name}! Aborting");
+                return;
+            }
+
+            addTo.Logs.Add(log);
+
             SaveState();
-            OnLogCollectionChanged();
             OnLogAdded(log, groupId);
+        }
+
+        public void AddLog(LogGroup group, IEnumerable<LogInfo> logs)
+        {
+            var saveGroup = Logs.Groups.FirstOrDefault(g => g.Name.Equals(@group.Name, StringComparison.InvariantCultureIgnoreCase)) ?? @group;
+
+            foreach (var log in logs)
+            {
+                if(!saveGroup.Logs.Any(l => l.Alias.Equals(log.Alias, StringComparison.Ordinal)))
+                    saveGroup.Logs.Add(log);
+
+                // update now to prevent a possible race condition in the OnLogAdded
+                OnLogAdded(log, saveGroup.Id); 
+            }
+
+            SaveState();
         }
 
         public void RemoveLog(LogInfo log)
@@ -86,8 +110,8 @@ namespace SwiftTailer.Wpf.Data
             {
                 group.Logs.RemoveAll(l => l.Id.Equals(log.Id));
             }
+
             SaveState();
-            OnLogCollectionChanged();
             OnLogRemoved(log);
         }
 
@@ -116,10 +140,10 @@ namespace SwiftTailer.Wpf.Data
             OnLogGroupDeleted();
         }
 
-        private void OnLogCollectionChanged()
+        private void OnLogSourceBound()
         {
-            Debug.WriteLine("OnLogCollectionChanged fired (LogSource)");
-            LogCollectionChanged?.Invoke(this, new EventArgs());
+            Debug.WriteLine("OnLogSourceBound fired (LogSource)");
+            LogSourceBound?.Invoke(this, new EventArgs());
         }
 
         private void OnLogGroupCollectionChanged()
@@ -178,5 +202,7 @@ namespace SwiftTailer.Wpf.Data
     public delegate void LogGroupDeletedHandler(object sender, EventArgs args);
 
     public delegate void LogGroupEditedHandler(object sender, LogGroupEventArgs args);
+
+    public delegate void LogSourceBoundHandler(object sender, EventArgs args);
 
 }
