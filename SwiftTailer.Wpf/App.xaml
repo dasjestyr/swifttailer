@@ -48,6 +48,7 @@
                 </MultiTrigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
+        
         <SolidColorBrush x:Key="Expander.MouseOver.Circle.Stroke" Color="#FF5593FF"/>
         <SolidColorBrush x:Key="Expander.MouseOver.Circle.Fill" Color="#FFF3F9FF"/>
         <SolidColorBrush x:Key="Expander.MouseOver.Arrow.Stroke" Color="#FF000000"/>
@@ -60,6 +61,7 @@
         <SolidColorBrush x:Key="Expander.Static.Circle.Fill" Color="#FFFFFFFF"/>
         <SolidColorBrush x:Key="Expander.Static.Circle.Stroke" Color="#FF333333"/>
         <SolidColorBrush x:Key="Expander.Static.Arrow.Stroke" Color="#FF333333"/>
+        
         <Style x:Key="ExpanderRightHeaderStyle" TargetType="{x:Type ToggleButton}">
             <Setter Property="Template">
                 <Setter.Value>

@@ -180,8 +180,13 @@ namespace SwiftTailer.Wpf.Models.Observable
             BindingOperations.EnableCollectionSynchronization(LogLines, _lockObject);
         }
 
+        /// <summary>
+        /// Stops tailing this instance and tells the LogSource to delete it.
+        /// </summary>
         public void DeleteSelf()
         {
+            // NOTE: not entirely sure if this get's GC'd
+
             // make sure this isn't running
             _cts.Cancel();
 
@@ -198,9 +203,11 @@ namespace SwiftTailer.Wpf.Models.Observable
         public async Task StartTailing()
         {
             _cts = new CancellationTokenSource();
-            
+
             if (File.Exists(LogInfo.Location))
-                await RunUpdates();            
+            {
+                await RunUpdates();
+            }            
             else
             {
                 await Task.Run(() =>
@@ -307,7 +314,7 @@ namespace SwiftTailer.Wpf.Models.Observable
                     _lastLineIsDirty = true;
 
                     // trim the log if necessary
-                    TrimLog(newLines.Count);                        
+                    LineCount = TrimLog(newLines.Count);                        
                         
                     _lastIndex = startAt;
                     _lastIndex = fs.Position;
@@ -315,7 +322,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             }                       
         }
 
-        private void TrimLog(int newLineCount)
+        private int TrimLog(int newLineCount)
         {
             if ((LogLines.Count + newLineCount) >= Settings.MaxDisplayLogLines
                             && LogLines.Count > newLineCount)
@@ -325,7 +332,7 @@ namespace SwiftTailer.Wpf.Models.Observable
                     LogLines.RemoveAt(i);
                 }
             }
-            LineCount = LogLines.Count;
+            return LogLines.Count;
         }
 
         private void OnLogTextChanged(RawContentsChangedEventArgs args)
@@ -334,10 +341,9 @@ namespace SwiftTailer.Wpf.Models.Observable
 
             LogLines.Clear();
             LogLines.AddRange(args.NewText
-                .Split(new []{"\r\n"}, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(line => new LogLine(line, LogHighlight.None)));
 
-            // trigger listeners
             RawContentChanged?.Invoke(this, args);
         }
 

@@ -73,9 +73,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         private void SetApplicator()
         {
             HighlightApplicator.ClearGlobalFilters();
-
-            /* I feel like this could be handled cleaner with something like a factory */
-
+            
             if(SearchMode == SearchMode.Find)
                 HighlightApplicator.AddFilter(new FindHighlightRule(this, PhraseType, CompareRule));
 

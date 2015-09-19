@@ -33,8 +33,10 @@ namespace SwiftTailer.Wpf.Filters
         /// <param name="logLines">The log lines.</param>
         public static void Apply(IEnumerable<LogLine> logLines)
         {
-            // TODO: maybe there's a decent way to run this in parallel?
             var logLineList = logLines.ToList();
+
+            // TODO: maybe there's a decent way to run this in parallel?
+            // TODO: this tends to throw exceptions on startup stating the collection has been modified - the app will resume
             foreach (var filter in _globalFilters)
             {
                 Apply(filter, logLineList);
