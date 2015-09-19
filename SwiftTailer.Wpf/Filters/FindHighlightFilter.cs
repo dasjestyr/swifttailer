@@ -4,19 +4,26 @@ using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Filters
 {
-    public class SearchHighlightFilter : ILogLineFilter
+    public class FindHighlightFilter : ILogLineFilter
     {
         private readonly ISearchSource _source;
         private readonly StringComparison _comparisonRule;
 
-        public string Description => "Applies highlight to log lines that contain the specified search term";
+        /// <summary>
+        /// Gets or sets the description of the filter.
+        /// </summary>
+        /// <value>
+        /// The description.
+        /// </value>
+        public string Description => "Applies highlight to log lines that contain the specified search term. " +
+                                     "Do not place this in the same filter chain as another search mode filter.";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SearchHighlightFilter" /> class.
+        /// Initializes a new instance of the <see cref="FindHighlightFilter" /> class.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="comparisoneRule">The comparisone rule.</param>
-        public SearchHighlightFilter(ISearchSource source, StringComparison comparisoneRule)
+        public FindHighlightFilter(ISearchSource source, StringComparison comparisoneRule)
         {
             _source = source;
             _comparisonRule = comparisoneRule;
@@ -38,7 +45,6 @@ namespace SwiftTailer.Wpf.Filters
             }
 
             logLine.Highlight = LogHighlight.Find;
-            Debug.WriteLine($"Highlighted {logLine.Content}");
             return true;
         }
     }

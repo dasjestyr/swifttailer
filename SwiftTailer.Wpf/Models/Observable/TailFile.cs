@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -24,7 +23,6 @@ namespace SwiftTailer.Wpf.Models.Observable
         private int _lineCount;
         private int _selectedLineIndex;
         private bool _followTail;
-        private SearchOptions _searchOptions;
         private ObservableCollection<LogLine> _logLines = new ObservableCollection<LogLine>();
         private CancellationTokenSource _cts;
         public event RawContentsChangedHandler RawContentChanged;
@@ -45,20 +43,21 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// The identifier.
         /// </value>
         public Guid Id => LogInfo.Id;
-        
+
+
+        /// <summary>
+        /// Gets or sets the search options.
+        /// </summary>
+        /// <value>
+        /// The search options.
+        /// </value>
+        public SearchOptions SearchOptions { get; set; }
+
+
         public OpenInExplorerCommand OpenInExplorerCommand { get; set; }
 
-        #region -- Observable Properties --
 
-        public SearchOptions SearchOptions
-        {
-            get { return _searchOptions; }
-            set
-            {
-                _searchOptions = value;
-                OnPropertyChanged();
-            }
-        }
+        #region -- Observable Properties --
 
         /// <summary>
         /// Gets or sets the raw contents.
@@ -94,6 +93,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Gets or sets the index of this tail in the group.
+        /// </summary>
+        /// <value>
+        /// The order.
+        /// </value>
         public int Order
         {
             get { return LogInfo.Order; }
@@ -104,6 +109,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Gets or sets the line count.
+        /// </summary>
+        /// <value>
+        /// The line count.
+        /// </value>
         public int LineCount
         {
             get { return _lineCount; }
@@ -114,6 +125,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Gets or sets the selected line.
+        /// </summary>
+        /// <value>
+        /// The selected line.
+        /// </value>
         public int SelectedLine
         {
             get { return _selectedLineIndex; }
@@ -124,6 +141,9 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// If true, Selected line will be set to the last line in the collection when an update is made.
+        /// </summary>
         public bool FollowTail
         {
             get { return _followTail; }
@@ -135,7 +155,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         }
 
         #endregion
-        
+
         /// <summary>
         /// Gets the log information.
         /// </summary>
@@ -151,15 +171,13 @@ namespace SwiftTailer.Wpf.Models.Observable
         public TailFile(LogInfo logInfo)
         {
             LogInfo = logInfo;
+            SearchOptions = new SearchOptions(this);
             _displayBuffer = Settings.DisplayBufferSize * 0x400;
             _cts = new CancellationTokenSource();
-            _searchOptions = new SearchOptions(this);
             
             OpenInExplorerCommand = new OpenInExplorerCommand();
-            LogLines = new ObservableCollection<LogLine>();
             
             BindingOperations.EnableCollectionSynchronization(LogLines, _lockObject);
-            
         }
 
         public void DeleteSelf()
@@ -209,7 +227,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             {
                 while (!_cts.IsCancellationRequested)
                 {
-                    GetUpdates();
+                    UpdateTail();
 
                     if (FollowTail && _lastLineIsDirty)
                     {
@@ -222,8 +240,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             }, _cts.Token);
         }
         
-        // TODO: this method is getting a bit fat. Break it down...
-        private void GetUpdates()
+        private void UpdateTail()
         {
             // lock this or else you'll run into internal array sizing issues with the bounded ItemSource
             lock (_lockObject)
@@ -283,14 +300,7 @@ namespace SwiftTailer.Wpf.Models.Observable
                         .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(line => new LogLine(line, LogHighlight.None))
                         .ToList();
-
-                    // run them through the filter
-                    // TODO: figure out some sort of live filter collection that updates
-                    // with the UI so that they can be applied as the new lines come in
-                    //HighlightApplicator.Apply(newLines,
-                    //    new ClearHighlitersFilter(),
-                    //    new SearchHighlightFilter(SearchOptions.SearchPhrase));
-
+                    
                     // update the log collection
                     LogLines.AddRange(newLines);
                     OnNewContentedAdded(new NewContentEventArgs(this, newLines));
@@ -340,22 +350,4 @@ namespace SwiftTailer.Wpf.Models.Observable
 
     public delegate void RawContentsChangedHandler(object sender, RawContentsChangedEventArgs args);
     public delegate void NewContentAddedHandler(object sender, NewContentEventArgs args);
-
-    public class NewContentEventArgs : EventArgs
-    {
-        public TailFile Context { get; private set; }
-
-        public IEnumerable<LogLine> NewLines { get; private set; }
-
-        public int NewLineCount { get; private set; }
-
-        public NewContentEventArgs(TailFile context, IEnumerable<LogLine> newLines)
-        {
-            var lines = newLines.ToList();
-
-            Context = context;
-            NewLines = lines;
-            NewLineCount = lines.Count();
-        }
-    }
 }

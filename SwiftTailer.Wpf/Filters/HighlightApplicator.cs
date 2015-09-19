@@ -10,9 +10,6 @@ namespace SwiftTailer.Wpf.Filters
     {
         private static readonly List<ILogLineFilter> _globalFilters = new List<ILogLineFilter>();
         
-        // TODO: global filters are half-baked at the moment. How should they work? Maybe user settings determine whether they're
-        // applied before or after explicit rules?
-
         /// <summary>
         /// Gets the loaded filters.
         /// </summary>

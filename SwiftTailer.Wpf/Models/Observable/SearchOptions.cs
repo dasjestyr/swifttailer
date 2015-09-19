@@ -75,7 +75,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             HighlightApplicator.ClearGlobalFilters();
 
             if(SearchMode == SearchMode.Find)
-                HighlightApplicator.AddFilter(new SearchHighlightFilter(this, CompareRule));
+                HighlightApplicator.AddFilter(new FindHighlightFilter(this, CompareRule));
 
             Trace.WriteLine("Applicator was reconfigured!");
             ApplyFilters();

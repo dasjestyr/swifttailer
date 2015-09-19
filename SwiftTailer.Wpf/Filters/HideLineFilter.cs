@@ -8,17 +8,14 @@ namespace SwiftTailer.Wpf.Filters
         private readonly StringComparison _comparisonRule;
         private readonly string _phrase;
 
-        public HideLineFilter(string phrase)
+        public HideLineFilter(string phrase, StringComparison comparisonRule)
         {
-            // TODO: get from settings
-            _comparisonRule = StringComparison.OrdinalIgnoreCase;
+            _comparisonRule = comparisonRule;
             _phrase = phrase;
         }
 
         public bool ApplyFilter(LogLine logLine)
         {
-            // REFACTOR: this logic may be unreliable since it's really just
-            // the opposite of SearchHighlightFilter
             if (string.IsNullOrEmpty(logLine.Content) || logLine.Content.IndexOf(_phrase, _comparisonRule) != -1)
                 return false;
 
@@ -26,6 +23,7 @@ namespace SwiftTailer.Wpf.Filters
             return true;
         }
 
-        public string Description => "Applies filter to designate whether or not the line should be hidden.";
+        public string Description => "Applies filter to designate whether or not the line should be hidden. " +
+                                     "Do not place this into the same filter chain with another search mode filter.";
     }
 }
