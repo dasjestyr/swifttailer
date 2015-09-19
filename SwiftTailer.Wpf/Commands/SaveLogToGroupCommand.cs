@@ -25,8 +25,11 @@ namespace SwiftTailer.Wpf.Commands
         {
             var w = parameter as Window;
             if (w == null) return;
+            
+            // remove quotes
+            var fileLocation = _vm.FileLocation.Trim('"');
 
-            var newLog = new LogInfo(_vm.FileLocation, _vm.Alias);
+            var newLog = new LogInfo(fileLocation, _vm.Alias);
             LogSource.Instance.Logs.Groups
                 .First(group => group.Id.Equals(_vm.SelectedGroup.Id))
                 .AddLog(newLog);
