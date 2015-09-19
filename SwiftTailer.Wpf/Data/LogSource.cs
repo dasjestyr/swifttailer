@@ -46,6 +46,7 @@ namespace SwiftTailer.Wpf.Data
         {
             Logs = logs;
             SaveState();
+            OnLogSourceBound();
         }
 
         public void SaveState()
@@ -56,7 +57,6 @@ namespace SwiftTailer.Wpf.Data
                 WriteToFile(LogFileLocation, logsJson);
             }
             Trace.WriteLine("Saved config state!");
-            OnLogSourceBound();
         }
 
         private void LoadLogs(string path)
@@ -81,6 +81,11 @@ namespace SwiftTailer.Wpf.Data
                 return;
             }
 
+            if (addTo.Logs.Any())
+            {
+                var highestOrder = addTo.Logs.Max(l => l.Order);
+            }
+            
             addTo.Logs.Add(log);
 
             SaveState();
@@ -93,10 +98,13 @@ namespace SwiftTailer.Wpf.Data
 
             foreach (var log in logs)
             {
-                if(!saveGroup.Logs.Any(l => l.Alias.Equals(log.Alias, StringComparison.Ordinal)))
+                if (!saveGroup.Logs.Any(l => l.Alias.Equals(log.Alias, StringComparison.Ordinal)))
+                {
+                    var highestOrder = saveGroup.Logs.Max(l => l.Order);
+                    log.Order = highestOrder + 1;
                     saveGroup.Logs.Add(log);
-
-                // update now to prevent a possible race condition in the OnLogAdded
+                }
+                
                 OnLogAdded(log, saveGroup.Id); 
             }
 

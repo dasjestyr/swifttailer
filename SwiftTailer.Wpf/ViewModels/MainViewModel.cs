@@ -189,7 +189,8 @@ namespace SwiftTailer.Wpf.ViewModels
         {
             // update the groups
             Groups.Clear();
-            foreach (var group in LogSource.Instance.Logs.Groups)
+            foreach (var group in LogSource.Instance.Logs.Groups
+                .OrderBy(g => g.Name))
             {
                 Groups.Add(group);
             }
@@ -219,6 +220,7 @@ namespace SwiftTailer.Wpf.ViewModels
         private void LogAdded(object sender, LogEventArgs args)
         {
             Debug.WriteLine("Setting selected tail...");
+            SetTails();
             var tail = Tails.FirstOrDefault(t => t.Id.Equals(args.Log.Id));
             if (tail != null)
                 SelectedTail = tail;
@@ -227,7 +229,8 @@ namespace SwiftTailer.Wpf.ViewModels
         private void LogRemoved(object sender, LogEventArgs args)
         {
             Debug.WriteLine("Setting selected tail...");
-            SelectedTail = Tails.FirstOrDefault();
+            SetTails();
+            SelectedTail = Tails.LastOrDefault();
         }
 
         private void LogGroupAdded(object sender, LogGroupEventArgs args)
@@ -245,7 +248,7 @@ namespace SwiftTailer.Wpf.ViewModels
         private void LogGroupDeleted(object sender, EventArgs args)
         {
             Debug.WriteLine("Setting selected group...");
-            SelectedGroup = Groups.Any() ? Groups[0] : null;
+            SelectedGroup = Groups.FirstOrDefault();
         }
 
         #endregion
