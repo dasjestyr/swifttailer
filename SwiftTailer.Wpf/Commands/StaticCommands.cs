@@ -7,7 +7,7 @@ namespace SwiftTailer.Wpf.Commands
     /// </summary>
     public class StaticCommands
     {
-        public static ICommand OpenLogLineCommand { get; set; }
+        public static ICommand OpenLogLineCommand = new OpenLogLineCommand();
         
         public static ICommand CloseWindowCommand = new CloseWindowCommand();
 

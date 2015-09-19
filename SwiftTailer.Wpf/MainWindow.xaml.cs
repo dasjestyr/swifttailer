@@ -2,7 +2,9 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
+using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.ViewModels;
 
 namespace SwiftTailer.Wpf
@@ -98,5 +100,12 @@ namespace SwiftTailer.Wpf
         //        pageContext.SaveOrder();
         //    }
         //}
+        private void ListBoxItem_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var lbi = sender as ListBoxItem;
+            if (lbi == null) return;
+
+            StaticCommands.OpenLogLineCommand.Execute(lbi);
+        }
     }
 }

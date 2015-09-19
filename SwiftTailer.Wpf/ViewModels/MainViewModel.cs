@@ -126,8 +126,6 @@ namespace SwiftTailer.Wpf.ViewModels
             LogSource.Instance.LogGroupAdded += LogGroupAdded;
             LogSource.Instance.LogGroupEdited += LogGroupEdited;
             LogSource.Instance.LogGroupDeleted += LogGroupDeleted;
-
-            StaticCommands.OpenLogLineCommand = new OpenLogLineCommand();
         }
 
         public void StartTailing()

@@ -20,7 +20,7 @@ namespace SwiftTailer.Wpf.Commands
         public void Execute(object parameter)
         {
             var lbx = parameter as ListBox;
-            var lbi = parameter as UIElement;
+            var lbi = parameter as ListBoxItem;
 
             if (lbx == null)
             {

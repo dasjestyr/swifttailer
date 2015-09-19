@@ -14,7 +14,6 @@
         <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
         <converters:HighlightConverter x:Key="HighlightConverter"/>
         <converters:LineCountDisplayConverter x:Key="LineCountDisplayConverter" />
-        <CollectionViewSource x:Key="cvs" x:Name="cvs" Source="{Binding}" />
         <Style TargetType="ListBoxItem" x:Key="HighlightItemStyle">
             <Setter Property="ContextMenu">
                 <Setter.Value>
@@ -24,7 +23,7 @@
                 </Setter.Value>
             </Setter>
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            
+            <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_DoubleClick" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Find">
                     <Setter Property="Background" Value="Yellow" />
@@ -152,11 +151,6 @@
                         <ListBox x:Name="LogList" ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" SelectionMode="Extended" 
                                  ItemContainerStyle="{StaticResource HighlightItemStyle}" FontFamily="{x:Static wpf:Settings.LogWindowFontFamily}"
                                  SelectedIndex="{Binding SelectedLine}" SelectionChanged="LogList_SelectionChanged">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseDoubleClick">
-                                    <i:InvokeCommandAction Command="commands:StaticCommands.OpenLogLineCommand" CommandParameter="{Binding ElementName=LogList}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Content}"/>
