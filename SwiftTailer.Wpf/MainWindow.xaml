@@ -29,6 +29,9 @@
                 <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Find">
                     <Setter Property="Background" Value="Yellow" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Hide">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
         <Style TargetType="StatusBarItem">
@@ -175,13 +178,7 @@
                                 <DockPanel LastChildFill="True">
                                     <Label Content="Search:"/>
                                     <TextBox x:Name="LogFilter" HorizontalAlignment="Stretch" BorderBrush="Gray" VerticalContentAlignment="Center"
-                                        Text="{Binding SearchOptions.SearchPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Phrase'}">
-                                        <!--<i:Interaction.Triggers>
-                                            <i:EventTrigger EventName="TextChanged">
-                                                <i:InvokeCommandAction Command="{Binding ApplyUserInputHighlightCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
-                                            </i:EventTrigger>
-                                        </i:Interaction.Triggers>-->
-                                    </TextBox>
+                                        Text="{Binding SearchOptions.SearchPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Phrase'}"/>
                                 </DockPanel>
                             </Expander.Header>
                             <StackPanel Orientation="Horizontal">

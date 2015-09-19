@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows.Data;
 using SwiftTailer.Wpf.Filters;
-using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Converters
 {
