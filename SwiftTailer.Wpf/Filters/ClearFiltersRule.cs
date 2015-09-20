@@ -6,7 +6,7 @@ namespace SwiftTailer.Wpf.Filters
     {
         public bool ApplyFilter(LogLine logLine)
         {
-            logLine.Highlight = LogHighlight.None;
+            logLine.DeFilter();
             return true;
         }
 

@@ -9,6 +9,7 @@
         xmlns:wpf="clr-namespace:SwiftTailer.Wpf"
         xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
         xmlns:data="clr-namespace:SwiftTailer.Wpf.Data"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d" x:Name="ThisWindow"
         Title="SwiftTailer" Height="800" Width="800" WindowStartupLocation="CenterScreen">
     <Window.Resources>
@@ -16,6 +17,7 @@
         <converters:HighlightConverter x:Key="HighlightConverter"/>
         <converters:LineCountDisplayConverter x:Key="LineCountDisplayConverter" />
         <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
+        <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter" />
         <Style TargetType="ListBoxItem" x:Key="HighlightItemStyle">
             <Setter Property="ContextMenu">
                 <Setter.Value>
@@ -204,8 +206,12 @@
 
                                 <GroupBox Header="Search Mode" Padding="5 5 5 0" Margin="2">
                                     <StackPanel Orientation="Vertical">
-                                        <RadioButton GroupName="SearchMode" Content="Find" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Find}" />
-                                        <RadioButton GroupName="SearchMode" Content="Filter" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Filter}"/>
+                                        <RadioButton GroupName="SearchMode" Name="FindModeRdo"  Content="Find" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Find}" />
+                                        <RadioButton GroupName="SearchMode" Name="FilterModeRdo" Content="Filter" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Filter}"/>
+                                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextHeadSize}" Minimum="0" Text="Head Size"
+                                                            Visibility="{Binding ElementName=FilterModeRdo, Path=IsChecked, Converter={StaticResource BooleanVisibilityConverter}}"/>
+                                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextTailSize}" Minimum="0" Text="Tail Size"
+                                                            Visibility="{Binding ElementName=FilterModeRdo, Path=IsChecked, Converter={StaticResource BooleanVisibilityConverter}}"/>
                                     </StackPanel>
                                 </GroupBox>
 
@@ -247,7 +253,7 @@
                         <ColumnDefinition Width="Auto" MaxWidth="300" />
                         <ColumnDefinition Width="100" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding ProgressText, FallbackValue='Processing c:\\MyDocuments\MyFilt.txt...'}" Margin="5 0" />
+                    <TextBlock Text="{Binding ProgressText, FallbackValue='Processing c:\\MyDocuments\\MyFilt.txt...'}" Margin="5 0" />
                     <ProgressBar Value="{Binding ProgressBarValue}" Maximum="100" Width="100" Height="15" x:Name="ProgressBar" Grid.Column="1" />
                 </Grid>
             </StatusBarItem>

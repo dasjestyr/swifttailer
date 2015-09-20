@@ -17,6 +17,8 @@ namespace SwiftTailer.Wpf.Models.Observable
         private PhraseType _phraseType = PhraseType.Literal;
         private string _errorPhrases = string.Empty;
         private string _generalPhrases = string.Empty;
+        private int _contextHeadSize;
+        private int _contextTailSize;
 
         private StringComparison CompareRule
             => CaseSensitive
@@ -95,6 +97,26 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        public int ContextHeadSize
+        {
+            get { return _contextHeadSize; }
+            set
+            {
+                _contextHeadSize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ContextTailSize
+        {
+            get { return _contextTailSize; }
+            set
+            {
+                _contextTailSize = value;
+                OnPropertyChanged();
+            }
+        }
+
         public SearchOptions(TailFile tail)
         {
             _tail = tail;
@@ -108,8 +130,16 @@ namespace SwiftTailer.Wpf.Models.Observable
             if(SearchMode == SearchMode.Find)
                 HighlightApplicator.AddFilter(new FindHighlightRule(this, PhraseType, CompareRule));
 
-            if(SearchMode == SearchMode.Filter)
+            if (SearchMode == SearchMode.Filter)
+            {
+                // must be applied in this order
                 HighlightApplicator.AddFilter(new HideLineRule(this, PhraseType, CompareRule));
+                HighlightApplicator.AddFilter(new CaptureContextRule(
+                    ContextHeadSize, 
+                    ContextTailSize, 
+                    SearchMode, 
+                    _tail.LogLines));
+            }
 
             // auto-enabled
             HighlightApplicator.AddFilter(new GeneralPhraseRule(this));

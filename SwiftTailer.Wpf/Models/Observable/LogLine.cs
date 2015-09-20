@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using SwiftTailer.Wpf.Filters;
 
 namespace SwiftTailer.Wpf.Models.Observable
@@ -5,7 +6,8 @@ namespace SwiftTailer.Wpf.Models.Observable
     public class LogLine : ModelBase
     {
         private LogHighlight _highlight;
-        
+        private ObservableCollection<LogLine> _context;
+
         /// <summary>
         /// Gets or sets the content.
         /// </summary>
@@ -30,6 +32,23 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+
+        /// <summary>
+        /// Gets or sets the context, if applicable.
+        /// </summary>
+        /// <value>
+        /// The context.
+        /// </value>
+        public ObservableCollection<LogLine> Context
+        {
+            get { return _context; }
+            set
+            {
+                _context = value;
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LogLine" /> class.
         /// </summary>
@@ -46,6 +65,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// </summary>
         public void DeFilter()
         {
+            Context.Clear();
             Highlight = LogHighlight.None;
         }
     }
