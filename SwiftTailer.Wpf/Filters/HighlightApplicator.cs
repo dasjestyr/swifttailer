@@ -12,14 +12,6 @@ namespace SwiftTailer.Wpf.Filters
     {
         private readonly List<ILogLineFilter> _globalFilters = new List<ILogLineFilter>();
         private readonly object _lockObject;
-
-        /// <summary>
-        /// Gets the loaded filters.
-        /// </summary>
-        /// <value>
-        /// The filters.
-        /// </value>
-        public IReadOnlyCollection<ILogLineFilter> GlobalFilters => new ReadOnlyCollection<ILogLineFilter>(_globalFilters);
         
         /// <summary>
         /// Clears the global filters. This will also insert the ClearFilter rule at the top of the collection
@@ -43,20 +35,17 @@ namespace SwiftTailer.Wpf.Filters
         /// </summary>
         /// <param name="logLines">The log lines.</param>
         /// <param name="cts">The CTS.</param>
-        public void Apply(IEnumerable<LogLine> logLines, CancellationTokenSource cts)
+        public async void Apply(IEnumerable<LogLine> logLines, CancellationTokenSource cts)
         {
-            var logLineList = logLines.ToList();
-
-            // TODO: maybe there's a decent way to run this in parallel?
-            // TODO: this tends to throw exceptions on startup stating the collection has been modified - the app will resume
+            IEnumerable<Task> tasks;
 
             lock (_lockObject)
             {
-                foreach (var filter in _globalFilters)
-                {
-                    Apply(filter, logLineList, cts);
-                }
+                var logLineList = logLines.ToList();
+                tasks = _globalFilters.Select(filter => Apply(filter, logLineList, cts));
             }
+
+            await Task.WhenAll(tasks);
         }
 
         /// <summary>
@@ -65,14 +54,10 @@ namespace SwiftTailer.Wpf.Filters
         /// <param name="logLines">The log lines.</param>
         /// <param name="cts">The CTS.</param>
         /// <param name="filters">The filters to be applied in order. The last rule that applies will be the rule applied. For example, if a line matches 'dog' and then 'cat' then the rule for 'cat' will be applied.</param>
-        public async void Apply(IEnumerable<LogLine> logLines, CancellationTokenSource cts, params ILogLineFilter[] filters)
+        public async Task Apply(IEnumerable<LogLine> logLines, CancellationTokenSource cts, params ILogLineFilter[] filters)
         {
-            // TODO: maybe there's a decent way to run this in parallel?
-            var logLineList = logLines.ToList();
-            foreach (var filter in filters)
-            {
-                await Apply(filter, logLineList, cts);
-            }
+            var tasks = filters.Select(filter => Apply(filter, logLines, cts));
+            await Task.WhenAll(tasks);
         }
 
         /// <summary>
@@ -83,13 +68,9 @@ namespace SwiftTailer.Wpf.Filters
         /// <param name="cts">The CTS.</param>
         public async Task Apply(ILogLineFilter filter, IEnumerable<LogLine> logLines, CancellationTokenSource cts)
         {
-            await Task.Run(async () =>
-            {
-                foreach (var line in logLines)
-                {
-                    await filter.ApplyFilter(line);
-                }
-            }, cts.Token);
+            var logLineList = logLines.ToList();
+            var tasks = logLineList.Select(filter.ApplyFilter);
+            await Task.WhenAll(tasks);
         }
 
         /// <summary>

@@ -145,7 +145,7 @@ namespace SwiftTailer.Wpf.Models.Observable
                 case SearchMode.Filter:
                     // must be applied in this order
                     _applicator.AddFilter(new HideLineRule(this, PhraseType, CompareRule));
-                    _applicator.AddFilter(new CaptureContextRule(this, ContextHeadSize, ContextTailSize, _tail.LogLines, _cancellationTokenSource.Token));
+                    _applicator.AddFilter(new CaptureContextRule(this, ContextHeadSize, ContextTailSize, _tail.LogLines));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -159,7 +159,7 @@ namespace SwiftTailer.Wpf.Models.Observable
 
             // make sure to stop anything that's still in flight
 
-            await Application.Current.Dispatcher.InvokeAsync(() => _applicator.Apply(_tail.LogLines, _cancellationTokenSource));
+            Application.Current.Dispatcher.Invoke(() => _applicator.Apply(_tail.LogLines, _cancellationTokenSource));
         }
 
         private void NewContentAddedHandler(object sender, NewContentEventArgs args)

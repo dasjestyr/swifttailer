@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using SwiftTailer.Wpf.Models.Observable;
 
@@ -35,9 +34,7 @@ namespace SwiftTailer.Wpf.Filters
             _source = source;
             _logLines = logLines;
         }
-
-        // TODO: there's probably still some work to do in order to speed this up
-
+        
         public async Task<bool> ApplyFilter(LogLine logLine)
         {
             // this only applies to Filter mode
@@ -65,6 +62,7 @@ namespace SwiftTailer.Wpf.Filters
             var startIndex = currentIndex - HeadCount;
             var sliceSize = Range;
 
+            // make sure we don't go out of bounds
             if (startIndex < 0)
             {
                 sliceSize += startIndex;
@@ -73,9 +71,8 @@ namespace SwiftTailer.Wpf.Filters
 
             if (startIndex + sliceSize > _logLines.Count)
                 sliceSize = _logLines.Count - startIndex;
-            
-            Trace.WriteLine($"Extracting {sliceSize} lines...");
 
+            // get the slice
             var slice = new LogLine[sliceSize];
             Array.Copy(logarray, startIndex, slice, 0, sliceSize);
 
