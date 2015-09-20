@@ -99,7 +99,8 @@
                         Command="commands:StaticCommands.ZipSelectedGroupCommand" CommandParameter="{Binding ElementName=ThisWindow, Path=DataContext}">
                     <Image Source="Assets/compress.png" />
                 </Button>
-                <Button ToolTip="Zip the current state of the group and email it..." Style="{StaticResource ToolbarIconStyle}">
+                <Button ToolTip="Zip the current state of the group and email it..." Style="{StaticResource ToolbarIconStyle}"
+                        Command="commands:StaticCommands.ZipGroupAndEmailCommand" CommandParameter="{Binding ElementName=ThisWindow, Path=DataContext}">
                     <Image Source="Assets/packages.png"/>
                 </Button>
             </ToolBar>

@@ -9,7 +9,7 @@ using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.ViewModels
 {
-    public class MainViewModel : ModelBase
+    public class MainViewModel : ModelBase, IProgressProvider
     {
         private bool _isRunning;
         private string _status = "Idle";
@@ -269,5 +269,12 @@ namespace SwiftTailer.Wpf.ViewModels
         }
 
         #endregion
+    }
+
+    public interface IProgressProvider
+    {
+        string ProgressText { get; set; }
+
+        int ProgressBarValue { get; set; }
     }
 }

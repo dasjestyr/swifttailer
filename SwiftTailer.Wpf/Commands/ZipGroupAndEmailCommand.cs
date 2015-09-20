@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -6,7 +7,7 @@ using SwiftTailer.Wpf.ViewModels;
 
 namespace SwiftTailer.Wpf.Commands
 {
-    public class ZipGroupCommand : ICommand
+    public class ZipGroupAndEmailCommand : ICommand
     {
         public bool CanExecute(object parameter)
         {
@@ -31,8 +32,14 @@ namespace SwiftTailer.Wpf.Commands
             var result = fileLocation.ShowDialog();
             if (!result.HasValue || !result.Value)
                 return;
-            
+
             await Task.Run(() => ZipTasks.ZipGroup(group, fileLocation.FileName, vm));
+
+            EmailTasks.SendAttachment(
+                "someone@domain.com", 
+                "Log Files", 
+                Path.GetFileName(fileLocation.FileName), 
+                fileLocation.FileName);
         }
 
         public event EventHandler CanExecuteChanged;
