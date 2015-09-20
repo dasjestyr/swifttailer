@@ -43,6 +43,9 @@ namespace SwiftTailer.Wpf.Commands
                         // add each log to the archive
                         foreach (var log in group.Logs)
                         {
+                            if (!File.Exists(log.Filename))
+                                continue;
+
                             // create the entry
                             var entry = zip.CreateEntry(Path.GetFileName(log.Filename), CompressionLevel.Fastest);
 
