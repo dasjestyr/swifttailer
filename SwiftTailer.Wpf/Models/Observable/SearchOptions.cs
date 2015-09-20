@@ -9,8 +9,10 @@ namespace SwiftTailer.Wpf.Models.Observable
 {
     public class SearchOptions : ModelBase, ISearchSource
     {
-        private bool _isInitialized;
+        private readonly CaptureContextRule _captureRule;
         private readonly TailFile _tail;
+        private readonly HighlightApplicator _applicator = new HighlightApplicator();
+        private bool _isInitialized;
         private bool _caseSensitive;
         private string _searchPhrase;
         private SearchMode _searchMode = SearchMode.Find;
@@ -19,8 +21,6 @@ namespace SwiftTailer.Wpf.Models.Observable
         private string _generalPhrases = string.Empty;
         private int _contextHeadSize;
         private int _contextTailSize;
-
-        private CaptureContextRule _captureRule;
 
         private StringComparison CompareRule
             => CaseSensitive
@@ -135,28 +135,30 @@ namespace SwiftTailer.Wpf.Models.Observable
 
         private void InitializeApplicator()
         {
-            HighlightApplicator.ClearGlobalFilters();
-            
-            if(SearchMode == SearchMode.Find)
-                HighlightApplicator.AddFilter(new FindHighlightRule(this, PhraseType, CompareRule));
-
-            if (SearchMode == SearchMode.Filter)
+            lock (this)
             {
-                _captureRule.SearchMode = SearchMode;
+                _applicator.ClearGlobalFilters();
+                if (SearchMode == SearchMode.Find)
+                    _applicator.AddFilter(new FindHighlightRule(this, PhraseType, CompareRule));
 
-                // must be applied in this order
-                HighlightApplicator.AddFilter(new HideLineRule(this, PhraseType, CompareRule));
-                HighlightApplicator.AddFilter(_captureRule);
+                if (SearchMode == SearchMode.Filter)
+                {
+                    _captureRule.SearchMode = SearchMode;
+
+                    // must be applied in this order
+                    _applicator.AddFilter(new HideLineRule(this, PhraseType, CompareRule));
+                    _applicator.AddFilter(_captureRule);
+                }
+
+                // auto-enabled
+                _applicator.AddFilter(new GeneralPhraseRule(this));
+                _applicator.AddFilter(new ErrorPhraseRule(this));
+
+                _isInitialized = true;
+                Trace.WriteLine("Applicator was (re)initialized!");
+
+                ApplyFilters();
             }
-
-            // auto-enabled
-            HighlightApplicator.AddFilter(new GeneralPhraseRule(this));
-            HighlightApplicator.AddFilter(new ErrorPhraseRule(this));
-
-            _isInitialized = true;
-            Trace.WriteLine("Applicator was (re)initialized!");
-
-            ApplyFilters();
         }
 
         private void ApplyFilters()
@@ -168,13 +170,13 @@ namespace SwiftTailer.Wpf.Models.Observable
 
             lock (this)
             {
-                Task.Run(() => HighlightApplicator.Apply(_tail.LogLines));
+                Task.Run(() => _applicator.Apply(_tail.LogLines));
             }
         }
 
         private void NewContentAddedHandler(object sender, NewContentEventArgs args)
         {
-            HighlightApplicator.Apply(args.NewLines);
+            _applicator.Apply(args.NewLines);
         }
     }
 

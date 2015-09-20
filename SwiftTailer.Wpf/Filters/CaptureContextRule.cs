@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Data;
+using System.Windows.Threading;
 using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Filters
@@ -36,22 +39,31 @@ namespace SwiftTailer.Wpf.Filters
 
         public bool ApplyFilter(LogLine logLine)
         {
-            // this only applies to Filter mode
-            if (SearchMode != SearchMode.Filter || Range == 0)
-                return false;
-            
-            for (var i = 0; i < _logLines.Count; i++)
+            lock (this)
             {
-                if (_logLines[i].Highlight.Category != HighlightCategory.None) continue;
+                // this only applies to Filter mode
+                if (SearchMode != SearchMode.Filter || Range == 0)
+                    return false;
 
-                var contextSlice = ExtractContext(i);
-                _logLines[i].Context = new ObservableCollection<LogLine>(contextSlice);
+                Dispatcher.CurrentDispatcher.InvokeAsync(() =>
+                {
+                    for (var i = 0; i < _logLines.Count; i++)
+                    {
+
+                        if (_logLines[i].Highlight.Category != HighlightCategory.None)
+                            continue;
+
+                        var contextSlice = ExtractContext(i);
+                        _logLines[i].Context.Clear();
+                        _logLines[i].Context.AddRange(contextSlice);
+                    }
+                }).Wait();
+
+                return true;
             }
-
-            return true;
         }
 
-        private List<LogLine> ExtractContext(int currentIndex)
+        private IEnumerable<LogLine> ExtractContext(int currentIndex)
         {
             var startIndex = currentIndex - HeadCount;
             var sliceSize = Range;

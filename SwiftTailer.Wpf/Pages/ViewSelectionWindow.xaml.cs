@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
+using SwiftTailer.Wpf.Models.Observable;
 using SwiftTailer.Wpf.ViewModels;
 
 namespace SwiftTailer.Wpf.Pages
@@ -8,14 +10,14 @@ namespace SwiftTailer.Wpf.Pages
     /// </summary>
     public partial class ViewSelectionWindow : Window
     {
-        public ViewSelectionWindow(string content)
+        public ViewSelectionWindow(IEnumerable<LogLine> logLines)
         {
             InitializeComponent();
 
             var vm = new ViewSelectionViewModel();
             DataContext = vm;
 
-            vm.Content = content;
+            vm.LogLines = logLines;
         }
     }
 }

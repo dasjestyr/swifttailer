@@ -29,13 +29,8 @@ namespace SwiftTailer.Wpf.Commands
             }
 
             var lines = lbx.SelectedItems.Cast<LogLine>().ToList();
-            var sb = new StringBuilder();
-            foreach (var line in lines)
-            {
-                sb.AppendLine(line.Content);
-            }
 
-            var viewer = new ViewSelectionWindow(sb.ToString());
+            var viewer = new ViewSelectionWindow(lines);
             viewer.ShowDialog();
         }
 

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows.Threading;
 using SwiftTailer.Wpf.Filters;
 
 namespace SwiftTailer.Wpf.Models.Observable
@@ -65,8 +66,11 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// </summary>
         public void DeFilter()
         {
-            Context.Clear();
-            Highlight = LogHighlight.None;
+            Dispatcher.CurrentDispatcher.InvokeAsync(() =>
+            {
+                Context.Clear();
+                Highlight = LogHighlight.None;
+            });
         }
     }
 }

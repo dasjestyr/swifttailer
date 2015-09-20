@@ -178,7 +178,12 @@
                                  SelectedIndex="{Binding SelectedLine}" SelectionChanged="LogList_SelectionChanged">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Content}"/>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Content}"/>
+                                        <Expander Header="{Binding Content}">
+                                            <ListBox ItemsSource="{Binding Content.Context}" DisplayMemberPath="Content" />
+                                        </Expander>
+                                    </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
