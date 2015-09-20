@@ -20,6 +20,8 @@ namespace SwiftTailer.Wpf.Models.Observable
         private int _contextHeadSize;
         private int _contextTailSize;
 
+        private CaptureContextRule _captureRule;
+
         private StringComparison CompareRule
             => CaseSensitive
                 ? StringComparison.Ordinal
@@ -103,6 +105,8 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _contextHeadSize = value;
+                _captureRule.HeadCount = value;
+                ApplyFilters();
                 OnPropertyChanged();
             }
         }
@@ -113,6 +117,8 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _contextTailSize = value;
+                _captureRule.TailCount = value;
+                ApplyFilters();
                 OnPropertyChanged();
             }
         }
@@ -120,6 +126,10 @@ namespace SwiftTailer.Wpf.Models.Observable
         public SearchOptions(TailFile tail)
         {
             _tail = tail;
+
+            // keeping a steady instance over this so that we can update the head and tail sizes without
+            // re-initializing the applicator
+            _captureRule = new CaptureContextRule(ContextHeadSize, ContextTailSize, SearchMode, _tail.LogLines);
             _tail.NewLinesAdded += NewContentAddedHandler;
         }
 
@@ -132,13 +142,11 @@ namespace SwiftTailer.Wpf.Models.Observable
 
             if (SearchMode == SearchMode.Filter)
             {
+                _captureRule.SearchMode = SearchMode;
+
                 // must be applied in this order
                 HighlightApplicator.AddFilter(new HideLineRule(this, PhraseType, CompareRule));
-                HighlightApplicator.AddFilter(new CaptureContextRule(
-                    ContextHeadSize, 
-                    ContextTailSize, 
-                    SearchMode, 
-                    _tail.LogLines));
+                HighlightApplicator.AddFilter(_captureRule);
             }
 
             // auto-enabled

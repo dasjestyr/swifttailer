@@ -208,13 +208,18 @@
                                     <StackPanel Orientation="Vertical">
                                         <RadioButton GroupName="SearchMode" Name="FindModeRdo"  Content="Find" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Find}" />
                                         <RadioButton GroupName="SearchMode" Name="FilterModeRdo" Content="Filter" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Filter}"/>
-                                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextHeadSize}" Minimum="0" Text="Head Size"
-                                                            Visibility="{Binding ElementName=FilterModeRdo, Path=IsChecked, Converter={StaticResource BooleanVisibilityConverter}}"/>
-                                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextTailSize}" Minimum="0" Text="Tail Size"
-                                                            Visibility="{Binding ElementName=FilterModeRdo, Path=IsChecked, Converter={StaticResource BooleanVisibilityConverter}}"/>
                                     </StackPanel>
                                 </GroupBox>
 
+                                <GroupBox Header="Lines of Context" Visibility="{Binding ElementName=FilterModeRdo, Path=IsChecked, Converter={StaticResource BooleanVisibilityConverter}}">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Head"/>
+                                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextHeadSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" />
+                                        <TextBlock Text="Tail"/>
+                                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextTailSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" />
+                                    </StackPanel>
+                                </GroupBox>
+                                
                                 <GroupBox Header="Phrase Type" Padding="5 5 5 0" Margin="2">
                                     <StackPanel Orientation="Vertical">
                                         <RadioButton GroupName="PhraseType" Content="Literal" IsChecked="{Binding SearchOptions.PhraseType, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Literal, Mode=TwoWay}" />
@@ -222,14 +227,14 @@
                                     </StackPanel>
                                 </GroupBox>
 
-                                <GroupBox Header="Error keywords" Padding="5 5 5 0" Margin="2" Width="200" Height="100"
+                                <GroupBox Header="Error keywords" Padding="5 5 5 0" Margin="2" Width="150" Height="100"
                                           ToolTip="Comma delimited set of words that will be highlighted in red">
                                     <Grid>
                                         <TextBox Text="{Binding SearchOptions.ErrorPhrases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </Grid>
                                 </GroupBox>
 
-                                <GroupBox Header="General keywords" Padding="5 5 5 0" Margin="2" Width="200" Height="100"
+                                <GroupBox Header="General keywords" Padding="5 5 5 0" Margin="2" Width="150" Height="100"
                                           ToolTip="Comma delimited set of words that will be highlighted in green">
                                     <Grid>
                                         <TextBox Text="{Binding SearchOptions.GeneralPhrases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

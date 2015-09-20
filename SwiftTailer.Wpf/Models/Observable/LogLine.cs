@@ -6,7 +6,7 @@ namespace SwiftTailer.Wpf.Models.Observable
     public class LogLine : ModelBase
     {
         private LogHighlight _highlight;
-        private ObservableCollection<LogLine> _context;
+        private ObservableCollection<LogLine> _context = new ObservableCollection<LogLine>();
 
         /// <summary>
         /// Gets or sets the content.

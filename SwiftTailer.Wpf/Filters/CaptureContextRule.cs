@@ -7,10 +7,16 @@ namespace SwiftTailer.Wpf.Filters
 {
     public class CaptureContextRule : ILogLineFilter
     {
-        private readonly int _headCount;
-        private readonly int _tailCount;
-        private readonly SearchMode _searchMode;
         private readonly IList<LogLine> _logLines;
+
+        private int Range => HeadCount + TailCount + 1;
+
+        public int HeadCount { get; set; }
+
+        public int TailCount { get; set; }
+
+        public SearchMode SearchMode { get; set; }
+
         public string Description => "Captures context of unfiltered results";
 
         /// <summary>
@@ -22,16 +28,16 @@ namespace SwiftTailer.Wpf.Filters
         /// <param name="logLines">The log lines.</param>
         public CaptureContextRule(int headCount, int tailCount, SearchMode searchMode, IList<LogLine> logLines)
         {
-            _headCount = headCount;
-            _tailCount = tailCount;
-            _searchMode = searchMode;
+            HeadCount = headCount;
+            TailCount = tailCount;
+            SearchMode = searchMode;
             _logLines = logLines;
         }
 
         public bool ApplyFilter(LogLine logLine)
         {
             // this only applies to Filter mode
-            if (_searchMode != SearchMode.Filter)
+            if (SearchMode != SearchMode.Filter || Range == 0)
                 return false;
             
             for (var i = 0; i < _logLines.Count; i++)
@@ -47,16 +53,18 @@ namespace SwiftTailer.Wpf.Filters
 
         private List<LogLine> ExtractContext(int currentIndex)
         {
-            var contextRange = _headCount + _tailCount + 1;
-            var startIndex = currentIndex - _headCount;
-            var sliceSize = contextRange;
-
-            if (startIndex + sliceSize > _logLines.Count)
-                sliceSize = _logLines.Count;
+            var startIndex = currentIndex - HeadCount;
+            var sliceSize = Range;
 
             if (startIndex < 0)
+            {
+                sliceSize += startIndex;
                 startIndex = 0;
+            }
 
+            if (startIndex + sliceSize > _logLines.Count)
+                sliceSize = _logLines.Count - startIndex;
+            
             var slice = _logLines
                 .Skip(startIndex)
                 .Take(sliceSize)
