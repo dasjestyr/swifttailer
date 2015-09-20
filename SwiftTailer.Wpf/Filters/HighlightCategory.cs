@@ -5,6 +5,7 @@ namespace SwiftTailer.Wpf.Filters
         None,
         Hide,
         Find,
-        Error
+        Error,
+        General
     }
 }

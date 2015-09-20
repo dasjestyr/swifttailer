@@ -30,6 +30,12 @@
                 <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Find">
                     <Setter Property="Background" Value="Yellow" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Error">
+                    <Setter Property="Background" Value="Red" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="General">
+                    <Setter Property="Background" Value="LightGreen" />
+                </DataTrigger>
                 <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Hide">
                     <Setter Property="Visibility" Value="Collapsed" />
                 </DataTrigger>
@@ -206,6 +212,20 @@
                                         <RadioButton GroupName="PhraseType" Content="Literal" IsChecked="{Binding SearchOptions.PhraseType, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Literal, Mode=TwoWay}" />
                                         <RadioButton GroupName="PhraseType" Content="Regex" IsChecked="{Binding SearchOptions.PhraseType, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Regex, Mode=TwoWay}"/>
                                     </StackPanel>
+                                </GroupBox>
+
+                                <GroupBox Header="Error keywords" Padding="5 5 5 0" Margin="2" Width="200" Height="100"
+                                          ToolTip="Comma delimited set of words that will be highlighted in red">
+                                    <Grid>
+                                        <TextBox Text="{Binding SearchOptions.ErrorPhrases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                </GroupBox>
+
+                                <GroupBox Header="General keywords" Padding="5 5 5 0" Margin="2" Width="200" Height="100"
+                                          ToolTip="Comma delimited set of words that will be highlighted in green">
+                                    <Grid>
+                                        <TextBox Text="{Binding SearchOptions.GeneralPhrases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
                                 </GroupBox>
                             </StackPanel>
                         </Expander>

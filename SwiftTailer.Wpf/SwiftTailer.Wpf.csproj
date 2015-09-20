@@ -149,6 +149,7 @@
     <Compile Include="Data\LogInfo.cs" />
     <Compile Include="Data\Logs.cs" />
     <Compile Include="Filters\ClearFiltersRule.cs" />
+    <Compile Include="Filters\ErrorPhraseRule.cs" />
     <Compile Include="Filters\HideLineRule.cs" />
     <Compile Include="Filters\HighlightCategory.cs" />
     <Compile Include="Filters\ILogLineFilter.cs" />

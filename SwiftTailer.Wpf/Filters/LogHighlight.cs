@@ -33,6 +33,13 @@ namespace SwiftTailer.Wpf.Filters
         /// </value>
         public static LogHighlight Hide => new LogHighlight(HighlightCategory.Hide);
 
+        /// <summary>
+        /// Gets or sets the general.
+        /// </summary>
+        /// <value>
+        /// The general.
+        /// </value>
+        public static LogHighlight General => new LogHighlight(HighlightCategory.General);
 
 
         /// <summary>
