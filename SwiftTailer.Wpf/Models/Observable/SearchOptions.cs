@@ -68,7 +68,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _caseSensitive = value;
-                SetApplicator();
+                InitializeApplicator();
                 OnPropertyChanged();
             }
         }
@@ -79,7 +79,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _searchMode = value;
-                SetApplicator();
+                InitializeApplicator();
                 OnPropertyChanged();
             }
         }
@@ -90,7 +90,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _phraseType = value;
-                SetApplicator();
+                InitializeApplicator();
                 OnPropertyChanged();
             }
         }
@@ -101,7 +101,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             _tail.NewLinesAdded += NewContentAddedHandler;
         }
 
-        private void SetApplicator()
+        private void InitializeApplicator()
         {
             HighlightApplicator.ClearGlobalFilters();
             
@@ -114,9 +114,9 @@ namespace SwiftTailer.Wpf.Models.Observable
             // auto-enabled
             HighlightApplicator.AddFilter(new GeneralPhraseRule(this));
             HighlightApplicator.AddFilter(new ErrorPhraseRule(this));
-            
-            Trace.WriteLine("Applicator was reconfigured!");
+
             _isInitialized = true;
+            Trace.WriteLine("Applicator was (re)initialized!");
 
             ApplyFilters();
         }
@@ -125,7 +125,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         {
             if (!_isInitialized)
             {
-                SetApplicator();
+                InitializeApplicator();
             }
 
             lock (this)
