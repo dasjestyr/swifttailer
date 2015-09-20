@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Filters
@@ -38,7 +39,7 @@ namespace SwiftTailer.Wpf.Filters
         /// </summary>
         /// <param name="logLine">The log line.</param>
         /// <returns></returns>
-        public bool ApplyFilter(LogLine logLine)
+        public async Task<bool> ApplyFilter(LogLine logLine)
         {
             if (string.IsNullOrEmpty(logLine.Content) || string.IsNullOrEmpty(_source.SearchPhrase))
                 return false;

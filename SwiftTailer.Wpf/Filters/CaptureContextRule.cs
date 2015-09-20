@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
-using System.Windows.Data;
-using System.Windows.Threading;
+using System.Threading;
+using System.Threading.Tasks;
 using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Filters
@@ -11,6 +11,7 @@ namespace SwiftTailer.Wpf.Filters
     public class CaptureContextRule : ILogLineFilter
     {
         private readonly IList<LogLine> _logLines;
+        private CancellationToken _cancellationToken;
 
         private int Range => HeadCount + TailCount + 1;
 
@@ -29,41 +30,45 @@ namespace SwiftTailer.Wpf.Filters
         /// <param name="tailCount">The tail count.</param>
         /// <param name="searchMode">The current search mode. This is used to ensure the filter is not applied in the wrong mode.</param>
         /// <param name="logLines">The log lines.</param>
-        public CaptureContextRule(int headCount, int tailCount, SearchMode searchMode, IList<LogLine> logLines)
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public CaptureContextRule(int headCount, int tailCount, SearchMode searchMode, IList<LogLine> logLines, CancellationToken cancellationToken)
         {
             HeadCount = headCount;
             TailCount = tailCount;
             SearchMode = searchMode;
             _logLines = logLines;
+            _cancellationToken = cancellationToken;
         }
 
-        public bool ApplyFilter(LogLine logLine)
+        public async Task<bool> ApplyFilter(LogLine logLine)
         {
-            lock (this)
+            // this only applies to Filter mode
+            if (SearchMode != SearchMode.Filter || Range == 0)
+                return false;
+
+            var logArray = _logLines.ToArray();
+            await Task.Run(() =>
             {
-                // this only applies to Filter mode
-                if (SearchMode != SearchMode.Filter || Range == 0)
-                    return false;
-
-                Dispatcher.CurrentDispatcher.InvokeAsync(() =>
+                Parallel.ForEach(logArray, async line =>
                 {
-                    for (var i = 0; i < _logLines.Count; i++)
-                    {
+                    var i = _logLines.IndexOf(line);
+                    if (_logLines[i].Highlight.Category != HighlightCategory.None)
+                        return;
 
-                        if (_logLines[i].Highlight.Category != HighlightCategory.None)
-                            continue;
+                    //var context = ExtractContext(i, logArray);
+                    _logLines[i].LineContext = await Task.Run(() => ExtractContext(i, logArray), _cancellationToken);
+                });
+            }, _cancellationToken);
 
-                        var contextSlice = ExtractContext(i);
-                        _logLines[i].Context.Clear();
-                        _logLines[i].Context.AddRange(contextSlice);
-                    }
-                }).Wait();
-
-                return true;
-            }
+            return true;
         }
 
-        private IEnumerable<LogLine> ExtractContext(int currentIndex)
+        public void SetCancellationToken(CancellationToken token)
+        {
+            _cancellationToken = token;
+        }
+
+        private string ExtractContext(int currentIndex, LogLine[] logarray)
         {
             var startIndex = currentIndex - HeadCount;
             var sliceSize = Range;
@@ -77,12 +82,14 @@ namespace SwiftTailer.Wpf.Filters
             if (startIndex + sliceSize > _logLines.Count)
                 sliceSize = _logLines.Count - startIndex;
             
-            var slice = _logLines
-                .Skip(startIndex)
-                .Take(sliceSize)
-                .ToList();
+            Trace.WriteLine($"Extracting {sliceSize} lines...");
 
-            return slice;
+            var slice = new LogLine[sliceSize];
+            Array.Copy(logarray, startIndex, slice, 0, sliceSize);
+
+            var context = string.Join("\n", slice.Select(l => l.Content));
+
+            return context;
         } 
     }
 }

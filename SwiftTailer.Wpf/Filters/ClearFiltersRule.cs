@@ -1,10 +1,11 @@
-﻿using SwiftTailer.Wpf.Models.Observable;
+﻿using System.Threading.Tasks;
+using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Filters
 {
     public class ClearFiltersRule : ILogLineFilter
     {
-        public bool ApplyFilter(LogLine logLine)
+        public async Task<bool> ApplyFilter(LogLine logLine)
         {
             logLine.DeFilter();
             return true;

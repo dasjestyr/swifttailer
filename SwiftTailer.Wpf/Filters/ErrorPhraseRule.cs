@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Filters
@@ -14,7 +15,7 @@ namespace SwiftTailer.Wpf.Filters
             _source = source;
         }
 
-        public bool ApplyFilter(LogLine logLine)
+        public async Task<bool> ApplyFilter(LogLine logLine)
         {
             if (string.IsNullOrEmpty(logLine.Content) || !_source.ErrorPhraseCollection.Any())
                 return false;
@@ -37,7 +38,7 @@ namespace SwiftTailer.Wpf.Filters
             _source = source;
         }
 
-        public bool ApplyFilter(LogLine logLine)
+        public async Task<bool> ApplyFilter(LogLine logLine)
         {
             if (string.IsNullOrEmpty(logLine.Content) || !_source.GeneralPhraseCollection.Any())
                 return false;

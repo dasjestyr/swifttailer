@@ -179,10 +179,7 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding Content}"/>
-                                        <Expander Header="{Binding Content}">
-                                            <ListBox ItemsSource="{Binding Content.Context}" DisplayMemberPath="Content" />
-                                        </Expander>
+                                        <TextBlock Text="{Binding Content}" ToolTip="{Binding LineContext}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -198,7 +195,7 @@
                                 <DockPanel LastChildFill="True">
                                     <Label Content="Search:"/>
                                     <TextBox x:Name="LogFilter" HorizontalAlignment="Stretch" BorderBrush="Gray" VerticalContentAlignment="Center"
-                                        Text="{Binding SearchOptions.SearchPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Phrase'}"/>
+                                        Text="{Binding SearchOptions.SearchPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"/>
                                 </DockPanel>
                             </Expander.Header>
                             <StackPanel Orientation="Horizontal">

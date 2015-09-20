@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
 using SwiftTailer.Wpf.Filters;
 
 namespace SwiftTailer.Wpf.Models.Observable
@@ -7,7 +6,7 @@ namespace SwiftTailer.Wpf.Models.Observable
     public class LogLine : ModelBase
     {
         private LogHighlight _highlight;
-        private ObservableCollection<LogLine> _context = new ObservableCollection<LogLine>();
+        private string _lineContext;
 
         /// <summary>
         /// Gets or sets the content.
@@ -33,19 +32,18 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
-
         /// <summary>
-        /// Gets or sets the context, if applicable.
+        /// Gets or sets the line context.
         /// </summary>
         /// <value>
-        /// The context.
+        /// The line context.
         /// </value>
-        public ObservableCollection<LogLine> Context
+        public string LineContext
         {
-            get { return _context; }
+            get { return _lineContext; }
             set
             {
-                _context = value;
+                _lineContext = value;
                 OnPropertyChanged();
             }
         }
@@ -66,11 +64,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// </summary>
         public void DeFilter()
         {
-            Dispatcher.CurrentDispatcher.InvokeAsync(() =>
-            {
-                Context.Clear();
-                Highlight = LogHighlight.None;
-            });
+            Highlight = LogHighlight.None;
         }
     }
 }

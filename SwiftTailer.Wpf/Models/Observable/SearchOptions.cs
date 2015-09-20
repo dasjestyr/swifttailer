@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using SwiftTailer.Wpf.Filters;
 
 namespace SwiftTailer.Wpf.Models.Observable
@@ -12,6 +14,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         private readonly CaptureContextRule _captureRule;
         private readonly TailFile _tail;
         private readonly HighlightApplicator _applicator = new HighlightApplicator();
+        private CancellationTokenSource _cancellationTokenSource;
         private bool _isInitialized;
         private bool _caseSensitive;
         private string _searchPhrase;
@@ -19,8 +22,8 @@ namespace SwiftTailer.Wpf.Models.Observable
         private PhraseType _phraseType = PhraseType.Literal;
         private string _errorPhrases = string.Empty;
         private string _generalPhrases = string.Empty;
-        private int _contextHeadSize;
-        private int _contextTailSize;
+        private int _contextHeadSize = 4;
+        private int _contextTailSize = 4;
 
         private StringComparison CompareRule
             => CaseSensitive
@@ -129,7 +132,8 @@ namespace SwiftTailer.Wpf.Models.Observable
 
             // keeping a steady instance over this so that we can update the head and tail sizes without
             // re-initializing the applicator
-            _captureRule = new CaptureContextRule(ContextHeadSize, ContextTailSize, SearchMode, _tail.LogLines);
+            _cancellationTokenSource = new CancellationTokenSource();
+            _captureRule = new CaptureContextRule(ContextHeadSize, ContextTailSize, SearchMode, _tail.LogLines, _cancellationTokenSource.Token);
             _tail.NewLinesAdded += NewContentAddedHandler;
         }
 
@@ -137,6 +141,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         {
             lock (this)
             {
+                _cancellationTokenSource = new CancellationTokenSource();
                 _applicator.ClearGlobalFilters();
                 if (SearchMode == SearchMode.Find)
                     _applicator.AddFilter(new FindHighlightRule(this, PhraseType, CompareRule));
@@ -161,22 +166,33 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
-        private void ApplyFilters()
+        private async void ApplyFilters()
         {
             if (!_isInitialized)
-            {
                 InitializeApplicator();
-            }
+            
+            Trace.WriteLine("Applying filters...");
 
-            lock (this)
-            {
-                Task.Run(() => _applicator.Apply(_tail.LogLines));
-            }
+            // make sure to stop anything that's still in flight
+            ResetCancellationToken();
+            await Application.Current.Dispatcher.InvokeAsync(() => _applicator.Apply(_tail.LogLines, _cancellationTokenSource));
         }
 
         private void NewContentAddedHandler(object sender, NewContentEventArgs args)
         {
-            _applicator.Apply(args.NewLines);
+            // these feels disjointed in that it's not in sync with anything else
+            //ResetCancellationToken();
+            _applicator.Apply(args.NewLines, _cancellationTokenSource);
+        }
+
+        private void ResetCancellationToken()
+        {
+            Trace.WriteLine("Cancelling all currently running filters...");
+            _cancellationTokenSource.Cancel();
+
+            Trace.WriteLine("Creating a new token source...");
+            _cancellationTokenSource = new CancellationTokenSource();
+            _captureRule.SetCancellationToken(_cancellationTokenSource.Token);
         }
     }
 

@@ -1,4 +1,6 @@
-﻿using SwiftTailer.Wpf.Models.Observable;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Filters
 {
@@ -9,7 +11,7 @@ namespace SwiftTailer.Wpf.Filters
         /// </summary>
         /// <param name="logLine">The log line to be processed.</param>
         /// <returns></returns>
-        bool ApplyFilter(LogLine logLine);
+        Task<bool> ApplyFilter(LogLine logLine);
 
         /// <summary>
         /// Gets the description of the filter.
