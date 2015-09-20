@@ -9,6 +9,7 @@ namespace SwiftTailer.Wpf.Models.Observable
 {
     public class SearchOptions : ModelBase, ISearchSource
     {
+        private bool _isInitialized;
         private readonly TailFile _tail;
         private bool _caseSensitive;
         private string _searchPhrase;
@@ -97,8 +98,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         public SearchOptions(TailFile tail)
         {
             _tail = tail;
-            HighlightApplicator.ClearGlobalFilters();
-            SetApplicator();
+            _tail.NewLinesAdded += NewContentAddedHandler;
         }
 
         private void SetApplicator()
@@ -116,15 +116,27 @@ namespace SwiftTailer.Wpf.Models.Observable
             HighlightApplicator.AddFilter(new ErrorPhraseRule(this));
             
             Trace.WriteLine("Applicator was reconfigured!");
+            _isInitialized = true;
+
             ApplyFilters();
         }
 
         private void ApplyFilters()
         {
+            if (!_isInitialized)
+            {
+                SetApplicator();
+            }
+
             lock (this)
             {
                 Task.Run(() => HighlightApplicator.Apply(_tail.LogLines));
             }
+        }
+
+        private void NewContentAddedHandler(object sender, NewContentEventArgs args)
+        {
+            HighlightApplicator.Apply(args.NewLines);
         }
     }
 
