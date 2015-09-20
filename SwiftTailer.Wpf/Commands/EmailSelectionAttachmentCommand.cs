@@ -7,7 +7,7 @@ using SwiftTailer.Wpf.Utility;
 
 namespace SwiftTailer.Wpf.Commands
 {
-    public class EmailAttachmentCommand : ICommand
+    public class EmailSelectionAttachmentCommand : ICommand
     {
         public bool CanExecute(object parameter)
         {
@@ -47,4 +47,6 @@ namespace SwiftTailer.Wpf.Commands
 
         public event EventHandler CanExecuteChanged;
     }
+
+    
 }

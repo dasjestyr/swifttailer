@@ -18,6 +18,7 @@ namespace SwiftTailer.Wpf.ViewModels
         private ObservableCollection<TailFile> _tails = new ObservableCollection<TailFile>();
         private ObservableCollection<LogLine> _selectedLines = new ObservableCollection<LogLine>();
         private TailFile _selectedTail;
+        private int _progressBarValue;
 
         #region -- Commands --
         public SelectGroupCommand SelectGroupCommand { get; private set; }
@@ -102,6 +103,16 @@ namespace SwiftTailer.Wpf.ViewModels
             set
             {
                 _status = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ProgressBarValue
+        {
+            get { return _progressBarValue; }
+            set
+            {
+                _progressBarValue = value;
                 OnPropertyChanged();
             }
         }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Win32;
 using SwiftTailer.Wpf.Data;
+using SwiftTailer.Wpf.ViewModels;
 
 namespace SwiftTailer.Wpf.Commands
 {
@@ -17,8 +18,10 @@ namespace SwiftTailer.Wpf.Commands
 
         public async void Execute(object parameter)
         {
-            var group = parameter as LogGroup;
-            if (group == null) return;
+            var vm = parameter as MainViewModel;
+            if (vm == null) return;
+
+            var group = vm.SelectedGroup;
 
             // get destination
             var fileLocation = new SaveFileDialog
@@ -40,6 +43,8 @@ namespace SwiftTailer.Wpf.Commands
                     // create the archive to go into the file
                     using (var zip = new ZipArchive(ms, ZipArchiveMode.Create))
                     {
+                        var progressFactor = 100/group.Logs.Count;
+
                         // add each log to the archive
                         foreach (var log in group.Logs)
                         {
@@ -61,6 +66,7 @@ namespace SwiftTailer.Wpf.Commands
                                     using (var logStream = new MemoryStream(fileBytes))
                                     {
                                         logStream.CopyTo(entryStream);
+                                        vm.ProgressBarValue += progressFactor;
                                     }
                                 }
                             }
@@ -68,6 +74,8 @@ namespace SwiftTailer.Wpf.Commands
                     }
                 }
             });
+
+            vm.ProgressBarValue = 0;
         }
 
         public event EventHandler CanExecuteChanged;

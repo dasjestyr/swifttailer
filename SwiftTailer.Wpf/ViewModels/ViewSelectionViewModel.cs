@@ -8,7 +8,7 @@ namespace SwiftTailer.Wpf.ViewModels
 
         public SaveToTextCommand SaveToTextCommand { get; set; }
 
-        public EmailAttachmentCommand EmailAttachmentCommand { get; set; }
+        public EmailSelectionAttachmentCommand EmailSelectionAttachmentCommand { get; set; }
 
         public string Content
         {
@@ -23,7 +23,7 @@ namespace SwiftTailer.Wpf.ViewModels
         public ViewSelectionViewModel()
         {
             SaveToTextCommand = new SaveToTextCommand();
-            EmailAttachmentCommand = new EmailAttachmentCommand();
+            EmailSelectionAttachmentCommand = new EmailSelectionAttachmentCommand();
         }
     }
 }

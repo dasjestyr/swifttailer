@@ -96,7 +96,7 @@
                     <Image Source="Assets/doc_minus.png" />
                 </Button>
                 <Button ToolTip="Zip the current state of the group..." Style="{StaticResource ToolbarIconStyle}"
-                        Command="commands:StaticCommands.ZipSelectedGroupCommand" CommandParameter="{Binding SelectedGroup}">
+                        Command="commands:StaticCommands.ZipSelectedGroupCommand" CommandParameter="{Binding ElementName=ThisWindow, Path=DataContext}">
                     <Image Source="Assets/compress.png" />
                 </Button>
                 <Button ToolTip="Zip the current state of the group and email it..." Style="{StaticResource ToolbarIconStyle}">
@@ -240,6 +240,9 @@
             <StatusBarItem Content="{Binding Status, FallbackValue=Idle}" HorizontalAlignment="Left" />
             <StatusBarItem Content="{Binding SelectedGroup.Name, FallbackValue='Group 1'}" HorizontalAlignment="Left" />
             <StatusBarItem Content="{Binding SelectedTail.LineCount, Converter={StaticResource LineCountDisplayConverter}}" />
+            <StatusBarItem HorizontalAlignment="Right">
+                <ProgressBar Value="{Binding ProgressBarValue}" Maximum="100" Width="100" Height="15" x:Name="ProgressBar" />
+            </StatusBarItem>
         </StatusBar>
     </Grid>
 </Window>
