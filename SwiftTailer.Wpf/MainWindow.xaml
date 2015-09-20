@@ -95,7 +95,8 @@
                         Command="commands:StaticCommands.RemoveLogCommand" CommandParameter="{Binding SelectedTail}">
                     <Image Source="Assets/doc_minus.png" />
                 </Button>
-                <Button ToolTip="Zip the current state of the group..." Style="{StaticResource ToolbarIconStyle}">
+                <Button ToolTip="Zip the current state of the group..." Style="{StaticResource ToolbarIconStyle}"
+                        Command="commands:StaticCommands.ZipSelectedGroupCommand" CommandParameter="{Binding SelectedGroup}">
                     <Image Source="Assets/compress.png" />
                 </Button>
                 <Button ToolTip="Zip the current state of the group and email it..." Style="{StaticResource ToolbarIconStyle}">

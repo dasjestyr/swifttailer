@@ -204,7 +204,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         {
             _cts = new CancellationTokenSource();
 
-            if (File.Exists(LogInfo.Location))
+            if (File.Exists(LogInfo.Filename))
             {
                 await RunUpdates();
             }            
@@ -212,8 +212,8 @@ namespace SwiftTailer.Wpf.Models.Observable
             {
                 await Task.Run(() =>
                 {
-                    Trace.WriteLine($"{LogInfo.Location} was not found.");
-                    LogText = $"File not found: {LogInfo.Location}";
+                    Trace.WriteLine($"{LogInfo.Filename} was not found.");
+                    LogText = $"File not found: {LogInfo.Filename}";
                 });
             }
         }
@@ -253,7 +253,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             lock (_lockObject)
             {
                 // handle case where file may have been deleted while tailing
-                if (!File.Exists(LogInfo.Location))
+                if (!File.Exists(LogInfo.Filename))
                 {
                     // we want to keep tailing for now in case it was just a case of the file be republished, for example
                     // so just skip
@@ -261,7 +261,7 @@ namespace SwiftTailer.Wpf.Models.Observable
                     return;
                 }                    
 
-                using (var fs = new FileStream(LogInfo.Location, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var fs = new FileStream(LogInfo.Filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     // handle case where the file may have been reset (e.g. republished)
                     if (_lastIndex > fs.Length)

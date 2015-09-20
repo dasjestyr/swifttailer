@@ -26,5 +26,7 @@ namespace SwiftTailer.Wpf.Commands
         public static ICommand OpenPathInExplorerCommand = new OpenPathInExplorerCommand();
 
         public static ICommand OpenLogConfigInExplorerCommand = new OpenLogConfigInExplorerCommand();
+
+        public static ICommand ZipSelectedGroupCommand = new ZipGroupCommand();
     }
 }
