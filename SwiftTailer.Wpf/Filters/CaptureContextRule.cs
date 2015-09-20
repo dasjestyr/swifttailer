@@ -54,6 +54,7 @@ namespace SwiftTailer.Wpf.Filters
 
             await Task.Run(() =>
             {
+                // not sure how reliable this is
                 Parallel.ForEach(logArray, line =>
                 {
                     if (_cancellationToken.IsCancellationRequested)

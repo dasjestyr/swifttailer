@@ -19,8 +19,8 @@ namespace SwiftTailer.Wpf.Models.Observable
         private PhraseType _phraseType = PhraseType.Literal;
         private string _errorPhrases = string.Empty;
         private string _generalPhrases = string.Empty;
-        private int _contextHeadSize = 4;
-        private int _contextTailSize = 4;
+        private int _contextHeadSize;
+        private int _contextTailSize;
 
         private StringComparison CompareRule
             => CaseSensitive
