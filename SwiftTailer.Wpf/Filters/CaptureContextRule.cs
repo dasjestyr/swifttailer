@@ -10,6 +10,7 @@ namespace SwiftTailer.Wpf.Filters
 {
     public class CaptureContextRule : ILogLineFilter
     {
+        private readonly ISearchSource _source;
         private readonly IList<LogLine> _logLines;
         private CancellationToken _cancellationToken;
 
@@ -19,53 +20,56 @@ namespace SwiftTailer.Wpf.Filters
 
         public int TailCount { get; set; }
 
-        public SearchMode SearchMode { get; set; }
-
         public string Description => "Captures context of unfiltered results";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CaptureContextRule" /> class.
         /// </summary>
+        /// <param name="source">The source.</param>
         /// <param name="headCount">The head count.</param>
         /// <param name="tailCount">The tail count.</param>
-        /// <param name="searchMode">The current search mode. This is used to ensure the filter is not applied in the wrong mode.</param>
         /// <param name="logLines">The log lines.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public CaptureContextRule(int headCount, int tailCount, SearchMode searchMode, IList<LogLine> logLines, CancellationToken cancellationToken)
+        public CaptureContextRule(ISearchSource source, int headCount, int tailCount, IList<LogLine> logLines, CancellationToken cancellationToken)
         {
             HeadCount = headCount;
             TailCount = tailCount;
-            SearchMode = searchMode;
+            _source = source;
             _logLines = logLines;
             _cancellationToken = cancellationToken;
         }
 
+        // TODO: there's probably still some work to do in order to speed this up
+
         public async Task<bool> ApplyFilter(LogLine logLine)
         {
             // this only applies to Filter mode
-            if (SearchMode != SearchMode.Filter || Range == 0)
-                return false;
-
+            if (_source.SearchMode != SearchMode.Filter || 
+                string.IsNullOrEmpty(_source.SearchPhrase) || 
+                Range == 0)
+                    return false;
+            
             var logArray = _logLines.ToArray();
+            if (_cancellationToken.IsCancellationRequested) return false;
+
             await Task.Run(() =>
             {
-                Parallel.ForEach(logArray, async line =>
+                Parallel.ForEach(logArray, line =>
                 {
+                    if (_cancellationToken.IsCancellationRequested)
+                        return;
+
                     var i = _logLines.IndexOf(line);
                     if (_logLines[i].Highlight.Category != HighlightCategory.None)
                         return;
 
-                    //var context = ExtractContext(i, logArray);
-                    _logLines[i].LineContext = await Task.Run(() => ExtractContext(i, logArray), _cancellationToken);
+                    _logLines[i].DeFilter();
+                    _logLines[i].LineContext = ExtractContext(i, logArray);
                 });
             }, _cancellationToken);
+            
 
             return true;
-        }
-
-        public void SetCancellationToken(CancellationToken token)
-        {
-            _cancellationToken = token;
         }
 
         private string ExtractContext(int currentIndex, LogLine[] logarray)
@@ -87,9 +91,13 @@ namespace SwiftTailer.Wpf.Filters
             var slice = new LogLine[sliceSize];
             Array.Copy(logarray, startIndex, slice, 0, sliceSize);
 
-            var context = string.Join("\n", slice.Select(l => l.Content));
+            return GetContextContent(slice);
+        }
 
+        private string GetContextContent(IEnumerable<LogLine> lines)
+        {
+            var context = string.Join("\n", lines.Select(l => l.Content));
             return context;
-        } 
+        }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using SwiftTailer.Wpf.Filters;
 
@@ -11,11 +10,9 @@ namespace SwiftTailer.Wpf.Models.Observable
 {
     public class SearchOptions : ModelBase, ISearchSource
     {
-        private readonly CaptureContextRule _captureRule;
         private readonly TailFile _tail;
         private readonly HighlightApplicator _applicator = new HighlightApplicator();
         private CancellationTokenSource _cancellationTokenSource;
-        private bool _isInitialized;
         private bool _caseSensitive;
         private string _searchPhrase;
         private SearchMode _searchMode = SearchMode.Find;
@@ -42,8 +39,8 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _searchPhrase = value;
-                OnPropertyChanged();
                 ApplyFilters();
+                OnPropertyChanged();
             }
         }
 
@@ -53,8 +50,8 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _errorPhrases = value;
-                OnPropertyChanged();
                 ApplyFilters();
+                OnPropertyChanged();
             }
         }
 
@@ -64,8 +61,8 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _generalPhrases = value;
-                OnPropertyChanged();
                 ApplyFilters();
+                OnPropertyChanged();
             }
         }
 
@@ -75,7 +72,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _caseSensitive = value;
-                InitializeApplicator();
+                ApplyFilters();
                 OnPropertyChanged();
             }
         }
@@ -86,7 +83,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _searchMode = value;
-                InitializeApplicator();
+                ApplyFilters();
                 OnPropertyChanged();
             }
         }
@@ -97,7 +94,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _phraseType = value;
-                InitializeApplicator();
+                ApplyFilters();
                 OnPropertyChanged();
             }
         }
@@ -108,7 +105,6 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _contextHeadSize = value;
-                _captureRule.HeadCount = value;
                 ApplyFilters();
                 OnPropertyChanged();
             }
@@ -120,7 +116,6 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _contextTailSize = value;
-                _captureRule.TailCount = value;
                 ApplyFilters();
                 OnPropertyChanged();
             }
@@ -129,83 +124,63 @@ namespace SwiftTailer.Wpf.Models.Observable
         public SearchOptions(TailFile tail)
         {
             _tail = tail;
-
-            // keeping a steady instance over this so that we can update the head and tail sizes without
-            // re-initializing the applicator
-            _cancellationTokenSource = new CancellationTokenSource();
-            _captureRule = new CaptureContextRule(ContextHeadSize, ContextTailSize, SearchMode, _tail.LogLines, _cancellationTokenSource.Token);
             _tail.NewLinesAdded += NewContentAddedHandler;
-        }
-
-        private void InitializeApplicator()
-        {
-            lock (this)
-            {
-                _cancellationTokenSource = new CancellationTokenSource();
-                _applicator.ClearGlobalFilters();
-                if (SearchMode == SearchMode.Find)
-                    _applicator.AddFilter(new FindHighlightRule(this, PhraseType, CompareRule));
-
-                if (SearchMode == SearchMode.Filter)
-                {
-                    _captureRule.SearchMode = SearchMode;
-
-                    // must be applied in this order
-                    _applicator.AddFilter(new HideLineRule(this, PhraseType, CompareRule));
-                    _applicator.AddFilter(_captureRule);
-                }
-
-                // auto-enabled
-                _applicator.AddFilter(new GeneralPhraseRule(this));
-                _applicator.AddFilter(new ErrorPhraseRule(this));
-
-                _isInitialized = true;
-                Trace.WriteLine("Applicator was (re)initialized!");
-
-                ApplyFilters();
-            }
         }
 
         private async void ApplyFilters()
         {
-            if (!_isInitialized)
-                InitializeApplicator();
-            
+            // doing this every time seems to be the only way 
+            // to keep this shit uniformly in sync
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = new CancellationTokenSource();
+            Trace.WriteLine("Interrupted previous filter configuration");
+
+            _applicator.ClearGlobalFilters();
+
+            switch (SearchMode)
+            {
+                case SearchMode.Find:
+                    _applicator.AddFilter(new FindHighlightRule(this, PhraseType, CompareRule));
+                    break;
+                case SearchMode.Filter:
+                    // must be applied in this order
+                    _applicator.AddFilter(new HideLineRule(this, PhraseType, CompareRule));
+                    _applicator.AddFilter(new CaptureContextRule(this, ContextHeadSize, ContextTailSize, _tail.LogLines, _cancellationTokenSource.Token));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            // auto-enabled
+            _applicator.AddFilter(new GeneralPhraseRule(this));
+            _applicator.AddFilter(new ErrorPhraseRule(this));
+
             Trace.WriteLine("Applying filters...");
 
             // make sure to stop anything that's still in flight
-            ResetCancellationToken();
+
             await Application.Current.Dispatcher.InvokeAsync(() => _applicator.Apply(_tail.LogLines, _cancellationTokenSource));
         }
 
         private void NewContentAddedHandler(object sender, NewContentEventArgs args)
         {
-            // these feels disjointed in that it's not in sync with anything else
-            //ResetCancellationToken();
-            _applicator.Apply(args.NewLines, _cancellationTokenSource);
-        }
-
-        private void ResetCancellationToken()
-        {
-            Trace.WriteLine("Cancelling all currently running filters...");
-            _cancellationTokenSource.Cancel();
-
-            Trace.WriteLine("Creating a new token source...");
-            _cancellationTokenSource = new CancellationTokenSource();
-            _captureRule.SetCancellationToken(_cancellationTokenSource.Token);
+            ApplyFilters();
         }
     }
 
     public interface ISearchSource
     {
+        SearchMode SearchMode { get; }
+
         string SearchPhrase { get; }
 
-        IEnumerable<string> ErrorPhraseCollection { get; } 
+        IEnumerable<string> ErrorPhraseCollection { get; }
 
-        IEnumerable<string> GeneralPhraseCollection { get; } 
+        IEnumerable<string> GeneralPhraseCollection { get; }
     }
 
     #region -- Enums --
+
     public enum SearchMode
     {
         Find,
@@ -217,5 +192,6 @@ namespace SwiftTailer.Wpf.Models.Observable
         Literal,
         Regex
     }
+
     #endregion
 }

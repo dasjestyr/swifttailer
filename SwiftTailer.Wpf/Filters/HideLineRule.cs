@@ -47,10 +47,8 @@ namespace SwiftTailer.Wpf.Filters
         private bool ApplyLiteral(LogLine logLine)
         {
             if (logLine.Content.IndexOf(_source.SearchPhrase, _comparisonRule) != -1) // not droids you're looking for
-            {
-                Debug.WriteLine($"Hide filter skipped {logLine.Content}");
                 return false;
-            }
+            
 
             logLine.Highlight = LogHighlight.Hide;
             return true;

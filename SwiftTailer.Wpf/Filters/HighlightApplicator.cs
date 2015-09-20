@@ -11,7 +11,7 @@ namespace SwiftTailer.Wpf.Filters
     public class HighlightApplicator
     {
         private readonly List<ILogLineFilter> _globalFilters = new List<ILogLineFilter>();
-        private object _lockObject;
+        private readonly object _lockObject;
 
         /// <summary>
         /// Gets the loaded filters.
@@ -26,8 +26,11 @@ namespace SwiftTailer.Wpf.Filters
         /// </summary>
         public void ClearGlobalFilters()
         {
-            _globalFilters.Clear();
-            _globalFilters.Add(new ClearFiltersRule()); // always needs to be first
+            lock (_lockObject)
+            {
+                _globalFilters.Clear();
+                _globalFilters.Add(new ClearFiltersRule()); // always needs to be first
+            }
         }
 
         public HighlightApplicator()

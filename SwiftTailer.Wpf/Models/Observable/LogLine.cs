@@ -40,7 +40,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// </value>
         public string LineContext
         {
-            get { return _lineContext; }
+            get { return string.IsNullOrEmpty(_lineContext) ? Content : _lineContext; }
             set
             {
                 _lineContext = value;
@@ -64,6 +64,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// </summary>
         public void DeFilter()
         {
+            LineContext = string.Empty;
             Highlight = LogHighlight.None;
         }
     }
