@@ -12,7 +12,6 @@ namespace SwiftTailer.Wpf.Filters
     {
         private readonly ISearchSource _source;
         private readonly IList<LogLine> _logLines;
-        private CancellationToken _cancellationToken;
 
         private int Range => HeadCount + TailCount + 1;
 
@@ -29,14 +28,12 @@ namespace SwiftTailer.Wpf.Filters
         /// <param name="headCount">The head count.</param>
         /// <param name="tailCount">The tail count.</param>
         /// <param name="logLines">The log lines.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        public CaptureContextRule(ISearchSource source, int headCount, int tailCount, IList<LogLine> logLines, CancellationToken cancellationToken)
+        public CaptureContextRule(ISearchSource source, int headCount, int tailCount, IList<LogLine> logLines)
         {
             HeadCount = headCount;
             TailCount = tailCount;
             _source = source;
             _logLines = logLines;
-            _cancellationToken = cancellationToken;
         }
 
         // TODO: there's probably still some work to do in order to speed this up
@@ -46,29 +43,19 @@ namespace SwiftTailer.Wpf.Filters
             // this only applies to Filter mode
             if (_source.SearchMode != SearchMode.Filter || 
                 string.IsNullOrEmpty(_source.SearchPhrase) || 
-                Range == 0)
+                Range < 2)
                     return false;
             
             var logArray = _logLines.ToArray();
-            if (_cancellationToken.IsCancellationRequested) return false;
 
-            await Task.Run(() =>
+            for (var i = 0; i < logArray.Length; i++)
             {
-                // not sure how reliable this is
-                Parallel.ForEach(logArray, line =>
-                {
-                    if (_cancellationToken.IsCancellationRequested)
-                        return;
+                if (_logLines[i].Highlight.Category != HighlightCategory.None)
+                    continue;
 
-                    var i = _logLines.IndexOf(line);
-                    if (_logLines[i].Highlight.Category != HighlightCategory.None)
-                        return;
-
-                    _logLines[i].DeFilter();
-                    _logLines[i].LineContext = ExtractContext(i, logArray);
-                });
-            }, _cancellationToken);
-            
+                _logLines[i].DeFilter();
+                _logLines[i].LineContext = ExtractContext(i, logArray);
+            }
 
             return true;
         }
@@ -95,7 +82,7 @@ namespace SwiftTailer.Wpf.Filters
             return GetContextContent(slice);
         }
 
-        private string GetContextContent(IEnumerable<LogLine> lines)
+        private static string GetContextContent(IEnumerable<LogLine> lines)
         {
             var context = string.Join("\n", lines.Select(l => l.Content));
             return context;
