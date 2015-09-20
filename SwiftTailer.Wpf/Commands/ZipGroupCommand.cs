@@ -49,10 +49,16 @@ namespace SwiftTailer.Wpf.Commands
                             // fill the entry
                             using (var entryStream = entry.Open())
                             {
-                                var fileBytes = File.ReadAllBytes(log.Filename);
-                                using (var logStream = new MemoryStream(fileBytes))
+                                using (
+                                    var logFileStream = File.Open(log.Filename, FileMode.Open, FileAccess.Read,
+                                        FileShare.ReadWrite))
                                 {
-                                    logStream.CopyTo(entryStream);
+                                    var fileBytes = new byte[logFileStream.Length];
+                                    logFileStream.Read(fileBytes, 0, fileBytes.Length);
+                                    using (var logStream = new MemoryStream(fileBytes))
+                                    {
+                                        logStream.CopyTo(entryStream);
+                                    }
                                 }
                             }
                         }
