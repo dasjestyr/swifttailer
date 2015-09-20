@@ -243,8 +243,8 @@
             <StatusBarItem HorizontalAlignment="Right">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" MaxWidth="300" />
+                        <ColumnDefinition Width="100" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{Binding ProgressText, FallbackValue='Processing c:\\MyDocuments\MyFilt.txt...'}" Margin="5 0" />
                     <ProgressBar Value="{Binding ProgressBarValue}" Maximum="100" Width="100" Height="15" x:Name="ProgressBar" Grid.Column="1" />

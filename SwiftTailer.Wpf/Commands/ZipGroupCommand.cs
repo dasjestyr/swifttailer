@@ -78,6 +78,7 @@ namespace SwiftTailer.Wpf.Commands
                 }
             });
 
+            vm.ProgressText = string.Empty;
             vm.ProgressBarValue = 0;
         }
 
