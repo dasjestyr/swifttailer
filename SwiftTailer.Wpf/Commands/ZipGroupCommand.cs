@@ -35,6 +35,7 @@ namespace SwiftTailer.Wpf.Commands
             if (!result.HasValue || !result.Value)
                 return;
 
+            vm.ProgressBarValue = 0;
             await Task.Run(() =>
             {
                 // create the new zip file on disk
@@ -50,6 +51,8 @@ namespace SwiftTailer.Wpf.Commands
                         {
                             if (!File.Exists(log.Filename))
                                 continue;
+
+                            vm.ProgressText = $"Processing {log.Filename}...";
 
                             // create the entry
                             var entry = zip.CreateEntry(Path.GetFileName(log.Filename), CompressionLevel.Fastest);

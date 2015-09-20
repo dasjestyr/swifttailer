@@ -241,7 +241,14 @@
             <StatusBarItem Content="{Binding SelectedGroup.Name, FallbackValue='Group 1'}" HorizontalAlignment="Left" />
             <StatusBarItem Content="{Binding SelectedTail.LineCount, Converter={StaticResource LineCountDisplayConverter}}" />
             <StatusBarItem HorizontalAlignment="Right">
-                <ProgressBar Value="{Binding ProgressBarValue}" Maximum="100" Width="100" Height="15" x:Name="ProgressBar" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding ProgressText, FallbackValue='Processing c:\\MyDocuments\MyFilt.txt...'}" Margin="5 0" />
+                    <ProgressBar Value="{Binding ProgressBarValue}" Maximum="100" Width="100" Height="15" x:Name="ProgressBar" Grid.Column="1" />
+                </Grid>
             </StatusBarItem>
         </StatusBar>
     </Grid>
