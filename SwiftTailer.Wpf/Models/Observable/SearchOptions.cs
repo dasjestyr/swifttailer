@@ -105,6 +105,16 @@ namespace SwiftTailer.Wpf.Models.Observable
         }
 
         /// <summary>
+        /// Gets or sets the comparison rule.
+        /// </summary>
+        /// <value>
+        /// The comparison rule.
+        /// </value>
+        public StringComparison ComparisonRule => CaseSensitive
+                    ? StringComparison.Ordinal
+                    : StringComparison.OrdinalIgnoreCase;
+
+        /// <summary>
         /// Gets or sets the search mode.
         /// </summary>
         /// <value>
@@ -199,8 +209,8 @@ namespace SwiftTailer.Wpf.Models.Observable
                     break;
                 case SearchMode.Filter:
                     // must be applied in this order
-                    _applicator.AddFilter(new HideLineRule(this, PhraseType, CompareRule));
-                    _applicator.AddFilter(new CaptureContextRule(this, ContextHeadSize, ContextTailSize));
+                    _applicator.AddFilter(new HideLineRule(this, ContextHeadSize, ContextTailSize));
+                    //_applicator.AddFilter(new CaptureContextRule(this, ContextHeadSize, ContextTailSize));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

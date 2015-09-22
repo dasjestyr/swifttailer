@@ -40,7 +40,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// </value>
         public string LineContext
         {
-            get { return string.IsNullOrEmpty(_lineContext) ? Content : _lineContext; }
+            get { return _lineContext; }
             set
             {
                 _lineContext = value;

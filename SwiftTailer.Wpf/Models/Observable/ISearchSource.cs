@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -12,6 +13,22 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// The search mode.
         /// </value>
         SearchMode SearchMode { get; }
+
+        /// <summary>
+        /// Gets the type of the phrase.
+        /// </summary>
+        /// <value>
+        /// The type of the phrase.
+        /// </value>
+        PhraseType PhraseType { get; }
+
+        /// <summary>
+        /// Gets the comparison rule.
+        /// </summary>
+        /// <value>
+        /// The comparison rule.
+        /// </value>
+        StringComparison ComparisonRule { get; }
 
         /// <summary>
         /// Gets the search phrase.
