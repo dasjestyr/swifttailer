@@ -1,7 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
 using SwiftTailer.Wpf.ViewModels;
@@ -18,9 +21,26 @@ namespace SwiftTailer.Wpf.Pages
         public AdHocTailingWindow(string filePath)
         {
             InitializeComponent();
+            Dispatcher.UnhandledException += DisplayUnhandledException;
 
             ViewModel.WindowTitle = $"Tailing {Path.GetFileName(filePath)}";
             ViewModel.SetTail(filePath);
+        }
+
+        private void DisplayUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            // Global error catch 
+            // Doesn't really allow the app to resume, but it's better than logs
+            // for now
+            // var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log", "error.log");
+            var logPath = Path.Combine(Settings.WorkingDirectory, "error.log");
+
+            using (var sw = File.AppendText(logPath))
+            {
+                sw.WriteLine($"{DateTime.Now.ToLongDateString()} :: {e.Exception.Message} :: {e.Exception}");
+            }
+
+            MessageBox.Show($"e.Exception.Message :: {e.Exception}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void LogList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -46,6 +66,14 @@ namespace SwiftTailer.Wpf.Pages
             if (lbi == null) return;
 
             StaticCommands.OpenLogLineCommand.Execute(lbi);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (ViewModel.IsRunning)
+            {
+                ViewModel.StopTailing();
+            }
         }
     }
 }
