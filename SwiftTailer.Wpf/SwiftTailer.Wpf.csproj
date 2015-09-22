@@ -154,6 +154,7 @@
     <Compile Include="Commands\EmailTasks.cs" />
     <Compile Include="Commands\ExportLogConfigCommand.cs" />
     <Compile Include="Commands\FeatureStubCommand.cs" />
+    <Compile Include="Commands\OpenAdHocTailCommand.cs" />
     <Compile Include="Commands\OpenMenuItemInExplorerCommand.cs" />
     <Compile Include="Commands\OpenLogLineCommand.cs" />
     <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="Models\Observable\BindableBase.cs" />
     <Compile Include="Models\Observable\IModel.cs" />
     <Compile Include="Models\Observable\IProperty.cs" />
+    <Compile Include="Models\Observable\ISearchSource.cs" />
     <Compile Include="Models\Observable\LogLine.cs" />
     <Compile Include="Models\Observable\ModelBase.cs" />
     <Compile Include="Models\Observable\NewContentEventArgs.cs" />
@@ -198,6 +200,9 @@
     <Compile Include="Models\Observable\RawContentsChangedEventArgs.cs" />
     <Compile Include="Models\Observable\SearchOptions.cs" />
     <Compile Include="Models\Observable\TailFile.cs" />
+    <Compile Include="Pages\AdHocTailingWindow.xaml.cs">
+      <DependentUpon>AdHocTailingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\EditGroupWindow.xaml.cs">
       <DependentUpon>EditGroupWindow.xaml</DependentUpon>
     </Compile>
@@ -213,6 +218,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\Extensions.cs" />
     <Compile Include="ViewModels\AddGroupViewModel.cs" />
+    <Compile Include="ViewModels\AdHocTailingViewModel.cs" />
     <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewSelectionViewModel.cs" />
@@ -229,6 +235,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\AdHocTailingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\EditGroupWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

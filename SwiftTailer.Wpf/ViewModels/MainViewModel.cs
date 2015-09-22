@@ -9,7 +9,7 @@ using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.ViewModels
 {
-    public class MainViewModel : ModelBase, IProgressProvider
+    public class MainViewModel : ModelBase, IProgressProvider, ITailControl
     {
         private bool _isRunning;
         private string _status = "Idle";
