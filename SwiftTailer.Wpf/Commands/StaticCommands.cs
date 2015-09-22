@@ -30,5 +30,7 @@ namespace SwiftTailer.Wpf.Commands
         public static ICommand ZipSelectedGroupCommand = new ZipGroupCommand();
 
         public static ICommand ZipGroupAndEmailCommand = new ZipGroupAndEmailCommand();
+
+        public static ICommand OpenAdHocTailCommand = new OpenAdHocTailCommand();
     }
 }

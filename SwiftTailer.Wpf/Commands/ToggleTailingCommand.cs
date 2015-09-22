@@ -7,7 +7,7 @@ namespace SwiftTailer.Wpf.Commands
 {
     public class StartTailingCommand : ModelBase, ICommand
     {
-        private readonly MainViewModel _vm;
+        private readonly ITailControl _vm;
         private bool _isEnabled = true;
 
         public bool IsEnabled
@@ -20,7 +20,7 @@ namespace SwiftTailer.Wpf.Commands
             }
         }
 
-        public StartTailingCommand(MainViewModel vm)
+        public StartTailingCommand(ITailControl vm)
         {
             _vm = vm;
         }
@@ -49,7 +49,7 @@ namespace SwiftTailer.Wpf.Commands
 
     public class StopTailingCommand : ModelBase, ICommand
     {
-        private readonly MainViewModel _vm;
+        private readonly ITailControl _vm;
         private bool _isEnabled;
 
         public bool IsEnabled
@@ -62,7 +62,7 @@ namespace SwiftTailer.Wpf.Commands
             }
         }
 
-        public StopTailingCommand(MainViewModel vm)
+        public StopTailingCommand(ITailControl vm)
         {
             _vm = vm;
         }
@@ -87,5 +87,14 @@ namespace SwiftTailer.Wpf.Commands
         {
             IsEnabled = CanExecute(null);            
         }
+    }
+
+    public interface ITailControl
+    {
+        bool IsRunning { get; }
+
+        void StartTailing();
+
+        void StopTailing();
     }
 }

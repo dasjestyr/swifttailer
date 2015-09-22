@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using SwiftTailer.Wpf.Commands;
+using SwiftTailer.Wpf.Pages;
 using SwiftTailer.Wpf.ViewModels;
 
 namespace SwiftTailer.Wpf
@@ -106,6 +108,14 @@ namespace SwiftTailer.Wpf
             if (lbi == null) return;
 
             StaticCommands.OpenLogLineCommand.Execute(lbi);
+        }
+
+        private void UIElement_OnDrop(object sender, DragEventArgs e)
+        {
+            var files = (string[]) e.Data.GetData(DataFormats.FileDrop, false);
+            
+            var windows = files.Select(file => new AdHocTailingWindow(file)).Cast<Window>().ToList();
+            windows.ForEach(window => window.Show());
         }
     }
 }

@@ -144,6 +144,12 @@
                     </StackPanel>
                 </Button>
             </ToolBar>
+            <ToolBar ToolTip="File Options" BandIndex="4" Drop="UIElement_OnDrop" AllowDrop="True">
+                <Button ToolTip="Open ad-hoc log" Style="{StaticResource ToolbarIconStyle}"
+                        Command="commands:StaticCommands.OpenAdHocTailCommand">
+                    <Image Source="Assets/open-message.png" />
+                </Button>
+            </ToolBar>
         </ToolBarTray>
         
         <!-- TAB CONTROL -->
