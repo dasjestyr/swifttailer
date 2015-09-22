@@ -191,6 +191,7 @@
     <Compile Include="Models\Observable\BindableBase.cs" />
     <Compile Include="Models\Observable\IModel.cs" />
     <Compile Include="Models\Observable\IProperty.cs" />
+    <Compile Include="Models\Observable\ISearchSource.cs" />
     <Compile Include="Models\Observable\LogLine.cs" />
     <Compile Include="Models\Observable\ModelBase.cs" />
     <Compile Include="Models\Observable\NewContentEventArgs.cs" />

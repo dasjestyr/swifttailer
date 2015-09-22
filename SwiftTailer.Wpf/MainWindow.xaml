@@ -18,11 +18,11 @@
         <converters:LineCountDisplayConverter x:Key="LineCountDisplayConverter" />
         <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
         <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter" />
-        <Style TargetType="ListBoxItem" x:Key="HighlightItemStyle">
+        <Style TargetType="ListBoxItem" x:Key="LogLineStyle">
             <Setter Property="ContextMenu">
                 <Setter.Value>
                     <ContextMenu>
-                        <MenuItem Header="View Selected" Command="commands:StaticCommands.OpenLogLineCommand" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />-
+                        <MenuItem Header="View Selected" Command="commands:StaticCommands.OpenLogLineCommand" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
                     </ContextMenu>
                 </Setter.Value>
             </Setter>
@@ -70,6 +70,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
+        <!-- TOOL BARS -->
         <ToolBarTray Grid.Row="0">
             <ToolBar ToolTip="Group Options" Band="0">
                 <ComboBox Width="200" ItemsSource="{Binding Groups}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGroup}" 
@@ -173,8 +175,10 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
+                        
+                        <!-- LOG LINES -->
                         <ListBox x:Name="LogList" ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" SelectionMode="Extended" 
-                                 ItemContainerStyle="{StaticResource HighlightItemStyle}" FontFamily="{x:Static wpf:Settings.LogWindowFontFamily}"
+                                 ItemContainerStyle="{StaticResource LogLineStyle}" FontFamily="{x:Static wpf:Settings.LogWindowFontFamily}"
                                  SelectedIndex="{Binding SelectedLine}" SelectionChanged="LogList_SelectionChanged">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -200,21 +204,24 @@
                                 </DockPanel>
                             </Expander.Header>
                             <StackPanel Orientation="Horizontal">
-                                <GroupBox Header="Case Sensitivity" Padding="5 5 5 0" Margin="2">
+                                <GroupBox Header="Case Sensitivity" Padding="5 5 5 0" Margin="2"
+                                          ToolTip="Whether or not the search will use Ordinal matching rules.">
                                     <StackPanel Orientation="Vertical">
                                         <RadioButton GroupName="CaseSensitivity" Content="On" IsChecked="{Binding SearchOptions.CaseSensitive, Mode=TwoWay}"/>
                                         <RadioButton GroupName="CaseSensitivity" Content="Off" IsChecked="{Binding SearchOptions.CaseSensitive, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}" />
                                     </StackPanel>
                                 </GroupBox>
 
-                                <GroupBox Header="Search Mode" Padding="5 5 5 0" Margin="2">
+                                <GroupBox Header="Search Mode" Padding="5 5 5 0" Margin="2"
+                                          ToolTip="How the search will return hits. Find will highlight hits, Filter will disclude all non-hits.">
                                     <StackPanel Orientation="Vertical">
                                         <RadioButton GroupName="SearchMode" Name="FindModeRdo"  Content="Find" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Find}" />
                                         <RadioButton GroupName="SearchMode" Name="FilterModeRdo" Content="Filter" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Filter}"/>
                                     </StackPanel>
                                 </GroupBox>
 
-                                <GroupBox Header="Lines of Context (experimental)" Visibility="{Binding ElementName=FilterModeRdo, Path=IsChecked, Converter={StaticResource BooleanVisibilityConverter}}">
+                                <GroupBox Header="Lines of Context" Visibility="{Binding ElementName=FilterModeRdo, Path=IsChecked, Converter={StaticResource BooleanVisibilityConverter}}"
+                                          ToolTip="Experimental. Each line will contain a tool tip with the filter hit along with x lines of context, before and/or after.">
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="Head"/>
                                         <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextHeadSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}" Minimum="0" />
@@ -223,7 +230,8 @@
                                     </StackPanel>
                                 </GroupBox>
                                 
-                                <GroupBox Header="Phrase Type" Padding="5 5 5 0" Margin="2">
+                                <GroupBox Header="Phrase Type" Padding="5 5 5 0" Margin="2"
+                                          ToolTip="How the search phrase will be treated">
                                     <StackPanel Orientation="Vertical">
                                         <RadioButton GroupName="PhraseType" Content="Literal" IsChecked="{Binding SearchOptions.PhraseType, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Literal, Mode=TwoWay}" />
                                         <RadioButton GroupName="PhraseType" Content="Regex" IsChecked="{Binding SearchOptions.PhraseType, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Regex, Mode=TwoWay}"/>

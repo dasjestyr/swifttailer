@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -33,6 +34,14 @@ namespace SwiftTailer.Wpf.Models.Observable
         public IEnumerable<string> GeneralPhraseCollection
             => GeneralPhrases.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim());
 
+        public ObservableCollection<LogLine> LogLines => _tail.LogLines;
+
+        /// <summary>
+        /// Gets or sets the search phrase.
+        /// </summary>
+        /// <value>
+        /// The search phrase.
+        /// </value>
         public string SearchPhrase
         {
             get { return _searchPhrase; }
@@ -44,6 +53,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Gets or sets the error phrases.
+        /// </summary>
+        /// <value>
+        /// The error phrases.
+        /// </value>
         public string ErrorPhrases
         {
             get { return _errorPhrases; }
@@ -55,6 +70,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Gets or sets the general phrases.
+        /// </summary>
+        /// <value>
+        /// The general phrases.
+        /// </value>
         public string GeneralPhrases
         {
             get { return _generalPhrases; }
@@ -66,6 +87,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [case sensitive].
+        /// </summary>
+        /// <value>
+        /// {D255958A-8513-4226-94B9-080D98F904A1}  <c>true</c> if [case sensitive]; otherwise, <c>false</c>.
+        /// </value>
         public bool CaseSensitive
         {
             get { return _caseSensitive; }
@@ -77,6 +104,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Gets or sets the search mode.
+        /// </summary>
+        /// <value>
+        /// The search mode.
+        /// </value>
         public SearchMode SearchMode
         {
             get { return _searchMode; }
@@ -88,6 +121,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Gets or sets the type of the phrase.
+        /// </summary>
+        /// <value>
+        /// The type of the phrase.
+        /// </value>
         public PhraseType PhraseType
         {
             get { return _phraseType; }
@@ -99,6 +138,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Gets or sets the size of the context head.
+        /// </summary>
+        /// <value>
+        /// The size of the context head.
+        /// </value>
         public int ContextHeadSize
         {
             get { return _contextHeadSize; }
@@ -110,6 +155,12 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Gets or sets the size of the context tail.
+        /// </summary>
+        /// <value>
+        /// The size of the context tail.
+        /// </value>
         public int ContextTailSize
         {
             get { return _contextTailSize; }
@@ -121,13 +172,17 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SearchOptions" /> class.
+        /// </summary>
+        /// <param name="tail">The tail.</param>
         public SearchOptions(TailFile tail)
         {
             _tail = tail;
             _tail.NewLinesAdded += NewContentAddedHandler;
         }
 
-        private async void ApplyFilters()
+        private void ApplyFilters()
         {
             // doing this every time seems to be the only way 
             // to keep this shit uniformly in sync
@@ -145,7 +200,7 @@ namespace SwiftTailer.Wpf.Models.Observable
                 case SearchMode.Filter:
                     // must be applied in this order
                     _applicator.AddFilter(new HideLineRule(this, PhraseType, CompareRule));
-                    _applicator.AddFilter(new CaptureContextRule(this, ContextHeadSize, ContextTailSize, _tail.LogLines));
+                    _applicator.AddFilter(new CaptureContextRule(this, ContextHeadSize, ContextTailSize));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -166,17 +221,6 @@ namespace SwiftTailer.Wpf.Models.Observable
         {
             ApplyFilters();
         }
-    }
-
-    public interface ISearchSource
-    {
-        SearchMode SearchMode { get; }
-
-        string SearchPhrase { get; }
-
-        IEnumerable<string> ErrorPhraseCollection { get; }
-
-        IEnumerable<string> GeneralPhraseCollection { get; }
     }
 
     #region -- Enums --

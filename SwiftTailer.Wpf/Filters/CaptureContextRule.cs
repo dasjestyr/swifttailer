@@ -7,16 +7,14 @@ using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.Filters
 {
+    // TODO: considering trying to figure out how to refactor this into the HideLineRule since
+    // this is dependent on that filter being run first
     public class CaptureContextRule : ILogLineFilter
     {
         private readonly ISearchSource _source;
-        private readonly IList<LogLine> _logLines;
-
-        private int Range => HeadCount + TailCount + 1;
-
-        public int HeadCount { get; set; }
-
-        public int TailCount { get; set; }
+        private readonly int _headCount;
+        private readonly int _tailCount;
+        private int Range => _headCount + _tailCount + 1;
 
         public string Description => "Captures context of unfiltered results";
 
@@ -26,15 +24,13 @@ namespace SwiftTailer.Wpf.Filters
         /// <param name="source">The source.</param>
         /// <param name="headCount">The head count.</param>
         /// <param name="tailCount">The tail count.</param>
-        /// <param name="logLines">The log lines.</param>
-        public CaptureContextRule(ISearchSource source, int headCount, int tailCount, IList<LogLine> logLines)
+        public CaptureContextRule(ISearchSource source, int headCount, int tailCount)
         {
-            HeadCount = headCount;
-            TailCount = tailCount;
+            _headCount = headCount;
+            _tailCount = tailCount;
             _source = source;
-            _logLines = logLines;
         }
-        
+
         public async Task<bool> ApplyFilter(LogLine logLine)
         {
             // this only applies to Filter mode
@@ -42,24 +38,28 @@ namespace SwiftTailer.Wpf.Filters
                 string.IsNullOrEmpty(_source.SearchPhrase) || 
                 Range < 2)
                     return false;
-            
-            var logArray = _logLines.ToArray();
 
+            var sw = new Stopwatch();
+            sw.Start();
+
+            var logArray = _source.LogLines.ToArray();
             for (var i = 0; i < logArray.Length; i++)
             {
-                if (_logLines[i].Highlight.Category != HighlightCategory.None)
+                if (logArray[i].Highlight.Category != HighlightCategory.None)
                     continue;
 
-                _logLines[i].DeFilter();
-                _logLines[i].LineContext = ExtractContext(i, logArray);
+                logArray[i].DeFilter();
+                _source.LogLines[i].LineContext = ExtractContext(i, logArray);
             }
 
+            sw.Stop();
+            Debug.WriteLine($"CaptureContext completed in {sw.ElapsedMilliseconds}ms");
             return true;
         }
 
         private string ExtractContext(int currentIndex, LogLine[] logarray)
         {
-            var startIndex = currentIndex - HeadCount;
+            var startIndex = currentIndex - _headCount;
             var sliceSize = Range;
 
             // make sure we don't go out of bounds
@@ -69,8 +69,8 @@ namespace SwiftTailer.Wpf.Filters
                 startIndex = 0;
             }
 
-            if (startIndex + sliceSize > _logLines.Count)
-                sliceSize = _logLines.Count - startIndex;
+            if (startIndex + sliceSize > logarray.Length)
+                sliceSize = logarray.Length - startIndex;
 
             // get the slice
             var slice = new LogLine[sliceSize];
