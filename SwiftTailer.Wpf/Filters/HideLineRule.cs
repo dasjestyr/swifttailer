@@ -64,10 +64,12 @@ namespace SwiftTailer.Wpf.Filters
 
         private bool ApplyLiteral(LogLine logLine)
         {
-            if (logLine.Content.IndexOf(_source.SearchPhrase, _source.ComparisonRule) != -1) 
+            if (logLine.Content.IndexOf(_source.SearchPhrase, _source.ComparisonRule) != -1)
+            {
+                ExtractContext(logLine);
                 return false;
-
-            ExtractContext(logLine);
+            }
+            
             logLine.Highlight = LogHighlight.Hide;
 
             return true;
@@ -77,9 +79,11 @@ namespace SwiftTailer.Wpf.Filters
         {
             var regex = new Regex(_source.SearchPhrase);
             if (regex.IsMatch(logLine.Content))
+            {
+                ExtractContext(logLine);
                 return false;
-
-            ExtractContext(logLine);
+            }
+            
             logLine.Highlight = LogHighlight.Hide;
 
             return true;

@@ -224,7 +224,7 @@ namespace SwiftTailer.Wpf.Models.Observable
 
             // make sure to stop anything that's still in flight
 
-            Application.Current.Dispatcher.Invoke(() => _applicator.Apply(_tail.LogLines, _cancellationTokenSource));
+            Application.Current.Dispatcher.Invoke(() => _applicator.Apply(this, _cancellationTokenSource));
         }
 
         private void NewContentAddedHandler(object sender, NewContentEventArgs args)
