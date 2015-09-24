@@ -18,6 +18,7 @@
         <converters:LineCountDisplayConverter x:Key="LineCountDisplayConverter" />
         <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
         <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter" />
+        <converters:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter" />
         <Style TargetType="ListBoxItem" x:Key="LogLineStyle">
             <Setter Property="ContextMenu">
                 <Setter.Value>
@@ -27,6 +28,7 @@
                 </Setter.Value>
             </Setter>
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="ToolTip" Value="{Binding LineContext}" />
             <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_DoubleClick" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Find">
@@ -189,8 +191,9 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding Content}" ToolTip="{Binding LineContext}" 
-                                                   ToolTipService.InitialShowDelay="1000" ToolTipService.ShowDuration="20000" ToolTipService.HasDropShadow="True"/>
+                                        <TextBlock Text="{Binding Content}" ToolTipService.InitialShowDelay="1000" ToolTipService.ShowDuration="20000" 
+                                                   ToolTipService.HasDropShadow="True" ToolTip="{Binding LineContext}">
+                                        </TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
