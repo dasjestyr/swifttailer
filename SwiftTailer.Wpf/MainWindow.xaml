@@ -53,6 +53,7 @@
                 <DataTrigger Binding="{Binding Pinned}" Value="True">
                     <Setter Property="FontStyle" Value="Italic" />
                     <Setter Property="FontWeight" Value="Black"/>
+                    <Setter Property="Foreground" Value="DarkGreen" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>

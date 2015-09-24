@@ -8,14 +8,14 @@ namespace SwiftTailer.Wpf
     public class Settings
     {
         /// <summary>
-        /// The display buffer in kilobytes (i.e. 1 = 1000 bytes). Default 255. This will control how many kilobytes will be displayed in the log window.
+        /// The display buffer in kilobytes (i.e. 1 = 1000 bytes). Default 255. This will control how many kilobytes will be read from the back of the log file. For example, if the file is 1000 bytes and this value is set to 100, then it will only read bytes 900 thru 1000.
         /// </summary>
-        public static int DisplayBufferSize { get; set; } = 255;
+        public static int SeekBuffer { get; set; } = 255;
 
         /// <summary>
         /// The maximum number of lines to display in the log tailing window.
         /// </summary>
-        public static int MaxDisplayLogLines = 5000;
+        public static int MaxDisplayLogLines = 2;
         
         /// <summary>
         /// Polling interval in seconds. Default = 1000

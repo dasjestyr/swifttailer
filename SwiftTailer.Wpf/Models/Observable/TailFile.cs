@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -172,7 +173,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         {
             LogInfo = logInfo;
             SearchOptions = new SearchOptions(this);
-            _displayBuffer = Settings.DisplayBufferSize * 0x400;
+            _displayBuffer = Settings.SeekBuffer * 0x400;
             _cts = new CancellationTokenSource();
             
             OpenMenuItemInExplorerCommand = new OpenMenuItemInExplorerCommand();
@@ -314,7 +315,7 @@ namespace SwiftTailer.Wpf.Models.Observable
                     _lastLineIsDirty = true;
 
                     // trim the log if necessary
-                    LineCount = TrimLog(newLines.Count);                        
+                    LineCount = TrimLog();                        
                         
                     _lastIndex = startAt;
                     _lastIndex = fs.Position;
@@ -322,19 +323,26 @@ namespace SwiftTailer.Wpf.Models.Observable
             }                       
         }
 
-        private int TrimLog(int newLineCount)
+        private int TrimLog()
         {
-            if ((LogLines.Count + newLineCount) >= Settings.MaxDisplayLogLines
-                            && LogLines.Count > newLineCount)
+            if (LogLines.Count > Settings.MaxDisplayLogLines)
             {
-                for (var i = 0; i <= LogLines.Count || i < newLineCount; i++)
+                var toDelete = new List<LogLine>();
+                var pinned = 0;
+                for (var i = 0; LogLines.Count - toDelete.Count > Settings.MaxDisplayLogLines + pinned; i++)
                 {
-                    // TODO: consider handling trimming through filters
-                    if(LogLines[i].Pinned) continue;
+                    if (LogLines[i].Pinned)
+                    {
+                        pinned++;
+                        continue;
+                    }
 
-                    LogLines.RemoveAt(i);
+                    toDelete.Add(LogLines[i]);
                 }
+
+                toDelete.ForEach(line => LogLines.Remove(line));
             }
+
             return LogLines.Count;
         }
 
@@ -344,7 +352,7 @@ namespace SwiftTailer.Wpf.Models.Observable
 
             LogLines.Clear();
             LogLines.AddRange(args.NewText
-                .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(line => new LogLine(line.Trim(), LogHighlight.None)));
 
             RawContentChanged?.Invoke(this, args);
