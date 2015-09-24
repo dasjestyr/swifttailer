@@ -23,7 +23,14 @@
             <Setter Property="ContextMenu">
                 <Setter.Value>
                     <ContextMenu>
-                        <MenuItem Header="View Selected" Command="commands:StaticCommands.OpenLogLineCommand" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
+                        <MenuItem Header="View Selected" Command="commands:StaticCommands.OpenLogLineCommand" 
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
+                        <MenuItem Header="Pin this line" ToolTip="If pinned, the log line will be ommitted from trimming rules."
+                                  Command="commands:StaticCommands.PinLogLineCommand" 
+                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
+                        <MenuItem Header="Unpin this line"
+                                  Command="commands:StaticCommands.UnpinLogLineCommand"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
                     </ContextMenu>
                 </Setter.Value>
             </Setter>
@@ -42,6 +49,10 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Hide">
                     <Setter Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Pinned}" Value="True">
+                    <Setter Property="FontStyle" Value="Italic" />
+                    <Setter Property="FontWeight" Value="Black"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>

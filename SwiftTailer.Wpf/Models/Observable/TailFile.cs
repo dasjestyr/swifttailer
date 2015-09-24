@@ -329,6 +329,9 @@ namespace SwiftTailer.Wpf.Models.Observable
             {
                 for (var i = 0; i <= LogLines.Count || i < newLineCount; i++)
                 {
+                    // TODO: consider handling trimming through filters
+                    if(LogLines[i].Pinned) continue;
+
                     LogLines.RemoveAt(i);
                 }
             }
