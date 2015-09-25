@@ -7,6 +7,7 @@ namespace SwiftTailer.Wpf.Models.Observable
     {
         private LogHighlight _highlight;
         private string _lineContext;
+        private bool _pinned;
 
         /// <summary>
         /// Gets or sets the content.
@@ -44,6 +45,22 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _lineContext = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="LogLine"/> is pinning.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if pinning; otherwise, <c>false</c>.
+        /// </value>
+        public bool Pinned
+        {
+            get { return _pinned; }
+            set
+            {
+                _pinned = value;
                 OnPropertyChanged();
             }
         }

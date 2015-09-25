@@ -18,15 +18,24 @@
         <converters:LineCountDisplayConverter x:Key="LineCountDisplayConverter" />
         <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
         <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter" />
+        <converters:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter" />
         <Style TargetType="ListBoxItem" x:Key="LogLineStyle">
             <Setter Property="ContextMenu">
                 <Setter.Value>
                     <ContextMenu>
-                        <MenuItem Header="View Selected" Command="commands:StaticCommands.OpenLogLineCommand" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
+                        <MenuItem Header="View Selected" Command="commands:StaticCommands.OpenLogLineCommand" 
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
+                        <MenuItem Header="Pin this line" ToolTip="If pinned, the log line will be ommitted from trimming rules."
+                                  Command="commands:StaticCommands.PinLogLineCommand" 
+                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
+                        <MenuItem Header="Unpin this line"
+                                  Command="commands:StaticCommands.UnpinLogLineCommand"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
                     </ContextMenu>
                 </Setter.Value>
             </Setter>
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="ToolTip" Value="{Binding LineContext}" />
             <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_DoubleClick" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Find">
@@ -40,6 +49,11 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Hide">
                     <Setter Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Pinned}" Value="True">
+                    <Setter Property="FontStyle" Value="Italic" />
+                    <Setter Property="FontWeight" Value="Black"/>
+                    <Setter Property="Foreground" Value="DarkGreen" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -189,8 +203,9 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding Content}" ToolTip="{Binding LineContext}" 
-                                                   ToolTipService.InitialShowDelay="1000" ToolTipService.ShowDuration="20000" ToolTipService.HasDropShadow="True"/>
+                                        <TextBlock Text="{Binding Content}" ToolTipService.InitialShowDelay="1000" ToolTipService.ShowDuration="20000" 
+                                                   ToolTipService.HasDropShadow="True" ToolTip="{Binding LineContext}">
+                                        </TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>

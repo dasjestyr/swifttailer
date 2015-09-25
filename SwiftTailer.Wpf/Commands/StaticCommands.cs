@@ -32,5 +32,9 @@ namespace SwiftTailer.Wpf.Commands
         public static ICommand ZipGroupAndEmailCommand = new ZipGroupAndEmailCommand();
 
         public static ICommand OpenAdHocTailCommand = new OpenAdHocTailCommand();
+
+        public static ICommand PinLogLineCommand = new PinLogLineCommand();
+
+        public static ICommand UnpinLogLineCommand = new UnpinLogLineCommand();
     }
 }

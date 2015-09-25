@@ -160,6 +160,7 @@
     <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />
     <Compile Include="Commands\OpenPathInExplorerCommand.cs" />
     <Compile Include="Commands\PickLogCommand.cs" />
+    <Compile Include="Commands\PinLogLineCommand.cs" />
     <Compile Include="Commands\RemoveLogFromGroupCommand.cs" />
     <Compile Include="Commands\SaveLogToGroupCommand.cs" />
     <Compile Include="Commands\SaveToTextCommand.cs" />
@@ -174,6 +175,7 @@
     <Compile Include="Converters\HighlightConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Converters\LineCountDisplayConverter.cs" />
+    <Compile Include="Converters\StringNotNullOrEmptyConverter.cs" />
     <Compile Include="Data\ILogSource.cs" />
     <Compile Include="Data\LogEventArgs.cs" />
     <Compile Include="Data\LogGroup.cs" />

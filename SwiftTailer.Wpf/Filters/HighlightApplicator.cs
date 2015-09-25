@@ -33,16 +33,15 @@ namespace SwiftTailer.Wpf.Filters
         /// <summary>
         /// Applies the global filter chain to the each log line.
         /// </summary>
-        /// <param name="logLines">The log lines.</param>
+        /// <param name="source">The source.</param>
         /// <param name="cts">The CTS.</param>
-        public async void Apply(IEnumerable<LogLine> logLines, CancellationTokenSource cts)
+        public async void Apply(ISearchSource source, CancellationTokenSource cts)
         {
             IEnumerable<Task> tasks;
 
             lock (_lockObject)
             {
-                var logLineList = logLines.ToList();
-                tasks = _globalFilters.Select(filter => Apply(filter, logLineList, cts));
+                tasks = _globalFilters.Select(filter => Apply(filter, source.LogLines, cts));
             }
 
             await Task.WhenAll(tasks);
@@ -68,7 +67,7 @@ namespace SwiftTailer.Wpf.Filters
         /// <param name="cts">The CTS.</param>
         public async Task Apply(ILogLineFilter filter, IEnumerable<LogLine> logLines, CancellationTokenSource cts)
         {
-            var logLineList = logLines.ToList();
+            var logLineList = logLines;
             var tasks = logLineList.Select(filter.ApplyFilter);
             await Task.WhenAll(tasks);
         }
@@ -83,28 +82,6 @@ namespace SwiftTailer.Wpf.Filters
             {
                 _globalFilters.Add(filter);
             }
-        }
-
-        /// <summary>
-        /// Adds the filters to a global set.
-        /// </summary>
-        /// <param name="filters">The filters.</param>
-        public void AddFilter(IEnumerable<ILogLineFilter> filters)
-        {
-            lock (_lockObject)
-            {
-                _globalFilters.AddRange(filters);
-            }
-        }
-
-        /// <summary>
-        /// Removes the filter from the global set.
-        /// </summary>
-        /// <param name="filter">The filter.</param>
-        public void RemoveFilter(ILogLineFilter filter)
-        {
-            _globalFilters.Remove(filter);
-            Debug.WriteLine($"Removed {filter.Description} from global set");
         }
     }
 }
