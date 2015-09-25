@@ -87,7 +87,7 @@
         
         <!-- TOOL BARS -->
         <ToolBarTray Grid.Row="0">
-            <ToolBar ToolTip="Group Options" Band="0">
+            <ToolBar Band="0">
                 <ComboBox Width="200" ItemsSource="{Binding Groups}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGroup}" 
                           Margin="10 0 5 0" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}" IsEditable="True" IsReadOnly="True" />
                 <Button ToolTip="Add new group..."  Style="{StaticResource ToolbarIconStyle}" Command="{Binding AddGroupDialogCommand}">
@@ -122,13 +122,13 @@
                     <Image Source="Assets/packages.png"/>
                 </Button>
             </ToolBar>
-            <ToolBar ToolTip="View Options" BandIndex="1">
+            <ToolBar BandIndex="1">
                 <Button ToolTip="Gridulate" Style="{StaticResource ToolbarIconStyle}"
                         Command="commands:StaticCommands.FeatureStubCommand" CommandParameter="Gridulator coming soon!">
                     <Image Source="Assets/grid.png" />
                 </Button>
             </ToolBar>
-            <ToolBar ToolTip="Config Options" BandIndex="2">
+            <ToolBar BandIndex="2">
                 <Button ToolTip="Export Log Config" Style="{StaticResource ToolbarIconStyle}"
                         Command="commands:StaticCommands.ExportLogConfigCommand">
                     <Image Source="Assets/doc_export.png" />
@@ -142,7 +142,7 @@
                     <Image Source="Assets/edit.png" />
                 </Button>
             </ToolBar>
-            <ToolBar ToolTip="Tailing Options" Band="2">
+            <ToolBar Band="2">
                 <Button ToolTip="Start tailing" x:Name="StartButton" Style="{StaticResource TransportControlButtons}" 
                         Command="{Binding StartTailingCommand}">
                     <StackPanel Orientation="Horizontal">
@@ -158,7 +158,7 @@
                     </StackPanel>
                 </Button>
             </ToolBar>
-            <ToolBar ToolTip="File Options" BandIndex="4" Drop="UIElement_OnDrop" AllowDrop="True">
+            <ToolBar BandIndex="4" Drop="UIElement_OnDrop" AllowDrop="True">
                 <Button ToolTip="Open ad-hoc log" Style="{StaticResource ToolbarIconStyle}"
                         Command="commands:StaticCommands.OpenAdHocTailCommand">
                     <Image Source="Assets/open-message.png" />

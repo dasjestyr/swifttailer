@@ -15,7 +15,7 @@ namespace SwiftTailer.Wpf
         /// <summary>
         /// The maximum number of lines to display in the log tailing window.
         /// </summary>
-        public static int MaxDisplayLogLines = 2;
+        public static int MaxDisplayLogLines = 2500;
         
         /// <summary>
         /// Polling interval in seconds. Default = 1000
