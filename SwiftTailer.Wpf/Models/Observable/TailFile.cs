@@ -23,7 +23,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         private bool _lastLineIsDirty;
         private int _lineCount;
         private int _selectedLineIndex;
-        private bool _followTail;
+        private bool _followTail = true;
         private ObservableCollection<LogLine> _logLines = new ObservableCollection<LogLine>();
         private CancellationTokenSource _cts;
         public event RawContentsChangedHandler RawContentChanged;

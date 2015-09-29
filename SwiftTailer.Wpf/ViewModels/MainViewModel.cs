@@ -28,9 +28,13 @@ namespace SwiftTailer.Wpf.ViewModels
 
         public StopTailingCommand StopTailingCommand { get; private set; }
 
+        public ToggleTailingCommand ToggleTailingCommand { get; private set; }
+
         public OpenLogPickerDialogCommand OpenLogPickerDialogCommand { get; set; }
 
         public AddGroupDialogCommand AddGroupDialogCommand { get; set; }
+
+        public FollowTailToggleCommand FollowTailToggleCommand { get; set; }
         
         #endregion
 
@@ -142,7 +146,9 @@ namespace SwiftTailer.Wpf.ViewModels
             AddGroupDialogCommand = new AddGroupDialogCommand();
             StopTailingCommand = new StopTailingCommand(this);
             StartTailingCommand = new StartTailingCommand(this);            
+            ToggleTailingCommand = new ToggleTailingCommand(this);
             SelectGroupCommand = new SelectGroupCommand(this);
+            FollowTailToggleCommand = new FollowTailToggleCommand(this);
 
             LogSource.Instance.LogSourceBound += LogSourceBound;
             LogSource.Instance.LogAdded += LogAdded;

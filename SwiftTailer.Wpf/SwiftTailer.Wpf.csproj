@@ -154,6 +154,7 @@
     <Compile Include="Commands\EmailTasks.cs" />
     <Compile Include="Commands\ExportLogConfigCommand.cs" />
     <Compile Include="Commands\FeatureStubCommand.cs" />
+    <Compile Include="Commands\FollowTailToggleCommand.cs" />
     <Compile Include="Commands\OpenAdHocTailCommand.cs" />
     <Compile Include="Commands\OpenMenuItemInExplorerCommand.cs" />
     <Compile Include="Commands\OpenLogLineCommand.cs" />
