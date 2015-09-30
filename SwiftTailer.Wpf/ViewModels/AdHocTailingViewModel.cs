@@ -14,6 +14,7 @@ namespace SwiftTailer.Wpf.ViewModels
         private LogLine _selectedLine;
         private bool _isRunning;
         private string _status;
+        private TailFile _selectedTail;
 
         public string WindowTitle
         {
@@ -67,6 +68,15 @@ namespace SwiftTailer.Wpf.ViewModels
             set
             {
                 _isRunning = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public TailFile SelectedTail {
+            get { return _selectedTail; }
+            set
+            {
+                _selectedTail = value;
                 OnPropertyChanged();
             }
         }

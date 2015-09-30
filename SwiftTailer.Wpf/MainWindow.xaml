@@ -11,7 +11,7 @@
         xmlns:data="clr-namespace:SwiftTailer.Wpf.Data"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d" x:Name="ThisWindow"
-        Title="SwiftTailer" Height="800" Width="800" WindowStartupLocation="CenterScreen">
+        Title="SwiftTailer" Height="800" Width="1000" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
         <converters:HighlightConverter x:Key="HighlightConverter"/>
@@ -75,7 +75,15 @@
     <Window.DataContext>
         <viewModels:MainViewModel />
     </Window.DataContext>
-
+    
+    <!-- GLOBAL INPUT BINDINGS -->
+    <Window.InputBindings>
+        <KeyBinding Gesture="CTRL+SPACE"
+                    Command="{Binding ToggleTailingCommand}" />
+        <KeyBinding Gesture="CTRL+PAGEDOWN"
+                    Command="{Binding FollowTailToggleCommand}" />
+    </Window.InputBindings>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -87,7 +95,23 @@
         
         <!-- TOOL BARS -->
         <ToolBarTray Grid.Row="0">
-            <ToolBar Band="0">
+            <ToolBar Band="0" BandIndex="0">
+                <Button ToolTip="Start tailing" x:Name="StartButton" Style="{StaticResource TransportControlButtons}" 
+                        Command="{Binding StartTailingCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Assets/playback_play.png" />
+                        <TextBlock Text="Start" />
+                    </StackPanel>
+                </Button>
+                <Button ToolTip="Stop tailing" x:Name="PauseButton" Style="{StaticResource TransportControlButtons}" 
+                        Command="{Binding StopTailingCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Assets/playback_pause.png" />
+                        <TextBlock  />
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+            <ToolBar Band="0" BandIndex="1">
                 <ComboBox Width="200" ItemsSource="{Binding Groups}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGroup}" 
                           Margin="10 0 5 0" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}" IsEditable="True" IsReadOnly="True" />
                 <Button ToolTip="Add new group..."  Style="{StaticResource ToolbarIconStyle}" Command="{Binding AddGroupDialogCommand}">
@@ -122,13 +146,13 @@
                     <Image Source="Assets/packages.png"/>
                 </Button>
             </ToolBar>
-            <ToolBar BandIndex="1">
+            <ToolBar Band="0" BandIndex="2">
                 <Button ToolTip="Gridulate" Style="{StaticResource ToolbarIconStyle}"
                         Command="commands:StaticCommands.FeatureStubCommand" CommandParameter="Gridulator coming soon!">
                     <Image Source="Assets/grid.png" />
                 </Button>
             </ToolBar>
-            <ToolBar BandIndex="2">
+            <ToolBar Band="0" BandIndex="3">
                 <Button ToolTip="Export Log Config" Style="{StaticResource ToolbarIconStyle}"
                         Command="commands:StaticCommands.ExportLogConfigCommand">
                     <Image Source="Assets/doc_export.png" />
@@ -142,23 +166,7 @@
                     <Image Source="Assets/edit.png" />
                 </Button>
             </ToolBar>
-            <ToolBar Band="2">
-                <Button ToolTip="Start tailing" x:Name="StartButton" Style="{StaticResource TransportControlButtons}" 
-                        Command="{Binding StartTailingCommand}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="Assets/playback_play.png" />
-                        <TextBlock Text="Start" />
-                    </StackPanel>
-                </Button>
-                <Button ToolTip="Stop tailing" x:Name="PauseButton" Style="{StaticResource TransportControlButtons}" 
-                        Command="{Binding StopTailingCommand}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="Assets/playback_pause.png" />
-                        <TextBlock  />
-                    </StackPanel>
-                </Button>
-            </ToolBar>
-            <ToolBar BandIndex="4" Drop="UIElement_OnDrop" AllowDrop="True">
+            <ToolBar Band="0" BandIndex="4" Drop="UIElement_OnDrop" AllowDrop="True">
                 <Button ToolTip="Open ad-hoc log" Style="{StaticResource ToolbarIconStyle}"
                         Command="commands:StaticCommands.OpenAdHocTailCommand">
                     <Image Source="Assets/open-message.png" />
