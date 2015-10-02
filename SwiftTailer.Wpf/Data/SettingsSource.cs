@@ -68,16 +68,4 @@ namespace SwiftTailer.Wpf.Data
             }
         }
     }
-
-    public class SwifTailerSettings
-    {
-        [JsonProperty("MaxReadLength")]
-        public int MaxReadLength { get; set; }
-
-        [JsonProperty("MaxDisplayLines")]
-        public int MaxDisplayLines { get; set; }
-
-        [JsonProperty("PollingInterval")]
-        public int PollingInterval { get; set; }
-    }
 }

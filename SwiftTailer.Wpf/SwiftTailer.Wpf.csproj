@@ -185,6 +185,7 @@
     <Compile Include="Data\LogInfo.cs" />
     <Compile Include="Data\Logs.cs" />
     <Compile Include="Data\SettingsSource.cs" />
+    <Compile Include="Data\SwifTailerSettings.cs" />
     <Compile Include="Filters\CaptureContextRule.cs" />
     <Compile Include="Filters\ClearFiltersRule.cs" />
     <Compile Include="Filters\ErrorPhraseRule.cs" />
