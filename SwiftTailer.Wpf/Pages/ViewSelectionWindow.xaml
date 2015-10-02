@@ -4,21 +4,30 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:root="clr-namespace:SwiftTailer.Wpf"
+        xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
         mc:Ignorable="d"
         Title="Log Selection" Height="224.892" Width="454.532" WindowStartupLocation="CenterScreen"
         d:DataContext="vm:ViewSelectionViewModel">
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" x:Name="Content" VerticalScrollBarVisibility="Auto" 
-                 Text="{Binding Content}" FontFamily="{x:Static root:Settings.LogWindowFontFamily}" />
+        <TextBox Grid.Row="0" x:Name="ContentBox" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                 Text="{Binding Content}" FontFamily="{x:Static root:Settings.LogWindowFontFamily}">
+            <TextBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Compare with clipboard" Click="CompareClipboard_Click"/>
+                    <MenuItem Header="Ping IP/Host" Click="PingIpAddress_Click" />
+                </ContextMenu>
+            </TextBox.ContextMenu>
+        </TextBox>
         
         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5" HorizontalAlignment="Right">
             <Button Content="Save As..." Padding="2" Width="100" Command="{Binding SaveToTextCommand}" 
-                    CommandParameter="{Binding ElementName=Content, Path=Text}" Margin="10 0" />
-            <Button Content="Email To..." Command="{Binding EmailSelectionAttachmentCommand}" CommandParameter="{Binding ElementName=Content, Path=Text}" Width="100" />
+                    CommandParameter="{Binding ElementName=ContentBox, Path=Text}" Margin="10 0" />
+            <Button Content="Email To..." Command="{Binding EmailSelectionAttachmentCommand}" CommandParameter="{Binding ElementName=ContentBox, Path=Text}" Width="100" />
             
         </StackPanel>
     </Grid>

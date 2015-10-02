@@ -147,6 +147,7 @@
     <Compile Include="Behaviors\MenuItemExtensions.cs" />
     <Compile Include="Commands\AddGroupDialogCommand.cs" />
     <Compile Include="Commands\CloseWindowCommand.cs" />
+    <Compile Include="Commands\CompareWithClipboardCommand.cs" />
     <Compile Include="Commands\CreateGroupCommand.cs" />
     <Compile Include="Commands\DeleteGroupCommand.cs" />
     <Compile Include="Commands\EditGroupCommand.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Commands\OpenPathInExplorerCommand.cs" />
     <Compile Include="Commands\OpenSettingsCommand.cs" />
     <Compile Include="Commands\PickLogCommand.cs" />
+    <Compile Include="Commands\PingSelectionCommand.cs" />
     <Compile Include="Commands\PinLogLineCommand.cs" />
     <Compile Include="Commands\RemoveLogFromGroupCommand.cs" />
     <Compile Include="Commands\SaveLogToGroupCommand.cs" />

@@ -38,5 +38,9 @@ namespace SwiftTailer.Wpf.Commands
         public static ICommand UnpinLogLineCommand = new UnpinLogLineCommand();
 
         public static ICommand OpenSettingsCommand = new OpenSettingsCommand();
+
+        public static ICommand CompareToClipboardCommand = new CompareWithClipboardCommand();
+
+        public static ICommand PingSelectionCommand = new PingSelectionCommand();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Models.Observable;
 using SwiftTailer.Wpf.ViewModels;
 
@@ -18,6 +19,16 @@ namespace SwiftTailer.Wpf.Pages
             DataContext = vm;
 
             vm.LogLines = logLines;
+        }
+
+        private void CompareClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            StaticCommands.CompareToClipboardCommand.Execute(ContentBox);
+        }
+
+        private void PingIpAddress_Click(object sender, RoutedEventArgs e)
+        {
+            StaticCommands.PingSelectionCommand.Execute(ContentBox);
         }
     }
 }
