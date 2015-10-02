@@ -10,7 +10,7 @@ namespace SwiftTailer.Wpf.Converters
         {
             if (!(value is int)) return value;
             var count = (int)value;
-            return $"Displaying {count} lines";
+            return $"Displaying {count} lines ({Settings.MaxDisplayLogLines} max)";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

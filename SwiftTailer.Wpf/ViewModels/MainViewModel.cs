@@ -132,6 +132,8 @@ namespace SwiftTailer.Wpf.ViewModels
             }
         }
 
+        
+
         #endregion
 
         public MainViewModel()
