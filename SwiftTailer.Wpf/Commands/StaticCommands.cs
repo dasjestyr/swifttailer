@@ -36,5 +36,7 @@ namespace SwiftTailer.Wpf.Commands
         public static ICommand PinLogLineCommand = new PinLogLineCommand();
 
         public static ICommand UnpinLogLineCommand = new UnpinLogLineCommand();
+
+        public static ICommand OpenSettingsCommand = new OpenSettingsCommand();
     }
 }

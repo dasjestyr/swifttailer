@@ -29,14 +29,14 @@ namespace SwiftTailer.Wpf.Data
         private LogSource()
         {
             _objectLock = new object();
-            var tempFileLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DesignTime", "DemoFiles.json");
+            var templateLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DesignTime", "DemoFiles.json");
             
             // if the file doesn't already exist, create it
             LogFileLocation = Path.Combine(Settings.WorkingDirectory, "LogConfig.json");
             if (!File.Exists(LogFileLocation))
             {
                 Trace.WriteLine($"{LogFileLocation} did not exist. Creating file with a default config...");
-                File.Copy(tempFileLocation, LogFileLocation);
+                File.Copy(templateLocation, LogFileLocation);
             }
 
             LoadLogs(LogFileLocation);

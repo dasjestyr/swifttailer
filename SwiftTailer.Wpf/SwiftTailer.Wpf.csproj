@@ -160,6 +160,7 @@
     <Compile Include="Commands\OpenLogLineCommand.cs" />
     <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />
     <Compile Include="Commands\OpenPathInExplorerCommand.cs" />
+    <Compile Include="Commands\OpenSettingsCommand.cs" />
     <Compile Include="Commands\PickLogCommand.cs" />
     <Compile Include="Commands\PinLogLineCommand.cs" />
     <Compile Include="Commands\RemoveLogFromGroupCommand.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="Data\LogGroupEventArgs.cs" />
     <Compile Include="Data\LogInfo.cs" />
     <Compile Include="Data\Logs.cs" />
+    <Compile Include="Data\SettingsSource.cs" />
     <Compile Include="Filters\CaptureContextRule.cs" />
     <Compile Include="Filters\ClearFiltersRule.cs" />
     <Compile Include="Filters\ErrorPhraseRule.cs" />
@@ -215,6 +217,9 @@
     <Compile Include="Pages\LogPicker.xaml.cs">
       <DependentUpon>LogPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ViewSelectionWindow.xaml.cs">
       <DependentUpon>ViewSelectionWindow.xaml</DependentUpon>
     </Compile>
@@ -224,6 +229,7 @@
     <Compile Include="ViewModels\AdHocTailingViewModel.cs" />
     <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ViewSelectionViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -254,6 +260,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\ViewSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -273,6 +283,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="DesignTime\Settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="icon_head.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
