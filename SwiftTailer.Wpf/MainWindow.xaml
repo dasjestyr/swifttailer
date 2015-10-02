@@ -171,6 +171,10 @@
                         Command="commands:StaticCommands.OpenAdHocTailCommand">
                     <Image Source="Assets/open-message.png" />
                 </Button>
+                <Button ToolTip="Open Settings Dialog" Style="{StaticResource ToolbarIconStyle}"
+                        Command="commands:StaticCommands.OpenSettingsCommand">
+                    <Image Source="Assets/setting.png" />
+                </Button>
             </ToolBar>
         </ToolBarTray>
         

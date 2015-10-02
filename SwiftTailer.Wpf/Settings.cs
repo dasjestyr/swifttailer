@@ -1,7 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Windows.Media;
+using SwiftTailer.Wpf.Data;
 
 namespace SwiftTailer.Wpf
 {
@@ -10,17 +9,44 @@ namespace SwiftTailer.Wpf
         /// <summary>
         /// The display buffer in kilobytes (i.e. 1 = 1000 bytes). Default 255. This will control how many kilobytes will be read from the back of the log file. For example, if the file is 1000 bytes and this value is set to 100, then it will only read bytes 900 thru 1000.
         /// </summary>
-        public static int SeekBuffer { get; set; } = 1000;
+        public static int SeekBuffer
+        {
+            get { return SettingsSource.Instance.Settings.MaxReadLength;}
+            set
+            {
+                Debug.WriteLine($"Changed SeekBuffer to {value}");
+                SettingsSource.Instance.Settings.MaxReadLength = value;
+                SettingsSource.SaveState();
+            }
+        }
 
         /// <summary>
         /// The maximum number of lines to display in the log tailing window.
         /// </summary>
-        public static int MaxDisplayLogLines = 13000;
-        
+        public static int MaxDisplayLogLines
+        {
+            get { return SettingsSource.Instance.Settings.MaxDisplayLines; }
+            set
+            {
+                Debug.WriteLine($"Changed MaxDisplayLogLines to {value}");
+                SettingsSource.Instance.Settings.MaxDisplayLines = value;
+                SettingsSource.SaveState();
+            }
+        }
+
         /// <summary>
         /// Polling interval in seconds. Default = 1000
         /// </summary>
-        public static int PollingInterval { get; set; } = 1000; // Do NOT change this to use a timespan!
+        public static int PollingInterval
+        {
+            get { return SettingsSource.Instance.Settings.PollingInterval; }
+            set
+            {
+                Debug.WriteLine($"Changed PollingInterval to {value}");
+                SettingsSource.Instance.Settings.PollingInterval = value;
+                SettingsSource.SaveState();
+            }
+        }
 
         /// <summary>
         /// The font face that will be used in log windows
@@ -30,20 +56,6 @@ namespace SwiftTailer.Wpf
         /// <summary>
         /// The directory in which all supporting files should be stored (e.g. logs, user configurations, etc)
         /// </summary>
-        public static readonly string WorkingDirectory;
-
-        static Settings()
-        {
-            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-            WorkingDirectory = Path.Combine(localAppDataPath, "SwiftTailer");
-
-            // if the app directory doesn't exist, create it
-            if (!Directory.Exists(WorkingDirectory))
-            {
-                Trace.WriteLine($"{WorkingDirectory} did not exist. Creating...");
-                Directory.CreateDirectory(WorkingDirectory);
-            }
-        }
+        public static string WorkingDirectory => SettingsSource.Instance.WorkingDirectory;
     }
 }
