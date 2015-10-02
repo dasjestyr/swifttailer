@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System.Windows.Controls;
+using System.Windows.Input;
+using SwiftTailer.Wpf.Behaviors;
 
 namespace SwiftTailer.Wpf.Commands
 {

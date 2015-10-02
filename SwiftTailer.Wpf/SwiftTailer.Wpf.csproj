@@ -30,7 +30,7 @@
     <ProductName>SwiftTailer</ProductName>
     <PublisherName>Jeremy Stafford</PublisherName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>0.4.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -145,6 +145,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Behaviors\MenuItemExtensions.cs" />
+    <Compile Include="Behaviors\RelayCommand.cs" />
     <Compile Include="Commands\AddGroupDialogCommand.cs" />
     <Compile Include="Commands\CloseWindowCommand.cs" />
     <Compile Include="Commands\CompareWithClipboardCommand.cs" />

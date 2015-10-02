@@ -7,7 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
+using SwiftTailer.Wpf.Behaviors;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
 using SwiftTailer.Wpf.Filters;
@@ -24,6 +27,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         private int _lineCount;
         private int _selectedLineIndex;
         private bool _followTail = true;
+        private bool _showSearchOptions;
         private ObservableCollection<LogLine> _logLines = new ObservableCollection<LogLine>();
         private CancellationTokenSource _cts;
         public event RawContentsChangedHandler RawContentChanged;
@@ -57,7 +61,7 @@ namespace SwiftTailer.Wpf.Models.Observable
 
         public OpenMenuItemInExplorerCommand OpenMenuItemInExplorerCommand { get; set; }
 
-
+        
         #region -- Observable Properties --
 
         /// <summary>
@@ -151,6 +155,16 @@ namespace SwiftTailer.Wpf.Models.Observable
             set
             {
                 _followTail = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ShowSearchOptions
+        {
+            get { return _showSearchOptions; }
+            set
+            {
+                _showSearchOptions = value;
                 OnPropertyChanged();
             }
         }

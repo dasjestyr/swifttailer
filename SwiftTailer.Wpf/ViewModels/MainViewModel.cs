@@ -2,7 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Input;
+using SwiftTailer.Wpf.Behaviors;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
 using SwiftTailer.Wpf.Models.Observable;
@@ -35,6 +37,18 @@ namespace SwiftTailer.Wpf.ViewModels
         public AddGroupDialogCommand AddGroupDialogCommand { get; set; }
 
         public FollowTailToggleCommand FollowTailToggleCommand { get; set; }
+
+        public ICommand ToggleSearchOptionsCommand
+        {
+            get
+            {
+                return new RelayCommand(
+                obj =>
+                {
+                    SelectedTail.ShowSearchOptions = !SelectedTail.ShowSearchOptions;
+                });
+            }
+        }
         
         #endregion
 
