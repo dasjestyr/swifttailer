@@ -15,5 +15,8 @@ namespace SwiftTailer.Wpf.Data
 
         [JsonProperty("UserEmail")]
         public string UserEmail { get; set; }
+
+        [JsonProperty("AutoFollow")]
+        public bool AutoFollowTail { get; set; }
     }
 }

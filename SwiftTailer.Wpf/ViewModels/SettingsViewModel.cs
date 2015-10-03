@@ -43,5 +43,15 @@ namespace SwiftTailer.Wpf.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public bool AutoFollow
+        {
+            get { return Settings.AutoFollow; }
+            set
+            {
+                Settings.AutoFollow = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

@@ -23,8 +23,8 @@ namespace SwiftTailer.Wpf.Models.Observable
         private bool _lastLineIsDirty;
         private int _lineCount;
         private int _selectedLineIndex;
-        private bool _followTail = true;
         private bool _showSearchOptions;
+        private bool _followTail = Settings.AutoFollow;
         private ObservableCollection<LogLine> _logLines = new ObservableCollection<LogLine>();
         private CancellationTokenSource _cts;
         private bool _isRunning;

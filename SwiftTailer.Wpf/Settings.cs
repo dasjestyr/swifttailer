@@ -65,6 +65,17 @@ namespace SwiftTailer.Wpf
             }
         }
 
+        public static bool AutoFollow
+        {
+            get { return SettingsSource.Instance.Settings.AutoFollowTail; }
+            set
+            {
+                Debug.WriteLine($"Changed AutoFollow to {value}");
+                SettingsSource.Instance.Settings.AutoFollowTail = value;
+                SettingsSource.SaveState();
+            }
+        }
+
         /// <summary>
         /// The font face that will be used in log windows
         /// </summary>
