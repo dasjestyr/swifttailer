@@ -57,3 +57,9 @@ This tailer focuses on the idea of tailing multiple logs simultaneously and also
    - Replace
    - Merge
  - Browse to application folder
+
+### Required to Run
+ - .Net 4.5.1
+
+### Required to Develop
+ - Visual Studio 2015
