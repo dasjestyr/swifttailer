@@ -36,7 +36,7 @@ namespace SwiftTailer.Wpf.Commands
             await Task.Run(() => ZipTasks.ZipGroup(group, fileLocation.FileName, vm));
 
             EmailTasks.SendAttachment(
-                "someone@domain.com", 
+                Settings.UserEmail, 
                 "Log Files", 
                 Path.GetFileName(fileLocation.FileName), 
                 fileLocation.FileName);
