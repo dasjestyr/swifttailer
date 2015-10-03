@@ -59,7 +59,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Assets\icon_head.ico</ApplicationIcon>
+    <ApplicationIcon>Loggly1.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>15759D52EDF1FA44F30968D99E7C47B891E985FB</ManifestCertificateThumbprint>
@@ -299,17 +299,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Loggly1.ico" />
+    <SplashScreen Include="Assets\Firewood.png" />
+    <Resource Include="Assets\Loggly1.ico" />
     <Content Include="DesignTime\Settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="icon_head.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <SplashScreen Include="Assets\icon_full.png" />
-    <Resource Include="Assets\icon_head.png" />
-    <Resource Include="Assets\icon_head.ico" />
     <Resource Include="Assets\copy.png" />
     <Resource Include="Assets\cut.png" />
     <Resource Include="Assets\document.png" />
