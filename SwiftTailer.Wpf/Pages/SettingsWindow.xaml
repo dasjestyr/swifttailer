@@ -10,7 +10,7 @@
         xmlns:wpf="clr-namespace:SwiftTailer.Wpf"
         xmlns:converter="clr-namespace:SwiftTailer.Wpf.Converters"
         mc:Ignorable="d"
-        Title="Settings" Height="300" Width="300"
+        Title="Settings" Height="300" Width="375"
         Name="ThisWindow" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" SizeToContent="Width">
 
     <Window.DataContext>
@@ -22,20 +22,20 @@
             <Setter Property="Width" Value="135" />
         </Style>
         <Style x:Key="NumberUpDown" TargetType="xctk:IntegerUpDown">
-            <Setter Property="Width" Value="120"/>
+            <Setter Property="Width" Value="150"/>
         </Style>
         <Style x:Key="TextInputs" TargetType="TextBox">
-            <Setter Property="Width" Value="120"/>
+            <Setter Property="Width" Value="150"/>
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
         </Style>
         <Style x:Key="ComboBoxInputs" TargetType="ComboBox">
-            <Setter Property="Width" Value="120"/>
+            <Setter Property="Width" Value="150"/>
         </Style>
         <converter:FontFamilyStringConverter x:Key="FontFamilyConverter" />
     </Window.Resources>
 
-    <Grid>
+    <Grid Margin="10 0 0 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -70,7 +70,7 @@
             <TextBox Text="{Binding UserEmail}" Style="{StaticResource TextInputs}" ToolTip="Used to populate the 'From' field in emails" />
         </StackPanel>
         <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="5">
-            <Label Content="User Email" Style="{StaticResource Labels}" />
+            <Label Content="Log Font" Style="{StaticResource Labels}" />
             <ComboBox Style="{StaticResource ComboBoxInputs}" ItemsSource="{Binding FontNames}"
                       SelectedValue="{Binding SelectedFontFamily, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
