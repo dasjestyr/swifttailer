@@ -6,7 +6,7 @@ SwiftTailer is an open-source log tailer application that was put together to ad
 This tailer focuses on the idea of tailing multiple logs simultaneously and also saving pre-defined "group" or "sessions" which should prove useful in scenarios where you have many logs to monitor across different environments. For example, if you have 20 different logs that you want to monitor in 3 different environments, such as dev, staging, and production, then you can preconfigure these groups with all of the corresponding file locations so that you can quickly switch between them.
 
 ## Project Goals
-  - Use modern practices and patterns as of .Net 4.5.1
+  - Use modern practices and patterns as of .Net 4.5.1 / C# 6
   - Low CPU usage
   - Do not overwhelm the UI with options, try to get operations contextual and sematic
   - Keep the UI somewhat responsive
@@ -62,4 +62,4 @@ This tailer focuses on the idea of tailing multiple logs simultaneously and also
  - .Net 4.5.1
 
 ### Required to Develop
- - Visual Studio 2015
+ - Visual Studio 2015 (C# 6.0)
