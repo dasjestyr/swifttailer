@@ -127,10 +127,10 @@
                         Command="commands:StaticCommands.EditGroupCommand" CommandParameter="{Binding SelectedGroup}">
                     <Image Source="Assets/edit.png" />
                 </Button>
-                <Button ToolTip="Clone this group..." Style="{StaticResource ToolbarIconStyle}" 
+                <!--<Button ToolTip="Clone this group..." Style="{StaticResource ToolbarIconStyle}" 
                         Command="commands:StaticCommands.FeatureStubCommand" CommandParameter="Clone feature coming soon!">
                     <Image Source="Assets/copy.png"/>
-                </Button>
+                </Button>-->
                 <Button ToolTip="Add log to this group..." Style="{StaticResource ToolbarIconStyle}" 
                     Command="{Binding OpenLogPickerDialogCommand}" CommandParameter="{Binding SelectedGroup}">
                     <Image Source="Assets/doc_plus.png"/>
@@ -148,12 +148,12 @@
                     <Image Source="Assets/packages.png"/>
                 </Button>
             </ToolBar>
-            <ToolBar Band="0" BandIndex="2">
+            <!--<ToolBar Band="0" BandIndex="2">
                 <Button ToolTip="Gridulate" Style="{StaticResource ToolbarIconStyle}"
                         Command="commands:StaticCommands.FeatureStubCommand" CommandParameter="Gridulator coming soon!">
                     <Image Source="Assets/grid.png" />
                 </Button>
-            </ToolBar>
+            </ToolBar>-->
             <ToolBar Band="0" BandIndex="3">
                 <Button ToolTip="Export Log Config" Style="{StaticResource ToolbarIconStyle}"
                         Command="commands:StaticCommands.ExportLogConfigCommand">
