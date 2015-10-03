@@ -7,10 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
-using SwiftTailer.Wpf.Behaviors;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
 using SwiftTailer.Wpf.Filters;
@@ -30,17 +27,10 @@ namespace SwiftTailer.Wpf.Models.Observable
         private bool _showSearchOptions;
         private ObservableCollection<LogLine> _logLines = new ObservableCollection<LogLine>();
         private CancellationTokenSource _cts;
+        private bool _isRunning;
         public event RawContentsChangedHandler RawContentChanged;
         public event NewContentAddedHandler NewLinesAdded;
-
-        /// <summary>
-        /// Gets or sets the log name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name => LogInfo.Alias;
-
+        
         /// <summary>
         /// Gets or sets the log identifier.
         /// </summary>
@@ -59,8 +49,25 @@ namespace SwiftTailer.Wpf.Models.Observable
 
         public OpenMenuItemInExplorerCommand OpenMenuItemInExplorerCommand { get; set; }
 
-        
+
         #region -- Observable Properties --
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is running.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is running; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsRunning
+        {
+            get { return _isRunning; }
+            set
+            {
+                _isRunning = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         /// <summary>
         /// Gets or sets the raw contents.
@@ -77,6 +84,22 @@ namespace SwiftTailer.Wpf.Models.Observable
                 _logText = value;
                 OnPropertyChanged();
                 OnLogTextChanged(new RawContentsChangedEventArgs(originalText, _logText, Id));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name
+        {
+            get { return LogInfo.Alias; }
+            set
+            {
+                LogInfo.Alias = value;
+                OnPropertyChanged();
             }
         }
 
@@ -228,6 +251,7 @@ namespace SwiftTailer.Wpf.Models.Observable
 
             if (File.Exists(LogInfo.Filename))
             {
+                IsRunning = true;
                 await RunUpdates();
             }            
             else
@@ -247,6 +271,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         {
             Trace.WriteLine($"Called tail cancellation on {LogInfo.Alias}");
             _cts.Cancel();
+            IsRunning = false;
         }
 
         private async Task RunUpdates()

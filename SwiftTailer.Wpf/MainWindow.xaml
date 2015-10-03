@@ -192,10 +192,10 @@
                                         <Setter Property="IsCheckable" Value="False"/>
                                     </Style>
                                 </ContextMenu.Resources>
-                                <MenuItem Header="Open in separate window" Command="commands:StaticCommands.OpenAdHocTailCommand"
+                                <MenuItem Header="Open in another window" Command="commands:StaticCommands.OpenAdHocTailCommand"
                                           CommandParameter="{Binding FilePath}"/>
-                                <MenuItem Header="Rename tab..." />
-                                <MenuItem Header="Change log path..." />
+                                <MenuItem Header="Edit log info" Command="commands:StaticCommands.OpenEditLogWindowCommand"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
                                 <MenuItem Header="Open in explorer" Command="{Binding OpenMenuItemInExplorerCommand}" 
                                           CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
                             </ContextMenu>

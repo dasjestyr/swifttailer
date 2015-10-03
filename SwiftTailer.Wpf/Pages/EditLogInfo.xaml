@@ -1,0 +1,42 @@
+﻿<Window x:Class="SwiftTailer.Wpf.Pages.EditLogInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SwiftTailer.Wpf.Pages"
+        xmlns:viewModels="clr-namespace:SwiftTailer.Wpf.ViewModels"
+        xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
+        Name="DialogWindow"
+        mc:Ignorable="d"
+        Title="Edit Log" Height="179" Width="600">
+
+    <Window.DataContext>
+        <viewModels:EditLogViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="Button" x:Key="ActionButtons">
+            <Setter Property="Margin" Value="5 0" />
+            <Setter Property="Width" Value="100"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <DockPanel LastChildFill="True" Grid.Row="1" Margin="5" Grid.ColumnSpan="2">
+            <Button Content="Choose..." Command="{Binding PickLogCommand}" Margin="0 0 5 0" Width="75"/>
+            <TextBox Text="{Binding FileLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </DockPanel>
+        <DockPanel Grid.Row="2" LastChildFill="True">
+            <TextBlock Text="Alias" VerticalAlignment="Center" Margin="5 0 0 0" Width="75"/>
+            <TextBox Text="{Binding Alias, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
+        </DockPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,20,5,5" HorizontalAlignment="Right" Grid.ColumnSpan="2">
+            <Button Content="OK" Style="{StaticResource ActionButtons}" Command="commands:StaticCommands.CloseWindowCommand" 
+                    CommandParameter="{Binding ElementName=DialogWindow}" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

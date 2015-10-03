@@ -158,6 +158,7 @@
     <Compile Include="Commands\FeatureStubCommand.cs" />
     <Compile Include="Commands\FollowTailToggleCommand.cs" />
     <Compile Include="Commands\OpenAdHocTailCommand.cs" />
+    <Compile Include="Commands\OpenEditLogWindowCommand.cs" />
     <Compile Include="Commands\OpenMenuItemInExplorerCommand.cs" />
     <Compile Include="Commands\OpenLogLineCommand.cs" />
     <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />
@@ -218,6 +219,9 @@
     <Compile Include="Pages\AddGroupWindow.xaml.cs">
       <DependentUpon>AddGroupWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\EditLogInfo.xaml.cs">
+      <DependentUpon>EditLogInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LogPicker.xaml.cs">
       <DependentUpon>LogPicker.xaml</DependentUpon>
     </Compile>
@@ -231,6 +235,8 @@
     <Compile Include="Utility\Extensions.cs" />
     <Compile Include="ViewModels\AddGroupViewModel.cs" />
     <Compile Include="ViewModels\AdHocTailingViewModel.cs" />
+    <Compile Include="ViewModels\EditLogViewModel.cs" />
+    <Compile Include="ViewModels\ILogTail.cs" />
     <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
@@ -257,6 +263,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\AddGroupWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\EditLogInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
