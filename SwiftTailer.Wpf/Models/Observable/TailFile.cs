@@ -49,7 +49,6 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// </value>
         public Guid Id => LogInfo.Id;
 
-
         /// <summary>
         /// Gets or sets the search options.
         /// </summary>
@@ -57,7 +56,6 @@ namespace SwiftTailer.Wpf.Models.Observable
         /// The search options.
         /// </value>
         public SearchOptions SearchOptions { get; set; }
-
 
         public OpenMenuItemInExplorerCommand OpenMenuItemInExplorerCommand { get; set; }
 
@@ -169,6 +167,15 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        public string FilePath
+        {
+            get { return LogInfo.Filename; }
+            set
+            {
+                LogInfo.Filename = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         /// <summary>
