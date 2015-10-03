@@ -18,5 +18,8 @@ namespace SwiftTailer.Wpf.Data
 
         [JsonProperty("AutoFollow")]
         public bool AutoFollowTail { get; set; }
+
+        [JsonProperty("LogFont")]
+        public string LogFont { get; set; }
     }
 }

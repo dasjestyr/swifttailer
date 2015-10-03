@@ -1,14 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.ViewModels
 {
-    public class ViewSelectionViewModel : Models.Observable.ModelBase
+    public class ViewSelectionViewModel : ModelBase
     {
         private string _content;
         private IEnumerable<LogLine> _logLines;
+        private string _logFont = Settings.LogWindowFont;
 
         public SaveToTextCommand SaveToTextCommand { get; set; }
 
@@ -34,10 +37,28 @@ namespace SwiftTailer.Wpf.ViewModels
             }
         }
 
+        public string LogFont
+        {
+            get { return _logFont; }
+            set
+            {
+                _logFont = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ViewSelectionViewModel()
         {
             SaveToTextCommand = new SaveToTextCommand();
             EmailSelectionAttachmentCommand = new EmailSelectionAttachmentCommand();
+        }
+
+        public void SettingsChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName.Equals("LogWindowFont", StringComparison.OrdinalIgnoreCase))
+            {
+                LogFont = Settings.LogWindowFont;
+            }
         }
     }
 }

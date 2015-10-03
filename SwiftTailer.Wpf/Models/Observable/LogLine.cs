@@ -1,4 +1,5 @@
-using System.Collections.ObjectModel;
+using System;
+using System.ComponentModel;
 using SwiftTailer.Wpf.Filters;
 
 namespace SwiftTailer.Wpf.Models.Observable
@@ -8,6 +9,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         private LogHighlight _highlight;
         private string _lineContext;
         private bool _pinned;
+        private string _logFont = Settings.LogWindowFont;
 
         /// <summary>
         /// Gets or sets the content.
@@ -65,6 +67,16 @@ namespace SwiftTailer.Wpf.Models.Observable
             }
         }
 
+        public string LogFont
+        {
+            get { return _logFont; }
+            set
+            {
+                _logFont = value;
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LogLine" /> class.
         /// </summary>
@@ -74,6 +86,8 @@ namespace SwiftTailer.Wpf.Models.Observable
         {
             Content = content;
             Highlight = highlight;
+
+            Settings.SettingsChanged += SettingsChanged;
         }
 
         /// <summary>
@@ -83,6 +97,14 @@ namespace SwiftTailer.Wpf.Models.Observable
         {
             LineContext = string.Empty;
             Highlight = LogHighlight.None;
+        }
+
+        private void SettingsChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName.Equals("LogWindowFont", StringComparison.OrdinalIgnoreCase))
+            {
+                LogFont = Settings.LogWindowFont;
+            }
         }
     }
 }

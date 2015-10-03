@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using SwiftTailer.Wpf.Commands;
@@ -15,6 +17,7 @@ namespace SwiftTailer.Wpf.ViewModels
         private bool _isRunning;
         private string _status;
         private TailFile _selectedTail;
+        private string _logFont = Settings.LogWindowFont;
 
         public string WindowTitle
         {
@@ -72,11 +75,22 @@ namespace SwiftTailer.Wpf.ViewModels
             }
         }
 
-        public TailFile SelectedTail {
+        public TailFile SelectedTail
+        {
             get { return _selectedTail; }
             set
             {
                 _selectedTail = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string LogFont
+        {
+            get { return _logFont; }
+            set
+            {
+                _logFont = value;
                 OnPropertyChanged();
             }
         }
@@ -109,6 +123,14 @@ namespace SwiftTailer.Wpf.ViewModels
             Status = "Idle";
             IsRunning = false;
             CommandManager.InvalidateRequerySuggested();
+        }
+
+        public void SettingsChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName.Equals("LogWindowFont", StringComparison.OrdinalIgnoreCase))
+            {
+                LogFont = Settings.LogWindowFont;
+            }
         }
     }
 }

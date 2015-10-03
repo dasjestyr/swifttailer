@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Input;
 using SwiftTailer.Wpf.Behaviors;
 using SwiftTailer.Wpf.Commands;
@@ -145,8 +145,6 @@ namespace SwiftTailer.Wpf.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        
 
         #endregion
 
@@ -291,12 +289,5 @@ namespace SwiftTailer.Wpf.ViewModels
         }
 
         #endregion
-    }
-
-    public interface IProgressProvider
-    {
-        string ProgressText { get; set; }
-
-        int ProgressBarValue { get; set; }
     }
 }

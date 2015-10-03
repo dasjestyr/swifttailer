@@ -178,6 +178,7 @@
     <Compile Include="Commands\ZipTasks.cs" />
     <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="Converters\EnumBoolConverter.cs" />
+    <Compile Include="Converters\FontFamilyStringConverter.cs" />
     <Compile Include="Converters\HighlightConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Converters\LineCountDisplayConverter.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="ViewModels\AdHocTailingViewModel.cs" />
     <Compile Include="ViewModels\EditLogViewModel.cs" />
     <Compile Include="ViewModels\ILogTail.cs" />
+    <Compile Include="ViewModels\IProgressProvider.cs" />
     <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />

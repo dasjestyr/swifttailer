@@ -10,7 +10,7 @@
         xmlns:converters="clr-namespace:SwiftTailer.Wpf.Converters"
         xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
         mc:Ignorable="d"
-        Title="{Binding WindowTitle}" Height="800" Width="600">
+        Title="{Binding WindowTitle}" Height="800" Width="600" Closing="Window_Closing">
     
     <Window.DataContext>
         <viewModels:AdHocTailingViewModel />
@@ -22,6 +22,7 @@
         <converters:LineCountDisplayConverter x:Key="LineCountDisplayConverter" />
         <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
         <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter" />
+        <converters:FontFamilyStringConverter x:Key="FontFamilyStringConverter"/>
         <Style TargetType="ListBoxItem" x:Key="LogLineStyle">
             <Setter Property="ContextMenu">
                 <Setter.Value>
@@ -81,7 +82,7 @@
         
         <!-- LOG LINES -->
         <ListBox x:Name="LogList" ItemsSource="{Binding TailFile.LogLines, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" SelectionMode="Extended" 
-                                 ItemContainerStyle="{StaticResource LogLineStyle}" FontFamily="{x:Static wpf:Settings.LogWindowFontFamily}"
+                                 ItemContainerStyle="{StaticResource LogLineStyle}" FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}"
                                  SelectedIndex="{Binding TailFile.SelectedLine}" SelectionChanged="LogList_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>

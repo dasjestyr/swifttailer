@@ -3,12 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:converters="clr-namespace:SwiftTailer.Wpf.Converters"
         xmlns:viewModels="clr-namespace:SwiftTailer.Wpf.ViewModels"
-        xmlns:wpf="clr-namespace:SwiftTailer.Wpf"
         xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
-        xmlns:data="clr-namespace:SwiftTailer.Wpf.Data"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d" x:Name="ThisWindow"
         Title="SwiftTailer" Height="800" Width="1000" WindowStartupLocation="CenterScreen">
@@ -19,6 +16,7 @@
         <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
         <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter" />
         <converters:StringNotNullOrEmptyConverter x:Key="StringNotNullOrEmptyConverter" />
+        <converters:FontFamilyStringConverter x:Key="FontFamilyStringConverter" />
         <Style TargetType="ListBoxItem" x:Key="LogLineStyle">
             <Setter Property="ContextMenu">
                 <Setter.Value>
@@ -214,13 +212,13 @@
                         
                         <!-- LOG LINES -->
                         <ListBox x:Name="LogList" ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" SelectionMode="Extended" 
-                                 ItemContainerStyle="{StaticResource LogLineStyle}" FontFamily="{x:Static wpf:Settings.LogWindowFontFamily}"
+                                 ItemContainerStyle="{StaticResource LogLineStyle}"
                                  SelectedIndex="{Binding SelectedLine}" SelectionChanged="LogList_SelectionChanged">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="{Binding Content}" ToolTipService.InitialShowDelay="1000" ToolTipService.ShowDuration="20000" 
-                                                   ToolTipService.HasDropShadow="True" ToolTip="{Binding LineContext}">
+                                                   ToolTipService.HasDropShadow="True" ToolTip="{Binding LineContext}" FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}">
                                         </TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
