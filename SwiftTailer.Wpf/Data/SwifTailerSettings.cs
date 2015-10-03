@@ -12,5 +12,8 @@ namespace SwiftTailer.Wpf.Data
 
         [JsonProperty("PollingInterval")]
         public int PollingInterval { get; set; }
+
+        [JsonProperty("UserEmail")]
+        public string UserEmail { get; set; }
     }
 }

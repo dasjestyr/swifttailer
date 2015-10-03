@@ -33,5 +33,15 @@ namespace SwiftTailer.Wpf.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public string UserEmail
+        {
+            get { return Settings.UserEmail; }
+            set
+            {
+                Settings.UserEmail = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

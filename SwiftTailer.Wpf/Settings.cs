@@ -49,6 +49,23 @@ namespace SwiftTailer.Wpf
         }
 
         /// <summary>
+        /// Gets or sets the user email.
+        /// </summary>
+        /// <value>
+        /// The user email.
+        /// </value>
+        public static string UserEmail
+        {
+            get { return SettingsSource.Instance.Settings.UserEmail; }
+            set
+            {
+                Debug.WriteLine($"Changed UserEmail to {value}");
+                SettingsSource.Instance.Settings.UserEmail = value;
+                SettingsSource.SaveState();
+            }
+        }
+
+        /// <summary>
         /// The font face that will be used in log windows
         /// </summary>
         public static FontFamily LogWindowFontFamily = new FontFamily("Courier New");
