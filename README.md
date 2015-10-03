@@ -50,6 +50,9 @@ This tailer focuses on the idea of tailing multiple logs simultaneously and also
  - Max lines
  - Max file read size
  - Polling interval
+ - User email (to use as From: field in emails)
+ - Font face for logs
+ - Auto follow tail on open
  
 ### Tools
  - Zip log group
