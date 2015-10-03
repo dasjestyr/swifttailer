@@ -72,7 +72,7 @@
         <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="5">
             <Label Content="Log Font" Style="{StaticResource Labels}" />
             <ComboBox Style="{StaticResource ComboBoxInputs}" ItemsSource="{Binding FontNames}"
-                      SelectedValue="{Binding SelectedFontFamily, Mode=TwoWay}">
+                      SelectedValue="{Binding SelectedFontFamily, Mode=TwoWay}" VerticalContentAlignment="Center">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" FontFamily="{Binding Converter={StaticResource FontFamilyConverter}}" />
