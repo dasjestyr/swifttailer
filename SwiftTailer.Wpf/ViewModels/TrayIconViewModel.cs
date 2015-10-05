@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Input;
 using Hardcodet.Wpf.TaskbarNotification;
@@ -17,17 +16,19 @@ namespace SwiftTailer.Wpf.ViewModels
             {
                 return new DelegateCommand
                 {
-                    CanExecuteFunc = () =>
-                        Application.Current.MainWindow == null || !Application.Current.MainWindow.IsActive,
+                    CanExecuteFunc = () => true,
                     CommandAction = () =>
                     {
-                        if (Application.Current.MainWindow == null)
+                        var mainWindow = Application.Current.MainWindow;
+
+                        // ReSharper disable once InvertIf
+                        if (mainWindow == null)
                         {
-                            Application.Current.MainWindow = new MainWindow();
-                            Application.Current.MainWindow.Show();
+                            mainWindow = new MainWindow();
+                            mainWindow.Show();
                         }
-                        Application.Current.MainWindow.Visibility = Visibility.Visible;
-                        Application.Current.MainWindow.Activate();
+                        mainWindow.Visibility = Visibility.Visible;
+                        mainWindow.Activate();
                     }
                 };
             }
@@ -42,12 +43,14 @@ namespace SwiftTailer.Wpf.ViewModels
             {
                 return new DelegateCommand
                 {
-                    CanExecuteFunc = () => Application.Current.MainWindow != null,
+                    CanExecuteFunc = () => Application.Current.MainWindow != null &&
+                                           Application.Current.MainWindow.Visibility == Visibility.Visible,
                     CommandAction = () =>
                     {
                         Application.Current.MainWindow.Visibility = Visibility.Collapsed;
-                        var currentApp = (App) Application.Current;
-                        currentApp.TaskbarIcon.ShowBalloonTip("SwiftTailer", "Running in background, use tray icon to exit.", BalloonIcon.Info);
+                        var currentApp = Application.Current as App;
+                        currentApp?.TaskbarIcon.ShowBalloonTip("SwiftTailer", 
+                            "Running in background, use tray icon to exit.", BalloonIcon.Info);
                     }
                 };
             }

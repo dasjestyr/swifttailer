@@ -19,18 +19,25 @@ namespace SwiftTailer.Wpf
         {
             InitializeComponent();
             Dispatcher.UnhandledException += DisplayException;
-            SourceInitialized += OnSourceInitialized; // Used to override window behaviors before they fire
+            SourceInitialized += OnSourceInitialized; // Used to hook window behaviors before they fire
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
             if (Application.Current.ShutdownMode == ShutdownMode.OnExplicitShutdown)
             {
+                // Cancel the close
                 e.Cancel = true;
-                Application.Current.MainWindow.Visibility = Visibility.Collapsed;
+
+                // Execute the command that handles minimize window to tray icon behavior
+                if (TrayIconViewModel.HideWindowCommand.CanExecute(null))
+                {
+                    TrayIconViewModel.HideWindowCommand.Execute(null);
+                }
             }
             else
             {
+                // Business as usual
                 base.OnClosing(e);
             }
         }
@@ -55,6 +62,10 @@ namespace SwiftTailer.Wpf
                 {
                     TrayIconViewModel.HideWindowCommand.Execute(null);
                 }
+            }
+            else
+            {
+                handled = false;
             }
 
             return IntPtr.Zero;

@@ -176,7 +176,6 @@
     <Compile Include="Commands\SaveLogToGroupCommand.cs" />
     <Compile Include="Commands\SaveToTextCommand.cs" />
     <Compile Include="Commands\SelectGroupCommand.cs" />
-    <Compile Include="Commands\ShowHideWindowCommands.cs" />
     <Compile Include="Commands\StaticCommands.cs" />
     <Compile Include="Commands\ToggleTailingCommand.cs" />
     <Compile Include="Commands\ZipGroupAndEmailCommand.cs" />
