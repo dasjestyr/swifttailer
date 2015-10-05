@@ -87,7 +87,12 @@ namespace SwiftTailer.Wpf
 
         public static string LogWindowFont
         {
-            get { return SettingsSource.Instance.Settings.LogFont; }
+            get
+            {
+                return string.IsNullOrEmpty(SettingsSource.Instance.Settings.LogFont) 
+                    ? "Courier New" 
+                    : SettingsSource.Instance.Settings.LogFont;
+            }
             set
             {
                 Debug.WriteLine($"Changed log font to {value}");
