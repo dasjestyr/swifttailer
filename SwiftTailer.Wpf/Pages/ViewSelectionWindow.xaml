@@ -3,19 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:root="clr-namespace:SwiftTailer.Wpf"
-        xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
+        xmlns:converters="clr-namespace:SwiftTailer.Wpf.Converters"
         mc:Ignorable="d"
         Title="Log Selection" Height="224.892" Width="454.532" WindowStartupLocation="CenterScreen"
-        d:DataContext="vm:ViewSelectionViewModel">
-    
+        d:DataContext="vm:ViewSelectionViewModel" Closing="Window_Closing">
+    <Window.Resources>
+        <converters:FontFamilyStringConverter x:Key="FontFamilyStringConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBox Grid.Row="0" x:Name="ContentBox" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                 Text="{Binding Content}" FontFamily="{x:Static root:Settings.LogWindowFontFamily}">
+                 Text="{Binding Content}" FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}">
             <TextBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Compare with clipboard" Click="CompareClipboard_Click"/>

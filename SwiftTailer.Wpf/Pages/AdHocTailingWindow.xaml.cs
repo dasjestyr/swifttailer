@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,14 @@ namespace SwiftTailer.Wpf.Pages
 
             ViewModel.WindowTitle = $"Tailing {Path.GetFileName(filePath)}";
             ViewModel.SetTail(filePath);
+
+            Settings.SettingsChanged += ViewModel.SettingsChanged;
+        }
+
+        private void Window_Closing(object sender, EventArgs e)
+        {
+            Settings.SettingsChanged -= ViewModel.SettingsChanged;
+            Debug.WriteLine("Unsubscribed from SettingsChanged event");
         }
 
         private void DisplayUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

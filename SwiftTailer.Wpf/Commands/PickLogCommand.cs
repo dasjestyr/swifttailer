@@ -7,9 +7,9 @@ namespace SwiftTailer.Wpf.Commands
 {
     public class PickLogCommand : ICommand
     {
-        private readonly LogPickerDialogViewModel _vm;
+        private readonly ILogTail _vm;
 
-        public PickLogCommand(LogPickerDialogViewModel vm)
+        public PickLogCommand(ILogTail vm)
         {
             _vm = vm;
         }

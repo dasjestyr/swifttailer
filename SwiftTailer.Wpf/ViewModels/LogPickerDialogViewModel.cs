@@ -4,7 +4,7 @@ using SwiftTailer.Wpf.Models.Observable;
 
 namespace SwiftTailer.Wpf.ViewModels
 {
-    public class LogPickerDialogViewModel : ModelBase
+    public class LogPickerDialogViewModel : ModelBase, ILogTail
     {
         private string _fileLocation;
         private LogGroup _selectedGroup;

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Models.Observable;
@@ -11,14 +13,22 @@ namespace SwiftTailer.Wpf.Pages
     /// </summary>
     public partial class ViewSelectionWindow : Window
     {
+        private ViewSelectionViewModel ViewModel => DataContext as ViewSelectionViewModel;
+
         public ViewSelectionWindow(IEnumerable<LogLine> logLines)
         {
             InitializeComponent();
+            DataContext = new ViewSelectionViewModel();
+            
+            ViewModel.LogLines = logLines;
 
-            var vm = new ViewSelectionViewModel();
-            DataContext = vm;
+            Settings.SettingsChanged += ViewModel.SettingsChanged;
+        }
 
-            vm.LogLines = logLines;
+        private void Window_Closing(object sender, EventArgs args)
+        {
+            Settings.SettingsChanged -= ViewModel.SettingsChanged;
+            Debug.WriteLine("Unsubscribed from SettingsChanged event");
         }
 
         private void CompareClipboard_Click(object sender, RoutedEventArgs e)

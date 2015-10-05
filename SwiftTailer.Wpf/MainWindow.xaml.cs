@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Threading;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Pages;
@@ -17,9 +19,59 @@ namespace SwiftTailer.Wpf
         {
             InitializeComponent();
             Dispatcher.UnhandledException += DisplayException;
+            SourceInitialized += OnSourceInitialized; // Used to hook window behaviors before they fire
         }
 
-        private void DisplayException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (Application.Current.ShutdownMode == ShutdownMode.OnExplicitShutdown)
+            {
+                // Cancel the close
+                e.Cancel = true;
+
+                // Execute the command that handles minimize window to tray icon behavior
+                if (TrayIconViewModel.HideWindowCommand.CanExecute(null))
+                {
+                    TrayIconViewModel.HideWindowCommand.Execute(null);
+                }
+            }
+            else
+            {
+                // Business as usual
+                base.OnClosing(e);
+            }
+        }
+
+        private void OnSourceInitialized(object sender, EventArgs e)
+        {
+            var source = (HwndSource)PresentationSource.FromVisual(this);
+            source?.AddHook(HandleMessages);
+        }
+
+        private static IntPtr HandleMessages(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            // 0x0112 == WM_SYSCOMMAND, 'Window' command message.
+            // 0xF020 == SC_MINIMIZE, command to minimize the window.
+            if (msg == 0x0112 && ((int)wParam & 0xFFF0) == 0xF020)
+            {
+                // Cancel the minimize.
+                handled = true;
+
+                // Execute the command that handles minimize window to tray icon behavior
+                if (TrayIconViewModel.HideWindowCommand.CanExecute(null))
+                {
+                    TrayIconViewModel.HideWindowCommand.Execute(null);
+                }
+            }
+            else
+            {
+                handled = false;
+            }
+
+            return IntPtr.Zero;
+        }
+
+        private static void DisplayException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // Global error catch 
             // Doesn't really allow the app to resume, but it's better than logs

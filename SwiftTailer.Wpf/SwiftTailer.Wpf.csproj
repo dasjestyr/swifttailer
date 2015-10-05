@@ -47,7 +47,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>6</LangVersion>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -59,7 +59,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Assets\icon_head.ico</ApplicationIcon>
+    <ApplicationIcon>Loggly1.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>15759D52EDF1FA44F30968D99E7C47B891E985FB</ManifestCertificateThumbprint>
@@ -74,6 +74,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Unofficial.Blend.Interactivity.1.0.0\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
@@ -96,6 +100,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -158,6 +163,7 @@
     <Compile Include="Commands\FeatureStubCommand.cs" />
     <Compile Include="Commands\FollowTailToggleCommand.cs" />
     <Compile Include="Commands\OpenAdHocTailCommand.cs" />
+    <Compile Include="Commands\OpenEditLogWindowCommand.cs" />
     <Compile Include="Commands\OpenMenuItemInExplorerCommand.cs" />
     <Compile Include="Commands\OpenLogLineCommand.cs" />
     <Compile Include="Commands\OpenLogPickerDialogCommand.cs" />
@@ -175,8 +181,12 @@
     <Compile Include="Commands\ZipGroupAndEmailCommand.cs" />
     <Compile Include="Commands\ZipGroupCommand.cs" />
     <Compile Include="Commands\ZipTasks.cs" />
+    <Compile Include="Controls\TrayIconInfoTooltip.xaml.cs">
+      <DependentUpon>TrayIconInfoTooltip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="Converters\EnumBoolConverter.cs" />
+    <Compile Include="Converters\FontFamilyStringConverter.cs" />
     <Compile Include="Converters\HighlightConverter.cs" />
     <Compile Include="Converters\InverseBoolConverter.cs" />
     <Compile Include="Converters\LineCountDisplayConverter.cs" />
@@ -218,6 +228,9 @@
     <Compile Include="Pages\AddGroupWindow.xaml.cs">
       <DependentUpon>AddGroupWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\EditLogInfo.xaml.cs">
+      <DependentUpon>EditLogInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LogPicker.xaml.cs">
       <DependentUpon>LogPicker.xaml</DependentUpon>
     </Compile>
@@ -231,10 +244,22 @@
     <Compile Include="Utility\Extensions.cs" />
     <Compile Include="ViewModels\AddGroupViewModel.cs" />
     <Compile Include="ViewModels\AdHocTailingViewModel.cs" />
+    <Compile Include="ViewModels\EditLogViewModel.cs" />
+    <Compile Include="ViewModels\ILogTail.cs" />
+    <Compile Include="ViewModels\IProgressProvider.cs" />
     <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\TrayIconViewModel.cs" />
     <Compile Include="ViewModels\ViewSelectionViewModel.cs" />
+    <Page Include="Assets\Resources\TrayIconDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TrayIconInfoTooltip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -257,6 +282,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\AddGroupWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\EditLogInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -287,17 +316,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Loggly1.ico" />
+    <SplashScreen Include="Assets\Firewood.png" />
+    <Resource Include="Assets\Loggly1.ico" />
     <Content Include="DesignTime\Settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="icon_head.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <SplashScreen Include="Assets\icon_full.png" />
-    <Resource Include="Assets\icon_head.png" />
-    <Resource Include="Assets\icon_head.ico" />
     <Resource Include="Assets\copy.png" />
     <Resource Include="Assets\cut.png" />
     <Resource Include="Assets\document.png" />

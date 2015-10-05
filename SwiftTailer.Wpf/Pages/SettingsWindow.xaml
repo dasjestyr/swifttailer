@@ -7,9 +7,11 @@
         xmlns:viewModels="clr-namespace:SwiftTailer.Wpf.ViewModels"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
+        xmlns:wpf="clr-namespace:SwiftTailer.Wpf"
+        xmlns:converter="clr-namespace:SwiftTailer.Wpf.Converters"
         mc:Ignorable="d"
-        Title="Settings" Height="300" Width="300"
-        Name="ThisWindow" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="Settings" Height="300" Width="375"
+        Name="ThisWindow" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" SizeToContent="Width">
 
     <Window.DataContext>
         <viewModels:SettingsViewModel />
@@ -19,13 +21,25 @@
         <Style x:Key="Labels" TargetType="Label">
             <Setter Property="Width" Value="135" />
         </Style>
-        <Style x:Key="TextInputs" TargetType="xctk:IntegerUpDown">
-            <Setter Property="Width" Value="100"/>
+        <Style x:Key="NumberUpDown" TargetType="xctk:IntegerUpDown">
+            <Setter Property="Width" Value="150"/>
         </Style>
+        <Style x:Key="TextInputs" TargetType="TextBox">
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+        <Style x:Key="ComboBoxInputs" TargetType="ComboBox">
+            <Setter Property="Width" Value="150"/>
+        </Style>
+        <converter:FontFamilyStringConverter x:Key="FontFamilyConverter" />
     </Window.Resources>
 
-    <Grid>
+    <Grid Margin="10 0 0 0">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -36,23 +50,40 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
             <Label Content="Maximum Read Length" Style="{StaticResource Labels}" />
             <xctk:IntegerUpDown Value="{Binding MaxReadLength, UpdateSourceTrigger=PropertyChanged, Delay=500, Mode=TwoWay}" 
-                         Style="{StaticResource TextInputs}" />
+                         Style="{StaticResource NumberUpDown}" />
             <Label Content="kb" />
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5">
             <Label Content="Maximum Display Lines" Style="{StaticResource Labels}"/>
             <xctk:IntegerUpDown Value="{Binding MaxDisplayLines, UpdateSourceTrigger=PropertyChanged, Delay=500, Mode=TwoWay}" 
-                         Style="{StaticResource TextInputs}" />
+                         Style="{StaticResource NumberUpDown}" />
             <Label Content="lines" />
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5">
             <Label Content="Polling Interval" Style="{StaticResource Labels}"/>
             <xctk:IntegerUpDown Value="{Binding PollingInterval, UpdateSourceTrigger=PropertyChanged, Delay=500, Mode=TwoWay}" 
-                         Style="{StaticResource TextInputs}" />
+                         Style="{StaticResource NumberUpDown}" />
             <Label Content="ms" />
         </StackPanel>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="5">
+            <Label Content="User Email" Style="{StaticResource Labels}" />
+            <TextBox Text="{Binding UserEmail}" Style="{StaticResource TextInputs}" ToolTip="Used to populate the 'From' field in emails" />
+        </StackPanel>
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="5">
+            <Label Content="Log Font" Style="{StaticResource Labels}" />
+            <ComboBox Style="{StaticResource ComboBoxInputs}" ItemsSource="{Binding FontNames}"
+                      SelectedValue="{Binding SelectedFontFamily, Mode=TwoWay}" VerticalContentAlignment="Center">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontFamily="{Binding Converter={StaticResource FontFamilyConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+        
+        <CheckBox Grid.Row="5" Content="Auto Follow on Open" IsChecked="{Binding AutoFollow}" Margin="5" ToolTip="When selected, log tails will have 'Follow Tail' selected by default, when opened."/>
 
-        <Button Grid.Row="4" Height="25" Width="100" Margin="5" HorizontalAlignment="Right" Content="OK"
+        <Button Grid.Row="7" Height="25" Width="100" Margin="5" HorizontalAlignment="Right" Content="OK"
                 Command="commands:StaticCommands.CloseWindowCommand" CommandParameter="{Binding ElementName=ThisWindow}"/>
     </Grid>
 </Window>

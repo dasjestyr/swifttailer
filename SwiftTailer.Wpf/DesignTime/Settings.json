@@ -1,5 +1,8 @@
 ﻿{
   "MaxReadLength": 1000,
   "MaxDisplayLines": 5000,
-  "PollingInterval":  1000
+  "PollingInterval": 1000,
+  "UserEmail": "",
+  "AutoFollow": false,
+  "LogFont": "Courier New"
 }

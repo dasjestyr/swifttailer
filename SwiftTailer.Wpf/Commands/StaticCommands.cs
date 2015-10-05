@@ -44,5 +44,7 @@ namespace SwiftTailer.Wpf.Commands
         public static ICommand CompareToClipboardCommand = new CompareWithClipboardCommand();
 
         public static ICommand PingSelectionCommand = new PingSelectionCommand();
+
+        public static ICommand OpenEditLogWindowCommand = new OpenEditLogWindowCommand();
     }
 }

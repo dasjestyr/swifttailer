@@ -14,16 +14,28 @@ namespace SwiftTailer.Wpf.Commands
 
         public void Execute(object parameter)
         {
-            var filePicker = new OpenFileDialog
+            var filePath = parameter as string;
+
+            if (filePath == null)
             {
-                Title = "Choose file to tail..."
-            };
+                var filePicker = new OpenFileDialog
+                {
+                    Title = "Choose file to tail..."
+                };
 
-            var result = filePicker.ShowDialog();
-            if (!result.HasValue || !result.Value)
-                return;
+                var result = filePicker.ShowDialog();
+                if (!result.HasValue || !result.Value)
+                    return;
 
-            var window = new AdHocTailingWindow(filePicker.FileName);
+                filePath = filePicker.FileName;
+            }
+
+            OpenWindow(filePath);
+        }
+
+        private void OpenWindow(string filename)
+        {
+            var window = new AdHocTailingWindow(filename);
             window.Show();
         }
 

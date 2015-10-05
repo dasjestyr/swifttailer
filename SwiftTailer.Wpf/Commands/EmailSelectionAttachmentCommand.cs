@@ -21,7 +21,7 @@ namespace SwiftTailer.Wpf.Commands
             File.WriteAllText(tempPath, content);
 
             EmailTasks.SendAttachment(
-                "someone@domain.com",
+                Settings.UserEmail,
                 "Log File",
                 fileName,
                 tempPath);
