@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using SwiftTailer.Wpf.Behaviors;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
 using SwiftTailer.Wpf.Models.Observable;
@@ -18,6 +19,31 @@ namespace SwiftTailer.Wpf.ViewModels
         private string _status;
         private TailFile _selectedTail;
         private string _logFont = Settings.LogWindowFont;
+
+        #region -- Commands --
+        public StartTailingCommand StartTailingCommand { get; private set; }
+
+        public StopTailingCommand StopTailingCommand { get; private set; }
+
+        public ToggleTailingCommand ToggleTailingCommand { get; private set; }
+
+        public FollowTailToggleCommand FollowTailToggleCommand { get; set; }
+
+        public ICommand ToggleSearchOptionsCommand
+        {
+            get
+            {
+                return new RelayCommand(
+                obj =>
+                {
+                    SelectedTail.ShowSearchOptions = !SelectedTail.ShowSearchOptions;
+                });
+            }
+        }
+
+        #endregion
+
+        #region -- Observable Properties --
 
         public string WindowTitle
         {
@@ -47,12 +73,6 @@ namespace SwiftTailer.Wpf.ViewModels
                 _selectedLine = value;
                 OnPropertyChanged();
             }
-        }
-
-        public void SetTail(string path)
-        {
-            var logInfo = new LogInfo(path);
-            TailFile = new TailFile(logInfo);
         }
 
         public string Status
@@ -95,14 +115,21 @@ namespace SwiftTailer.Wpf.ViewModels
             }
         }
 
-        public StartTailingCommand StartTailingCommand { get; private set; }
-
-        public StopTailingCommand StopTailingCommand { get; private set; }
+        #endregion
 
         public AdHocTailingViewModel()
         {
             StartTailingCommand = new StartTailingCommand(this);
             StopTailingCommand = new StopTailingCommand(this);
+            ToggleTailingCommand = new ToggleTailingCommand(this);
+            FollowTailToggleCommand = new FollowTailToggleCommand(this);
+        }
+
+        public void SetTail(string path)
+        {
+            var logInfo = new LogInfo(path);
+            TailFile = new TailFile(logInfo);
+            SelectedTail = TailFile;
         }
 
         public void StartTailing()
@@ -125,6 +152,8 @@ namespace SwiftTailer.Wpf.ViewModels
             CommandManager.InvalidateRequerySuggested();
         }
 
+        #region -- Event Handlers --
+
         public void SettingsChanged(object sender, PropertyChangedEventArgs args)
         {
             if (args.PropertyName.Equals("LogWindowFont", StringComparison.OrdinalIgnoreCase))
@@ -132,5 +161,7 @@ namespace SwiftTailer.Wpf.ViewModels
                 LogFont = Settings.LogWindowFont;
             }
         }
+
+        #endregion
     }
 }

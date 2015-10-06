@@ -57,7 +57,17 @@
             <Setter Property="Margin" Value="2 0" />
         </Style>
     </Window.Resources>
-    
+
+    <!-- WINDOW-SCOPE INPUT BINDINGS -->
+    <Window.InputBindings>
+        <KeyBinding Gesture="CTRL+SPACE"
+                    Command="{Binding ToggleTailingCommand}" />
+        <KeyBinding Gesture="ALT+F"
+                    Command="{Binding FollowTailToggleCommand}" />
+        <KeyBinding Gesture="OemTilde" 
+                    Command="{Binding ToggleSearchOptionsCommand}" />
+    </Window.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -95,11 +105,11 @@
         </ListBox>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Margin="5 5 5 0">
-            <CheckBox Content="Follow Tail" IsChecked="{Binding TailFile.FollowTail}" />
+            <CheckBox Content="Follow Tail" IsChecked="{Binding TailFile.FollowTail}" Focusable="False" />
         </StackPanel>
 
         <!-- SEARCH PANEL -->
-        <Expander Grid.Row="3" Margin="5 10 2 5" Style="{DynamicResource ExpanderStretchHeader}">
+        <Expander Grid.Row="3" Margin="5 10 2 5" Style="{DynamicResource ExpanderStretchHeader}" ToolTip="Search options (~)" Name="SearchOptions" IsExpanded="{Binding SelectedTail.ShowSearchOptions}" Focusable="False">
             <Expander.Header>
                 <DockPanel LastChildFill="True">
                     <Label Content="Search:"/>
