@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using SwiftTailer.Wpf.Data;
@@ -15,12 +16,15 @@ namespace SwiftTailer.Wpf.Commands
 
         public void Execute(object parameter)
         {
-            var path = parameter as string;
-            if (path == null)
+            var fullPath = parameter as string;
+            if (fullPath == null)
                 MessageBox.Show($"Invalid parameter {parameter}. Expected string.", "Invalid parameter",
                     MessageBoxButton.OK, MessageBoxImage.Error);
 
-            var args = $"/e, /select, \"{path}\"";
+            var directoryPath = Path.GetDirectoryName(fullPath);
+            var fileExists = File.Exists(fullPath);
+
+            var args = fileExists ? $"/e, \"{directoryPath}\"" : $"/e, /select, \"{fullPath}\"";
 
             var info = new ProcessStartInfo
             {

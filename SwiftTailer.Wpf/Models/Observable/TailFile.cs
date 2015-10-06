@@ -192,10 +192,10 @@ namespace SwiftTailer.Wpf.Models.Observable
 
         public string FilePath
         {
-            get { return LogInfo.Filename; }
+            get { return LogInfo.FullPath; }
             set
             {
-                LogInfo.Filename = value;
+                LogInfo.FullPath = value;
                 OnPropertyChanged();
             }
         }
@@ -249,7 +249,7 @@ namespace SwiftTailer.Wpf.Models.Observable
         {
             _cts = new CancellationTokenSource();
 
-            if (File.Exists(LogInfo.Filename))
+            if (File.Exists(LogInfo.FullPath))
             {
                 IsRunning = true;
                 await RunUpdates();
@@ -258,8 +258,8 @@ namespace SwiftTailer.Wpf.Models.Observable
             {
                 await Task.Run(() =>
                 {
-                    Trace.WriteLine($"{LogInfo.Filename} was not found.");
-                    LogText = $"File not found: {LogInfo.Filename}";
+                    Trace.WriteLine($"{LogInfo.FullPath} was not found.");
+                    LogText = $"File not found: {LogInfo.FullPath}";
                 });
             }
         }
@@ -300,7 +300,7 @@ namespace SwiftTailer.Wpf.Models.Observable
             lock (_lockObject)
             {
                 // handle case where file may have been deleted while tailing
-                if (!File.Exists(LogInfo.Filename))
+                if (!File.Exists(LogInfo.FullPath))
                 {
                     // we want to keep tailing for now in case it was just a case of the file be republished, for example
                     // so just skip
@@ -308,7 +308,7 @@ namespace SwiftTailer.Wpf.Models.Observable
                     return;
                 }                    
 
-                using (var fs = new FileStream(LogInfo.Filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var fs = new FileStream(LogInfo.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     // handle case where the file may have been reset (e.g. republished)
                     if (_lastIndex > fs.Length)

@@ -21,16 +21,21 @@ namespace SwiftTailer.Wpf.Commands
             var file = item?.DataContext as TailFile;
             if (file == null) return;
 
-            if (!File.Exists(file.LogInfo.Filename))
+            var fileExists = File.Exists(file.LogInfo.FullPath);
+            var directoryExists = Directory.Exists(file.LogInfo.DirectoryPath);
+
+            if (!fileExists && !directoryExists)
             {
                 MessageBox.Show(
-                    $"{file.LogInfo.Filename} does not exist.", "File not found",
+                    $"{file.LogInfo.FullPath} does not exist.", "File not found",
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
                 return;
             }
 
-            var args = $"/e, /select, \"{file.LogInfo.Filename}\"";
+            var args = fileExists
+                ? $"/e, /select, \"{file.LogInfo.FullPath}\""
+                : $"/e, \"{file.LogInfo.DirectoryPath}\"";
 
             var info = new ProcessStartInfo
             {
