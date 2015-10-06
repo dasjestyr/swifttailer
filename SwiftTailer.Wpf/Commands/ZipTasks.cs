@@ -22,19 +22,19 @@ namespace SwiftTailer.Wpf.Commands
                     // add each log to the archive
                     foreach (var log in logGroup.Logs)
                     {
-                        if (!File.Exists(log.FullPath))
+                        if (!File.Exists(log.Filename))
                             continue;
 
-                        progressProvider.ProgressText = $"Processing {log.FullPath}...";
+                        progressProvider.ProgressText = $"Processing {log.Filename}...";
 
                         // create the entry
-                        var entry = zip.CreateEntry(Path.GetFileName(log.FullPath), CompressionLevel.Fastest);
+                        var entry = zip.CreateEntry(Path.GetFileName(log.Filename), CompressionLevel.Fastest);
 
                         // fill the entry
                         using (var entryStream = entry.Open())
                         {
                             using (
-                                var logFileStream = File.Open(log.FullPath, FileMode.Open, FileAccess.Read,
+                                var logFileStream = File.Open(log.Filename, FileMode.Open, FileAccess.Read,
                                     FileShare.ReadWrite))
                             {
                                 var fileBytes = new byte[logFileStream.Length];

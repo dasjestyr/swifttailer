@@ -20,17 +20,17 @@ namespace SwiftTailer.Wpf.Data
             get
             {
                 return string.IsNullOrEmpty(_alias) 
-                    ? Path.GetFileName(FullPath) 
+                    ? Path.GetFileName(Filename) 
                     : _alias;
             }
             set { _alias = value; }
         }
 
         [JsonProperty("location")]
-        public string FullPath { get; set; }
+        public string Filename { get; set; }
 
         [JsonIgnore]
-        public string DirectoryPath => Path.GetDirectoryName(FullPath);
+        public string DirectoryPath => Path.GetDirectoryName(Filename);
 
 
         public LogInfo()
@@ -39,16 +39,16 @@ namespace SwiftTailer.Wpf.Data
             
         }
 
-        public LogInfo(string fullPath)
-            : this(fullPath, string.Empty)
+        public LogInfo(string filename)
+            : this(filename, string.Empty)
         {
             
         }
 
-        public LogInfo(string fullPath, string alias)
+        public LogInfo(string filename, string alias)
         {
             Id = Guid.NewGuid();
-            FullPath = fullPath;
+            Filename = filename;
             Alias = alias;
         }
     }
