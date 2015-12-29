@@ -123,6 +123,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -170,7 +171,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Behaviors\MenuItemExtensions.cs" />
-    <Compile Include="Behaviors\RelayCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Commands\AddGroupDialogCommand.cs" />
     <Compile Include="Commands\CloseWindowCommand.cs" />
     <Compile Include="Commands\CompareWithClipboardCommand.cs" />
@@ -201,6 +202,9 @@
     <Compile Include="Commands\ZipGroupAndEmailCommand.cs" />
     <Compile Include="Commands\ZipGroupCommand.cs" />
     <Compile Include="Commands\ZipTasks.cs" />
+    <Compile Include="Controls\GeneralSettings.xaml.cs">
+      <DependentUpon>GeneralSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TrayIconInfoTooltip.xaml.cs">
       <DependentUpon>TrayIconInfoTooltip.xaml</DependentUpon>
     </Compile>
@@ -228,6 +232,7 @@
     <Compile Include="Filters\LogHighlight.cs" />
     <Compile Include="Filters\HighlightApplicator.cs" />
     <Compile Include="Filters\FindHighlightRule.cs" />
+    <Compile Include="Infrastructure\IntertabClient.cs" />
     <Compile Include="Models\BindableBase.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\IProperty.cs" />
@@ -251,6 +256,7 @@
     <Compile Include="Pages\EditLogInfo.xaml.cs">
       <DependentUpon>EditLogInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ITailerWindowFactory.cs" />
     <Compile Include="Pages\LogPicker.xaml.cs">
       <DependentUpon>LogPicker.xaml</DependentUpon>
     </Compile>
@@ -275,6 +281,10 @@
     <Page Include="Assets\Resources\TrayIconDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\GeneralSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TrayIconInfoTooltip.xaml">
       <SubType>Designer</SubType>

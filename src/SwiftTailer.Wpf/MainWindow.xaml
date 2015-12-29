@@ -6,7 +6,10 @@
                       xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
                       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                       xmlns:models="clr-namespace:SwiftTailer.Wpf.Models"
-                      WindowTransitionsEnabled="False"
+                      xmlns:converters="clr-namespace:SwiftTailer.Wpf.Converters"
+                      xmlns:stControl="clr-namespace:SwiftTailer.Wpf.Controls"
+                      xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
+                      WindowTransitionsEnabled="True"
                       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                       Background="{DynamicResource MaterialDesignPaper}"					  
                       GlowBrush="{DynamicResource AccentColorBrush}"					  
@@ -21,6 +24,55 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <converters:LineCountDisplayConverter x:Key="LineCountDisplayConverter" />
+            <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converters:FontFamilyStringConverter x:Key="FontFamilyStringConverter" />
+            <converters:HighlightConverter x:Key="HighlightConverter" />
+
+            <Style TargetType="Button" x:Key="TransportControlButtons">
+                <Setter Property="Width" Value="25" />
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="Margin" Value="2 0" />
+            </Style>
+
+            <Style TargetType="ListBoxItem" x:Key="LogLineStyle">
+                <Setter Property="ContextMenu">
+                    <Setter.Value>
+                        <ContextMenu>
+                            <MenuItem Header="View Selected" Command="commands:StaticCommands.OpenLogLineCommand" 
+                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
+                            <MenuItem Header="Pin this line" ToolTip="If pinned, the log line will be ommitted from trimming rules."
+                                  Command="commands:StaticCommands.PinLogLineCommand" 
+                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
+                            <MenuItem Header="Unpin this line"
+                                  Command="commands:StaticCommands.UnpinLogLineCommand"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
+                        </ContextMenu>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="ToolTip" Value="{Binding LineContext}" />
+                <!--<EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_DoubleClick" />-->
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Find">
+                        <Setter Property="Background" Value="Yellow" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Error">
+                        <Setter Property="Background" Value="Red" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="General">
+                        <Setter Property="Background" Value="LightGreen" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Hide">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Pinned}" Value="True">
+                        <Setter Property="FontStyle" Value="Italic" />
+                        <Setter Property="FontWeight" Value="Black"/>
+                        <Setter Property="Foreground" Value="DarkGreen" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
     <controls:MetroWindow.LeftWindowCommands>
@@ -37,11 +89,7 @@
             <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding MenuIsOpen}">
                 <materialDesign:DrawerHost.LeftDrawerContent>
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="200" />
-                            <RowDefinition Height="200" />
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="Hello World" Height="200" Width="200"></TextBlock>
+                        <stControl:GeneralSettings Margin="10 10" />
                     </Grid>
                 </materialDesign:DrawerHost.LeftDrawerContent>
 
@@ -49,28 +97,103 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="35" />
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="20" />
+                        <RowDefinition Height="30" />
                     </Grid.RowDefinitions>
                     
-                    <ToolBarPanel Grid.Row="0" VerticalAlignment="Center">
-                        <ToolBar>
-                            <ComboBox Width="200">
-                                <ComboBoxItem>Environment 1</ComboBoxItem>
-                                <ComboBoxItem>Environment 2</ComboBoxItem>
-                                <ComboBoxItem>Environment 3</ComboBoxItem>
-                                <ComboBoxItem>Environment 4</ComboBoxItem>
-                            </ComboBox>
+                    <!-- ACTION BAR -->
+                    <ToolBarTray Grid.Row="0" VerticalAlignment="Center">
+                        <ToolBar Band="0" BandIndex="0">
+                            <Button ToolTip="Start tailing (toggle ctrl-space)" x:Name="StartButton" 
+                                    Style="{StaticResource TransportControlButtons}" 
+                                    Command="{Binding StartTailingCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="Assets/playback_play.png" />
+                                    <TextBlock Text="Start" />
+                                </StackPanel>
+                            </Button>
+                            <Button ToolTip="Stop tailing (toggle ctrl-space)" x:Name="PauseButton" 
+                                    Style="{StaticResource TransportControlButtons}" 
+                                    Command="{Binding StopTailingCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="Assets/playback_pause.png" />
+                                    <TextBlock  />
+                                </StackPanel>
+                            </Button>
                         </ToolBar>
-                    </ToolBarPanel>
+                        <ToolBar>
+                            <ComboBox Width="200"
+                                      ItemsSource="{Binding Groups}"
+                                      DisplayMemberPath="Name"
+                                      SelectedItem="{Binding SelectedGroup}"
+                                      IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"/>
+                        </ToolBar>
+                    </ToolBarTray>
                     
+                    <!-- LOG TAB VIEW -->
                     <dockablz:Layout Grid.Row="1">
-                        <dragablz:TabablzControl>
-                            <TabItem Header="Log 1" />
-                            <TabItem Header="Log 2" />
-                            <TabItem Header="Log 3" />
-                            <TabItem Header="Log 4" />
+                        <dragablz:TabablzControl 
+                            x:Name="SessionTabControl"
+                            ShowDefaultCloseButton="True"
+                            ItemsSource="{Binding Tails}"
+                            SelectedItem="{Binding SelectedTail}">
+                            
+                            <dragablz:TabablzControl.InterTabController>
+                                <dragablz:InterTabController />
+                            </dragablz:TabablzControl.InterTabController>
+                            
+                            <dragablz:TabablzControl.CustomHeaderItemTemplate>
+                                <DataTemplate DataType="{x:Type models:TailFile}">
+                                    <TextBlock Text="{Binding Name}"
+                                               Margin="9"
+                                               HorizontalAlignment="Center"
+                                               ToolTip="{Binding FilePath}"/>
+                                </DataTemplate>
+                            </dragablz:TabablzControl.CustomHeaderItemTemplate>
+                            
+                            <TabControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:TailFile}">
+                                    <ListBox x:Name="LogList"
+                                             ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}"
+                                             ItemContainerStyle="{StaticResource LogLineStyle}"
+                                             SelectedItem="{Binding SelectedLine}"
+                                             SelectionMode="Extended">
+                                        
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBlock Text="{Binding Content}"
+                                                               ToolTipService.InitialShowDelay="500"
+                                                               ToolTipService.ShowDuration="20000"
+                                                               ToolTipService.HasDropShadow="True"
+                                                               ToolTip="{Binding LineContext}"
+                                                               FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}"
+                                                               Foreground="Red"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                        
+                                    </ListBox>
+                                </DataTemplate>
+                            </TabControl.ItemTemplate>
                         </dragablz:TabablzControl>
                     </dockablz:Layout>
+
+                    <!-- STATUS AREA -->
+                    <StatusBar Grid.Row="2" MinHeight="20" Padding="5 0">
+                        <StatusBarItem Content="{Binding SelectedGroup.Name, FallbackValue='Group 1'}" HorizontalAlignment="Left" />
+                        <StatusBarItem Content="{Binding SelectedTail.LineCount, Converter={StaticResource LineCountDisplayConverter}}" />
+                        <StatusBarItem Content="{Binding Status, FallbackValue=Idle}" HorizontalAlignment="Left" />
+                        <StatusBarItem HorizontalAlignment="Right">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" MaxWidth="300" />
+                                    <ColumnDefinition Width="100" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding ProgressText, FallbackValue='Processing c:\\MyDocuments\\MyFilt.txt...'}" Margin="5 0" />
+                                <ProgressBar Value="{Binding ProgressBarValue}" Maximum="100" Width="100" Height="15" x:Name="ProgressBar" Grid.Column="1" />
+                            </Grid>
+                        </StatusBarItem>
+                    </StatusBar>
                 </Grid>
                 
             </materialDesign:DrawerHost>

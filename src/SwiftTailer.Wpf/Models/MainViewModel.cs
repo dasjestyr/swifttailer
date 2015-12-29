@@ -3,9 +3,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
+using Dragablz;
 using SwiftTailer.Wpf.Behaviors;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
+using SwiftTailer.Wpf.Infrastructure;
+using SwiftTailer.Wpf.Pages;
 
 namespace SwiftTailer.Wpf.Models
 {
@@ -155,6 +158,8 @@ namespace SwiftTailer.Wpf.Models
             }
         }
 
+        public IInterTabClient IntertabClient { get; }
+
         #endregion
 
         public MainViewModel()
@@ -163,6 +168,9 @@ namespace SwiftTailer.Wpf.Models
             //SelectedGroup = Groups.Count > 0 ? Groups[0] : new LogGroup();
 
             //SelectedGroup = LogSource.Instance.Logs.Groups[0];
+
+            IntertabClient = new IntertabClient(new TailerWindowFactory());
+
             LogSourceBound(this, new EventArgs());
 
             OpenLogPickerDialogCommand = new OpenLogPickerDialogCommand();
