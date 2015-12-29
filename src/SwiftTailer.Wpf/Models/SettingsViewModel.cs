@@ -1,10 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Media;
-using SwiftTailer.Wpf.Models.Observable;
 
-namespace SwiftTailer.Wpf.ViewModels
+namespace SwiftTailer.Wpf.Models
 {
     public class SettingsViewModel : ModelBase
     {

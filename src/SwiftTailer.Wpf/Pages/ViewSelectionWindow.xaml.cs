@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using SwiftTailer.Wpf.Commands;
-using SwiftTailer.Wpf.Models.Observable;
-using SwiftTailer.Wpf.ViewModels;
+using SwiftTailer.Wpf.Models;
 
 namespace SwiftTailer.Wpf.Pages
 {

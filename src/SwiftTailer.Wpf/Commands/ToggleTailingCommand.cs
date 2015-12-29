@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
-using SwiftTailer.Wpf.Models.Observable;
+using SwiftTailer.Wpf.Models;
 
 namespace SwiftTailer.Wpf.Commands
 {

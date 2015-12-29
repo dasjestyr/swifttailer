@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using SwiftTailer.Wpf.Commands;
-using SwiftTailer.Wpf.Models.Observable;
 
-namespace SwiftTailer.Wpf.ViewModels
+namespace SwiftTailer.Wpf.Models
 {
     public class ViewSelectionViewModel : ModelBase
     {

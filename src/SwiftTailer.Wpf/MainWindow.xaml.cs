@@ -8,12 +8,12 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using SwiftTailer.Wpf.Commands;
+using SwiftTailer.Wpf.Models;
 using SwiftTailer.Wpf.Pages;
-using SwiftTailer.Wpf.ViewModels;
 
 namespace SwiftTailer.Wpf
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public MainWindow()
         {

@@ -4,17 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SwiftTailer.Wpf.Pages"
-        xmlns:viewModels="clr-namespace:SwiftTailer.Wpf.ViewModels"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
         xmlns:wpf="clr-namespace:SwiftTailer.Wpf"
         xmlns:converter="clr-namespace:SwiftTailer.Wpf.Converters"
+        xmlns:models="clr-namespace:SwiftTailer.Wpf.Models"
         mc:Ignorable="d"
         Title="Settings" Height="300" Width="375"
         Name="ThisWindow" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" SizeToContent="Width">
 
     <Window.DataContext>
-        <viewModels:SettingsViewModel />
+        <models:SettingsViewModel />
     </Window.DataContext>
 
     <Window.Resources>

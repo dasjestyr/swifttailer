@@ -1,8 +1,7 @@
 ﻿using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
-using SwiftTailer.Wpf.Models.Observable;
 
-namespace SwiftTailer.Wpf.ViewModels
+namespace SwiftTailer.Wpf.Models
 {
     public class AddGroupViewModel : ModelBase
     {

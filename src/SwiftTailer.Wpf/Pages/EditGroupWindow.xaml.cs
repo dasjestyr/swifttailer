@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using SwiftTailer.Wpf.Data;
-using SwiftTailer.Wpf.ViewModels;
+using SwiftTailer.Wpf.Models;
 
 namespace SwiftTailer.Wpf.Pages
 {

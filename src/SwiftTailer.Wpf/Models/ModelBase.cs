@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace SwiftTailer.Wpf.Models.Observable
+namespace SwiftTailer.Wpf.Models
 {
     public abstract class ModelBase : BindableBase, IModel
     {

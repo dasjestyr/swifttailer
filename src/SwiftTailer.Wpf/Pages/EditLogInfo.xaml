@@ -4,14 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SwiftTailer.Wpf.Pages"
-        xmlns:viewModels="clr-namespace:SwiftTailer.Wpf.ViewModels"
         xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
+        xmlns:models="clr-namespace:SwiftTailer.Wpf.Models"
         Name="DialogWindow"
         mc:Ignorable="d"
         Title="Edit Log" Height="179" Width="600">
 
     <Window.DataContext>
-        <viewModels:EditLogViewModel />
+        <models:EditLogViewModel />
     </Window.DataContext>
     <Window.Resources>
         <Style TargetType="Button" x:Key="ActionButtons">

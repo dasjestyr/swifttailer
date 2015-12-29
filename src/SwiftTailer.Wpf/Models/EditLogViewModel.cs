@@ -1,10 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using SwiftTailer.Wpf.Commands;
+﻿using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
-using SwiftTailer.Wpf.Models.Observable;
 
-namespace SwiftTailer.Wpf.ViewModels
+namespace SwiftTailer.Wpf.Models
 {
     public class EditLogViewModel : ModelBase, ILogTail
     {

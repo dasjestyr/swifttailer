@@ -2,8 +2,8 @@
 using System.Windows;
 using System.Windows.Input;
 using SwiftTailer.Wpf.Data;
+using SwiftTailer.Wpf.Models;
 using SwiftTailer.Wpf.Pages;
-using SwiftTailer.Wpf.ViewModels;
 
 namespace SwiftTailer.Wpf.Commands
 {

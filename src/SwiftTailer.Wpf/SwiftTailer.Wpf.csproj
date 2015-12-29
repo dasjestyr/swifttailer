@@ -74,8 +74,28 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dragablz, Version=0.0.2.147, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dragablz.0.0.2.147\lib\net45\Dragablz.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.1.2.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.MahApps, Version=0.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.MahApps.0.0.3\lib\net45\MaterialDesignThemes.MahApps.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=1.3.0.413, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.1.3.0.413\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -104,7 +124,7 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unofficial.Blend.Interactivity.1.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
@@ -208,17 +228,17 @@
     <Compile Include="Filters\LogHighlight.cs" />
     <Compile Include="Filters\HighlightApplicator.cs" />
     <Compile Include="Filters\FindHighlightRule.cs" />
-    <Compile Include="Models\Observable\BindableBase.cs" />
-    <Compile Include="Models\Observable\IModel.cs" />
-    <Compile Include="Models\Observable\IProperty.cs" />
-    <Compile Include="Models\Observable\ISearchSource.cs" />
-    <Compile Include="Models\Observable\LogLine.cs" />
-    <Compile Include="Models\Observable\ModelBase.cs" />
-    <Compile Include="Models\Observable\NewContentEventArgs.cs" />
-    <Compile Include="Models\Observable\Property.cs" />
-    <Compile Include="Models\Observable\RawContentsChangedEventArgs.cs" />
-    <Compile Include="Models\Observable\SearchOptions.cs" />
-    <Compile Include="Models\Observable\TailFile.cs" />
+    <Compile Include="Models\BindableBase.cs" />
+    <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\IProperty.cs" />
+    <Compile Include="Models\ISearchSource.cs" />
+    <Compile Include="Models\LogLine.cs" />
+    <Compile Include="Models\ModelBase.cs" />
+    <Compile Include="Models\NewContentEventArgs.cs" />
+    <Compile Include="Models\Property.cs" />
+    <Compile Include="Models\RawContentsChangedEventArgs.cs" />
+    <Compile Include="Models\SearchOptions.cs" />
+    <Compile Include="Models\TailFile.cs" />
     <Compile Include="Pages\AdHocTailingWindow.xaml.cs">
       <DependentUpon>AdHocTailingWindow.xaml</DependentUpon>
     </Compile>
@@ -242,16 +262,16 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Utility\Extensions.cs" />
-    <Compile Include="ViewModels\AddGroupViewModel.cs" />
-    <Compile Include="ViewModels\AdHocTailingViewModel.cs" />
-    <Compile Include="ViewModels\EditLogViewModel.cs" />
-    <Compile Include="ViewModels\ILogTail.cs" />
-    <Compile Include="ViewModels\IProgressProvider.cs" />
-    <Compile Include="ViewModels\LogPickerDialogViewModel.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\TrayIconViewModel.cs" />
-    <Compile Include="ViewModels\ViewSelectionViewModel.cs" />
+    <Compile Include="Models\AddGroupViewModel.cs" />
+    <Compile Include="Models\AdHocTailingViewModel.cs" />
+    <Compile Include="Models\EditLogViewModel.cs" />
+    <Compile Include="Models\ILogTail.cs" />
+    <Compile Include="Models\IProgressProvider.cs" />
+    <Compile Include="Models\LogPickerDialogViewModel.cs" />
+    <Compile Include="Models\MainViewModel.cs" />
+    <Compile Include="Models\SettingsViewModel.cs" />
+    <Compile Include="Models\TrayIconViewModel.cs" />
+    <Compile Include="Models\ViewSelectionViewModel.cs" />
     <Page Include="Assets\Resources\TrayIconDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -397,7 +417,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Pages\backup\" />
+  </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>

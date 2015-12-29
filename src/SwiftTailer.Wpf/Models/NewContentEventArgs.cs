@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SwiftTailer.Wpf.Models.Observable
+namespace SwiftTailer.Wpf.Models
 {
     public class NewContentEventArgs : EventArgs
     {

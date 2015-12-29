@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SwiftTailer.Wpf.Models.Observable;
+using SwiftTailer.Wpf.Models;
 
 namespace SwiftTailer.Wpf.Filters
 {

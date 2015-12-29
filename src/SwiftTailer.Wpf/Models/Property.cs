@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace SwiftTailer.Wpf.Models.Observable
+namespace SwiftTailer.Wpf.Models
 {
     public class Property<T> : BindableBase, IProperty
     {

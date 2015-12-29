@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using SwiftTailer.Wpf.Models.Observable;
+using SwiftTailer.Wpf.Models;
 
 namespace SwiftTailer.Wpf.Filters
 {

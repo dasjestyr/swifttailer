@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using SwiftTailer.Wpf.Models.Observable;
+using SwiftTailer.Wpf.Models;
 using SwiftTailer.Wpf.Pages;
 using SwiftTailer.Wpf.Utility;
 

@@ -7,7 +7,7 @@ using System.Threading;
 using System.Windows;
 using SwiftTailer.Wpf.Filters;
 
-namespace SwiftTailer.Wpf.Models.Observable
+namespace SwiftTailer.Wpf.Models
 {
     public class SearchOptions : ModelBase, ISearchSource
     {

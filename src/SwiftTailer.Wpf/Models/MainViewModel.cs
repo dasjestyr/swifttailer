@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using SwiftTailer.Wpf.Behaviors;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
-using SwiftTailer.Wpf.Models.Observable;
 
-namespace SwiftTailer.Wpf.ViewModels
+namespace SwiftTailer.Wpf.Models
 {
     public class MainViewModel : ModelBase, IProgressProvider, ITailControl
     {

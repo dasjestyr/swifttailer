@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using Hardcodet.Wpf.TaskbarNotification;
 
-namespace SwiftTailer.Wpf.ViewModels
+namespace SwiftTailer.Wpf.Models
 {
     public class TrayIconViewModel
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using Microsoft.Win32;
-using SwiftTailer.Wpf.ViewModels;
+using SwiftTailer.Wpf.Models;
 
 namespace SwiftTailer.Wpf.Commands
 {

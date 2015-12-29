@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SwiftTailer.Wpf.Controls"
-             xmlns:vm="clr-namespace:SwiftTailer.Wpf.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="200">
     <!-- a simple user control which displays a fixed text within a border -->

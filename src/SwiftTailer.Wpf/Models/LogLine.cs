@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using SwiftTailer.Wpf.Filters;
 
-namespace SwiftTailer.Wpf.Models.Observable
+namespace SwiftTailer.Wpf.Models
 {
     public class LogLine : ModelBase
     {

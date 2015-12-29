@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
-using SwiftTailer.Wpf.ViewModels;
+using SwiftTailer.Wpf.Models;
 
 namespace SwiftTailer.Wpf.Commands
 {

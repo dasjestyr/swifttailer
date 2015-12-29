@@ -1,4 +1,4 @@
-﻿namespace SwiftTailer.Wpf.ViewModels
+﻿namespace SwiftTailer.Wpf.Models
 {
     public interface ILogTail
     {

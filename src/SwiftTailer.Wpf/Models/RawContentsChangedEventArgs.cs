@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SwiftTailer.Wpf.Models.Observable
+namespace SwiftTailer.Wpf.Models
 {
     public class RawContentsChangedEventArgs : EventArgs
     {

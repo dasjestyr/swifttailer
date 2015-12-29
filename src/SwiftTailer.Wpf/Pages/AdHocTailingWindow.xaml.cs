@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
-using SwiftTailer.Wpf.ViewModels;
+using SwiftTailer.Wpf.Models;
 
 namespace SwiftTailer.Wpf.Pages
 {
