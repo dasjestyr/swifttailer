@@ -1,21 +1,6 @@
-﻿/********************************** Module Header **********************************\
-* Module Name:  SearchableTextControl.cs
-* Project:      CSWPFSearchAndHighlightTextBlockControl
-* Copyright (c) Microsoft Corporation.
-*
-* The SearchableTextControl.cs file defines a User Control Class in order to search for
-* keyword and highlight it when the operation gets the result.
-*
-*
-* This source is subject to the Microsoft Public License.
-* See http://www.microsoft.com/opensource/licenses.mspx#Ms-PL.
-* All other rights reserved.
-*
-* THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER 
-* EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF 
-* MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
-\***********************************************************************************/
-
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -154,87 +139,154 @@ namespace SwiftTailer.Wpf.Controls
         /// </summary>
         protected override void OnRender(DrawingContext drawingContext)
         {
-
-            // Define a TextBlock to hold the search result.
             TextBlock displayTextBlock = this.Template.FindName("PART_TEXT", this) as TextBlock;
 
             if (string.IsNullOrEmpty(this.Text))
             {
                 base.OnRender(drawingContext);
-
                 return;
             }
+
             if (!this.IsHighlight)
             {
                 displayTextBlock.Text = this.Text;
                 base.OnRender(drawingContext);
-
                 return;
             }
 
             displayTextBlock.Inlines.Clear();
-            string searchstring = this.IsMatchCase ? (string)this.SearchText : ((string)this.SearchText).ToUpper();
 
-            string compareText = this.IsMatchCase ? this.Text : this.Text.ToUpper();
-            string displayText = this.Text;
+            if(string.IsNullOrEmpty(SearchText))
+                SearchText = string.Empty;
+            
+            var searchPhrases = this.IsMatchCase 
+                ? SearchText.Trim().Split(new [] {","}, StringSplitOptions.RemoveEmptyEntries) 
+                : SearchText.Trim().ToUpper().Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
-            Run run = null;
-            while (!string.IsNullOrEmpty(searchstring) && compareText.IndexOf(searchstring) >= 0)
+            var compareText = this.IsMatchCase ? this.Text : this.Text.ToUpper();
+            var displayText = this.Text;
+
+            var matches = GetMatchIndices(searchPhrases, compareText);
+
+            Run run;
+            var position = 0;
+
+            if (!matches.Any())
             {
-                int position = compareText.IndexOf(searchstring);
-                run = GenerateRun(displayText.Substring(0, position), false);
-
-                if (run != null)
-                {
-                    displayTextBlock.Inlines.Add(run);
-                }
-
-                run = GenerateRun(displayText.Substring(position, searchstring.Length), true);
-
-                if (run != null)
-                {
-                    displayTextBlock.Inlines.Add(run);
-                }
-
-                compareText = compareText.Substring(position + searchstring.Length);
-                displayText = displayText.Substring(position + searchstring.Length);
+                var runText = GenerateRun(displayText, false);
+                displayTextBlock.Inlines.Add(runText);
+                base.OnRender(drawingContext);
+                return;
             }
 
-            run = GenerateRun(displayText, false);
+            var firstMatchIndex = matches[0].Index;
 
-            if (run != null)
+            // if first match is not at start, grab first chunk of text
+            if (firstMatchIndex != 0)
             {
+                var firstChunk = displayText.Substring(0, firstMatchIndex);
+                run = GenerateRun(firstChunk, false); // unformatted text
+                displayTextBlock.Inlines.Add(run);
+                position = firstMatchIndex;
+            }
+
+            // start building
+            for (var i = 0; i < matches.Count; i++)
+            {
+                var match = matches[i];
+                var nextIndex = matches.Count > i + 1
+                    ? matches[i + 1].Index
+                    : -1;
+
+                // grab the match
+                var runText = GetSubStringAndAdvancePosition(displayText, ref position, match.Length);
+                run = GenerateRun(runText, true);
+
+                if (run != null)
+                    displayTextBlock.Inlines.Add(run);
+
+                // if the next position is not a match, grab unformatted text up to the next match
+                if (nextIndex != match.Index + 1 && nextIndex != -1)
+                {
+                    var length = nextIndex - position;
+                    runText = GetSubStringAndAdvancePosition(displayText, ref position, length);
+                    run = GenerateRun(runText, false);
+
+                    if(run != null)
+                        displayTextBlock.Inlines.Add(run);
+                }
+            }
+
+            // get everything else
+            if (position < displayText.Length)
+            {
+                var runText = displayText.Substring(position, displayText.Length - position);
+                run = GenerateRun(runText, false);
                 displayTextBlock.Inlines.Add(run);
             }
 
-
-
-
             base.OnRender(drawingContext);
         }
+
+        private string GetSubStringAndAdvancePosition(string source, ref int position, int length)
+        {
+            var result = source.Substring(position, length);
+            position += length;
+            return result;
+        }
+
+        private static List<PhraseMatchInfo> GetMatchIndices(IEnumerable<string> searchPhrases, string searchTarget)
+        {
+            var matchInfo = new List<PhraseMatchInfo>();
+            foreach (var phrase in searchPhrases)
+            {
+                if (searchTarget.IndexOf(phrase.Trim(), StringComparison.Ordinal) == -1)
+                    continue;
+
+                matchInfo.Add(new PhraseMatchInfo(
+                    searchTarget.IndexOf(phrase.Trim(), StringComparison.Ordinal), 
+                    phrase.Length));
+            }
+
+            return matchInfo
+                .OrderBy(m => m.Index)
+                .ToList();
+        } 
 
         /// <summary>
         /// Set inline-level flow content element intended to contain a run of formatted or unformatted 
         /// text into your background and foreground setting.
         /// </summary>
-        private Run GenerateRun(string searchedString, bool isHighlight)
+        private Run GenerateRun(string runSegment, bool isHighlight)
         {
-            if (!string.IsNullOrEmpty(searchedString))
+            if (string.IsNullOrEmpty(runSegment)) return null;
+
+            var run = new Run(runSegment)
             {
-                Run run = new Run(searchedString)
-                {
-                    Background = isHighlight ? this.HighlightBackground : this.Background,
-                    Foreground = isHighlight ? this.HighlightForeground : this.Foreground,
+                Background = isHighlight ? this.HighlightBackground : this.Background,
+                Foreground = isHighlight ? this.HighlightForeground : this.Foreground,
 
-                    // Set the source text with the style which is Italic.
-                    //   FontStyle = isHighlight ? FontStyles.Italic : FontStyles.Normal,
+                // Set the source text with the style which is Italic.
+                //   FontStyle = isHighlight ? FontStyles.Italic : FontStyles.Normal,
 
-                    // Set the source text with the style which is Bold.
-                    FontWeight = isHighlight ? FontWeights.Bold : FontWeights.Normal
-                };
-                return run;
+                // Set the source text with the style which is Bold.
+                FontWeight = isHighlight ? FontWeights.Bold : FontWeights.Normal
+            };
+
+            return run;
+        }
+
+        private class PhraseMatchInfo
+        {
+            public int Index { get; }
+
+            public int Length { get; set; }
+
+            public PhraseMatchInfo(int index, int length)
+            {
+                Index = index;
+                Length = length;
             }
-            return null;
         }
     }
 }

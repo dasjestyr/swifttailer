@@ -34,45 +34,6 @@
                 <Setter Property="Height" Value="25"/>
                 <Setter Property="Margin" Value="2 0" />
             </Style>
-
-            <Style TargetType="ListBoxItem" x:Key="LogLineStyle">
-                <Setter Property="ContextMenu">
-                    <Setter.Value>
-                        <ContextMenu>
-                            <MenuItem Header="View Selected" Command="commands:StaticCommands.OpenLogLineCommand" 
-                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}" />
-                            <MenuItem Header="Pin this line" ToolTip="If pinned, the log line will be ommitted from trimming rules."
-                                  Command="commands:StaticCommands.PinLogLineCommand" 
-                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
-                            <MenuItem Header="Unpin this line"
-                                  Command="commands:StaticCommands.UnpinLogLineCommand"
-                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}"/>
-                        </ContextMenu>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                <Setter Property="ToolTip" Value="{Binding LineContext}" />
-                <!--<EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_DoubleClick" />-->
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Find">
-                        <Setter Property="Background" Value="Yellow" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Error">
-                        <Setter Property="Background" Value="Red" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="General">
-                        <Setter Property="Background" Value="LightGreen" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Highlight, Converter={StaticResource HighlightConverter}}" Value="Hide">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Pinned}" Value="True">
-                        <Setter Property="FontStyle" Value="Italic" />
-                        <Setter Property="FontWeight" Value="Black"/>
-                        <Setter Property="Foreground" Value="DarkGreen" />
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
         </ResourceDictionary>
     </Window.Resources>
     <controls:MetroWindow.LeftWindowCommands>
@@ -152,27 +113,41 @@
                             
                             <TabControl.ContentTemplate>
                                 <DataTemplate DataType="{x:Type models:TailFile}">
-                                    <ListBox x:Name="LogList"
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="35" />
+                                        </Grid.RowDefinitions>
+                                        <ListBox x:Name="LogList"
                                              ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}"
                                              SelectedIndex="{Binding SelectedLine}"
                                              SelectionMode="Extended"
                                              Foreground="Black">
-                                        
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Vertical">
-                                                    
-                                                    <stControl:SearchableTextControl Text="{Binding Content}"
+
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Vertical">
+                                                        <stControl:SearchableTextControl Text="{Binding Content}"
                                                                ToolTipService.InitialShowDelay="500"
                                                                ToolTipService.ShowDuration="20000"
                                                                ToolTipService.HasDropShadow="True"
                                                                ToolTip="{Binding LineContext}"
+                                                               IsHighlight="True"
+                                                               IsMatchCase="False"
+                                                               SearchText="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                               HighlightBackground="{Binding Highlight, Converter={StaticResource HighlightConverter}}"
+                                                               HighlightForeground="Black"
                                                                FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}"/>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                        
-                                    </ListBox>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+
+                                        </ListBox>
+                                        <TextBox Grid.Row="1" 
+                                                 Foreground="Black"
+                                                 Text="{Binding SearchOptions.SearchPhrase, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Grid>
+                                    
                                 </DataTemplate>
                             </TabControl.ContentTemplate>
                         </dragablz:TabablzControl>

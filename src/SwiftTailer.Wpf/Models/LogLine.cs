@@ -10,6 +10,7 @@ namespace SwiftTailer.Wpf.Models
         private string _lineContext;
         private bool _pinned;
         private string _logFont = Settings.LogWindowFont;
+        private string _searchPhrase;
 
         /// <summary>
         /// Gets or sets the content.
@@ -31,6 +32,22 @@ namespace SwiftTailer.Wpf.Models
             set
             {
                 _highlight = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the search phrase.
+        /// </summary>
+        /// <value>
+        /// The search phrase.
+        /// </value>
+        public string SearchPhrase
+        {
+            get { return _searchPhrase; }
+            set
+            {
+                _searchPhrase = value;
                 OnPropertyChanged();
             }
         }

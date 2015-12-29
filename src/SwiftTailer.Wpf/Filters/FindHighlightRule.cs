@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SwiftTailer.Wpf.Models;
+#pragma warning disable CS1998
 
 namespace SwiftTailer.Wpf.Filters
 {
@@ -63,10 +63,11 @@ namespace SwiftTailer.Wpf.Filters
 
         private bool ApplyLiteral(LogLine logLine)
         {
-            if (logLine.Content.IndexOf(_source.SearchPhrase, _comparisonRule) == -1) // not droids you're looking for
-                return false;
+            //if (logLine.Content.IndexOf(_source.SearchPhrase, _comparisonRule) == -1) // not droids you're looking for
+            //    return false;
 
             logLine.Highlight = LogHighlight.Find;
+            logLine.SearchPhrase = _source.SearchPhrase;
             return true;
         }
 

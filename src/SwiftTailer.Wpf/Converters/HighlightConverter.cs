@@ -10,7 +10,17 @@ namespace SwiftTailer.Wpf.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var highlighter = (LogHighlight) value;
-            return highlighter.Category.ToString();
+            var category = highlighter.Category.ToString();
+
+            string colorValue = null;
+            switch (category)
+            {
+                case "Find":
+                    colorValue = "Green";
+                    break;
+            }
+
+            return colorValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
