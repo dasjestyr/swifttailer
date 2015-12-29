@@ -129,7 +129,7 @@
                         </ToolBar>
                     </ToolBarTray>
                     
-                    <!-- LOG TAB VIEW -->
+                    <!-- LOG VIEW AREA -->
                     <dockablz:Layout Grid.Row="1">
                         <dragablz:TabablzControl 
                             x:Name="SessionTabControl"
@@ -150,31 +150,31 @@
                                 </DataTemplate>
                             </dragablz:TabablzControl.CustomHeaderItemTemplate>
                             
-                            <TabControl.ItemTemplate>
+                            <TabControl.ContentTemplate>
                                 <DataTemplate DataType="{x:Type models:TailFile}">
                                     <ListBox x:Name="LogList"
                                              ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}"
-                                             ItemContainerStyle="{StaticResource LogLineStyle}"
-                                             SelectedItem="{Binding SelectedLine}"
-                                             SelectionMode="Extended">
+                                             SelectedIndex="{Binding SelectedLine}"
+                                             SelectionMode="Extended"
+                                             Foreground="Black">
                                         
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Vertical">
-                                                    <TextBlock Text="{Binding Content}"
+                                                    
+                                                    <stControl:SearchableTextControl Text="{Binding Content}"
                                                                ToolTipService.InitialShowDelay="500"
                                                                ToolTipService.ShowDuration="20000"
                                                                ToolTipService.HasDropShadow="True"
                                                                ToolTip="{Binding LineContext}"
-                                                               FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}"
-                                                               Foreground="Red"/>
+                                                               FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                         
                                     </ListBox>
                                 </DataTemplate>
-                            </TabControl.ItemTemplate>
+                            </TabControl.ContentTemplate>
                         </dragablz:TabablzControl>
                     </dockablz:Layout>
 

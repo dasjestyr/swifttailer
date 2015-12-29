@@ -205,6 +205,7 @@
     <Compile Include="Controls\GeneralSettings.xaml.cs">
       <DependentUpon>GeneralSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SearchableTextControl.cs" />
     <Compile Include="Controls\TrayIconInfoTooltip.xaml.cs">
       <DependentUpon>TrayIconInfoTooltip.xaml</DependentUpon>
     </Compile>
