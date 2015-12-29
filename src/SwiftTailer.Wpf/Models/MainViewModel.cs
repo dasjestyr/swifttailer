@@ -20,6 +20,7 @@ namespace SwiftTailer.Wpf.Models
         private TailFile _selectedTail;
         private int _progressBarValue;
         private string _progressText;
+        private bool _menuIsOpen;
 
         #region -- Commands --
         public SelectGroupCommand SelectGroupCommand { get; private set; }
@@ -140,6 +141,16 @@ namespace SwiftTailer.Wpf.Models
             set
             {
                 _progressText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool MenuIsOpen
+        {
+            get { return _menuIsOpen; }
+            set
+            {
+                _menuIsOpen = value;
                 OnPropertyChanged();
             }
         }

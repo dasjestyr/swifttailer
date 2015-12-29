@@ -4,19 +4,76 @@
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                       xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
                       xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
+                      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                      xmlns:models="clr-namespace:SwiftTailer.Wpf.Models"
                       WindowTransitionsEnabled="False"
                       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                       Background="{DynamicResource MaterialDesignPaper}"					  
                       GlowBrush="{DynamicResource AccentColorBrush}"					  
                       FontFamily="{StaticResource DefaultFont}"
-                      Title="SwiftTailer" Height="640" Width="800">
+                      Title="SwiftTailer" Height="640" Width="800"
+                      WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <models:MainViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <controls:MetroWindow.LeftWindowCommands>
+        <controls:WindowCommands>
+            <ToggleButton Width="22" Height="22" Margin="5 0 0 0"
+                    x:Name="MenuToggleButton"
+                    IsChecked="{Binding MenuIsOpen}"          
+                    Style="{StaticResource MaterialDesignHamburgerToggleButton}"/>
+        </controls:WindowCommands>
+    </controls:MetroWindow.LeftWindowCommands>
+    
+    <AdornerDecorator>
+        <Grid>
+            <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding MenuIsOpen}">
+                <materialDesign:DrawerHost.LeftDrawerContent>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="200" />
+                            <RowDefinition Height="200" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Hello World" Height="200" Width="200"></TextBlock>
+                    </Grid>
+                </materialDesign:DrawerHost.LeftDrawerContent>
 
-    <dockablz:Layout>
-        <dragablz:TabablzControl>
-            <TabItem Header="Log 1" />
-            <TabItem Header="Log 2" />
-            <TabItem Header="Log 3" />
-            <TabItem Header="Log 4" />
-        </dragablz:TabablzControl>
-    </dockablz:Layout>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
+                    
+                    <ToolBarPanel Grid.Row="0" VerticalAlignment="Center">
+                        <ToolBar>
+                            <ComboBox Width="200">
+                                <ComboBoxItem>Environment 1</ComboBoxItem>
+                                <ComboBoxItem>Environment 2</ComboBoxItem>
+                                <ComboBoxItem>Environment 3</ComboBoxItem>
+                                <ComboBoxItem>Environment 4</ComboBoxItem>
+                            </ComboBox>
+                        </ToolBar>
+                    </ToolBarPanel>
+                    
+                    <dockablz:Layout Grid.Row="1">
+                        <dragablz:TabablzControl>
+                            <TabItem Header="Log 1" />
+                            <TabItem Header="Log 2" />
+                            <TabItem Header="Log 3" />
+                            <TabItem Header="Log 4" />
+                        </dragablz:TabablzControl>
+                    </dockablz:Layout>
+                </Grid>
+                
+            </materialDesign:DrawerHost>
+        </Grid>
+    </AdornerDecorator>
 </controls:MetroWindow>
