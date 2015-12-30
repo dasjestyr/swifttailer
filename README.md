@@ -1,7 +1,7 @@
 # SwiftTailer
 ####A lightweight log tailer with some practical options
 
-# UI redesign is underway! Material Design incoming...
+## UI redesign is underway! Material Design incoming...
 
 ![SwiftTailer](http://i.imgur.com/PGL2fZK.png)
 
