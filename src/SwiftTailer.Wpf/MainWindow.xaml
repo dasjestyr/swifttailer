@@ -7,9 +7,7 @@
                       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                       xmlns:models="clr-namespace:SwiftTailer.Wpf.Models"
                       xmlns:converters="clr-namespace:SwiftTailer.Wpf.Converters"
-                      xmlns:stControl="clr-namespace:SwiftTailer.Wpf.Controls"
                       xmlns:is="clr-namespace:SwiftTailer.Wpf.Infrastructure"
-                      xmlns:system="clr-namespace:System;assembly=mscorlib"
                       xmlns:generalSettings="clr-namespace:SwiftTailer.Wpf.Controls.GeneralSettings"
                       xmlns:logViewer="clr-namespace:SwiftTailer.Wpf.Controls.LogViewer"
                       WindowTransitionsEnabled="True"
@@ -29,8 +27,6 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:LineCountDisplayConverter x:Key="LineCountDisplayConverter" />
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
-            <converters:FontFamilyStringConverter x:Key="FontFamilyStringConverter" />
-            <converters:HighlightConverter x:Key="HighlightConverter" />
 
             <Style TargetType="Button" x:Key="TransportControlButtons">
                 <Setter Property="Width" Value="25" />
@@ -41,8 +37,7 @@
     </Window.Resources>
 
     <Window.InputBindings>
-        <KeyBinding Key="OemTilde" 
-                    Command="{Binding ToggleSearchOptionsCommand}" />
+        <KeyBinding Key="OemTilde" Command="{Binding ToggleSearchOptionsCommand}" />
     </Window.InputBindings>
 
     <controls:MetroWindow.LeftWindowCommands>
@@ -57,6 +52,7 @@
     <AdornerDecorator>
         <Grid is:DependencyObjectHook.Receiver="{Binding FileDrop}">
             <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding MenuIsOpen}">
+                
                 <materialDesign:DrawerHost.LeftDrawerContent>
                     <Grid>
                         <generalSettings:GeneralSettings Margin="10 10" />
@@ -76,7 +72,7 @@
                                                HorizontalAlignment="Center" 
                                                VerticalAlignment="Center" />
 
-                    <!-- ACTION BAR -->
+                    <!--#region ACTION BAR -->
                     <ToolBarTray Grid.Row="0" VerticalAlignment="Center">
                         <ToolBar Band="0" BandIndex="0">
                             <Button ToolTip="Start tailing (toggle ctrl-space)" x:Name="StartButton" 
@@ -104,8 +100,9 @@
                                       IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"/>
                         </ToolBar>
                     </ToolBarTray>
+                    <!--#endregion -->
                     
-                    <!-- LOG VIEW AREA -->
+                    <!--#region LOG VIEW AREA -->
                     <dockablz:Layout Grid.Row="1">
                         <dragablz:TabablzControl 
                             x:Name="SessionTabControl"
@@ -133,8 +130,9 @@
                             </TabControl.ContentTemplate>
                         </dragablz:TabablzControl>
                     </dockablz:Layout>
+                    <!--#endregion -->
 
-                    <!-- STATUS AREA -->
+                    <!--#region STATUS AREA -->
                     <StatusBar Grid.Row="2" MinHeight="20" Padding="5 0">
                         <StatusBarItem Content="{Binding SelectedGroup.Name, FallbackValue='Group 1'}" HorizontalAlignment="Left" />
                         <StatusBarItem Content="{Binding SelectedTail.LineCount, Converter={StaticResource LineCountDisplayConverter}}" />
@@ -150,6 +148,8 @@
                             </Grid>
                         </StatusBarItem>
                     </StatusBar>
+                    <!--#endregion -->
+                    
                 </Grid>
             </materialDesign:DrawerHost>
         </Grid>
