@@ -228,8 +228,10 @@ namespace SwiftTailer.Wpf.Controls
             base.OnRender(drawingContext);
         }
 
-        private string GetSubStringAndAdvancePosition(string source, ref int position, int length)
+        private static string GetSubStringAndAdvancePosition(string source, ref int position, int length)
         {
+            if (length < 0) return source;
+
             var result = source.Substring(position, length);
             position += length;
             return result;
@@ -253,10 +255,6 @@ namespace SwiftTailer.Wpf.Controls
                 .ToList();
         } 
 
-        /// <summary>
-        /// Set inline-level flow content element intended to contain a run of formatted or unformatted 
-        /// text into your background and foreground setting.
-        /// </summary>
         private Run GenerateRun(string runSegment, bool isHighlight)
         {
             if (string.IsNullOrEmpty(runSegment)) return null;
@@ -280,7 +278,7 @@ namespace SwiftTailer.Wpf.Controls
         {
             public int Index { get; }
 
-            public int Length { get; set; }
+            public int Length { get; private set; }
 
             public PhraseMatchInfo(int index, int length)
             {

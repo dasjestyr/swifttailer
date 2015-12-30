@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SwiftTailer.Wpf.Models;
@@ -67,18 +69,33 @@ namespace SwiftTailer.Wpf.Filters
             //    return false;
 
             logLine.Highlight = LogHighlight.Find;
-            logLine.SearchPhrase = _source.SearchPhrase;
             return true;
         }
 
         private bool ApplyRegex(LogLine logLine)
         {
-            var regex = new Regex(_source.SearchPhrase);
-            if (!regex.IsMatch(logLine.Content))
-                return false;
+            try
+            {
+                // the user could still be typing... 
+                
+                var regex = new Regex(_source.SearchPhrase);
+                if (!regex.IsMatch(logLine.Content))
+                    return false;
 
-            logLine.Highlight = LogHighlight.Find;
-            return true;
+                var matchString = (
+                    from Match match in regex.Matches(logLine.Content)
+                    select match.Value)
+                    .ToList();
+
+                logLine.SearchOptions.SearchPhrase = string.Join(",", matchString);
+                logLine.Highlight = LogHighlight.Find;
+                return true;
+            }
+            catch
+            {
+                logLine.SearchOptions.SearchPhrase = string.Empty;
+                return false;
+            }
         }
     }
 }

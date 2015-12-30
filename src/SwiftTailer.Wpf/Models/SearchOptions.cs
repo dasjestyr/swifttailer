@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using SwiftTailer.Wpf.Filters;
@@ -48,7 +49,14 @@ namespace SwiftTailer.Wpf.Models
             set
             {
                 _searchPhrase = value;
-                ApplyFilters();
+
+                // .Net reloads the search phrase on list virtualization 
+                // which causes filters to get reapplied. This is a short-circuit workaround
+                if (!string.IsNullOrEmpty(value))
+                {
+                    ApplyFilters();
+                }
+
                 OnPropertyChanged();
             }
         }
@@ -230,6 +238,22 @@ namespace SwiftTailer.Wpf.Models
         private void NewContentAddedHandler(object sender, NewContentEventArgs args)
         {
             ApplyFilters();
+        }
+
+        private bool CanProcessPhrase(string input)
+        {
+            if (PhraseType == PhraseType.Literal)
+                return true;
+
+            try
+            {
+                new Regex(input);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 

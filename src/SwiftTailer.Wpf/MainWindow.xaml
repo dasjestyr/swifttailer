@@ -139,8 +139,8 @@
                                                                ToolTipService.HasDropShadow="True"
                                                                ToolTip="{Binding LineContext}"
                                                                IsHighlight="True"
-                                                               IsMatchCase="False"
-                                                               SearchText="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                               IsMatchCase="{Binding SearchOptions.CaseSensitive}"
+                                                               SearchText="{Binding SearchOptions.SearchPhrase, Mode=TwoWay}"
                                                                HighlightBackground="{Binding Highlight, Converter={StaticResource HighlightConverter}}"
                                                                HighlightForeground="Black"
                                                                FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}"/>

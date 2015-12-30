@@ -357,7 +357,7 @@ namespace SwiftTailer.Wpf.Models
                     // get the new lines
                     var newLines = newContentString
                         .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(line => new LogLine(line.Trim(), LogHighlight.None))
+                        .Select(line => new LogLine(line.Trim(), LogHighlight.None, SearchOptions))
                         .ToList();
                     
                     // update the log collection
@@ -404,7 +404,7 @@ namespace SwiftTailer.Wpf.Models
             LogLines.Clear();
             LogLines.AddRange(args.NewText
                 .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(line => new LogLine(line.Trim(), LogHighlight.None)));
+                .Select(line => new LogLine(line.Trim(), LogHighlight.None, SearchOptions)));
 
             RawContentChanged?.Invoke(this, args);
         }

@@ -10,10 +10,8 @@
              xmlns:models="clr-namespace:SwiftTailer.Wpf.Models"
              mc:Ignorable="d" 
              Background="{DynamicResource MaterialDesignPaper}"
-             d:DesignHeight="200" d:DesignWidth="800">
-    <UserControl.DataContext>
-        <models:TailFile />
-    </UserControl.DataContext>
+             d:DesignHeight="200" d:DesignWidth="800" d:DataContext="{d:DesignInstance models:TailFile}">
+   
     <UserControl.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
         <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
@@ -23,7 +21,7 @@
         <Expander Padding="3" IsExpanded="{Binding ShowSearchOptions, Mode=TwoWay}" Focusable="False">
             <Expander.Header>
                 <DockPanel LastChildFill="True">
-                    <TextBox Text="{Binding SearchOptions.SearchPhrase, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox Text="{Binding SearchOptions.SearchPhrase, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                              ToolTip="You can separated phrases with a comma"
                              materialDesign:TextFieldAssist.Hint="Type search phrase here. Comma-separate terms and phrases (e.g. 'hello, world, hello world')"
                              Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}"
@@ -42,8 +40,15 @@
                 <GroupBox Header="Search Mode" Padding="5 5 5 0" Margin="2"
                                           ToolTip="How the search will return hits. Find will highlight hits, Filter will disclude all non-hits.">
                     <StackPanel Orientation="Vertical">
-                        <RadioButton GroupName="SearchMode" Name="FindModeRdo"  Content="Find" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Find}" />
-                        <RadioButton GroupName="SearchMode" Name="FilterModeRdo" Content="Filter" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Filter}"/>
+                        <RadioButton GroupName="SearchMode" 
+                                     Name="FindModeRdo"  
+                                     Content="Find" 
+                                     IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Find}" />
+                        
+                        <RadioButton GroupName="SearchMode" 
+                                     Name="FilterModeRdo" 
+                                     Content="Filter" 
+                                     IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Filter}"/>
                     </StackPanel>
                 </GroupBox>
 

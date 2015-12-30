@@ -11,6 +11,7 @@ namespace SwiftTailer.Wpf.Models
         private bool _pinned;
         private string _logFont = Settings.LogWindowFont;
         private string _searchPhrase;
+        private SearchOptions _searchOptions;
 
         /// <summary>
         /// Gets or sets the content.
@@ -36,18 +37,12 @@ namespace SwiftTailer.Wpf.Models
             }
         }
 
-        /// <summary>
-        /// Gets or sets the search phrase.
-        /// </summary>
-        /// <value>
-        /// The search phrase.
-        /// </value>
-        public string SearchPhrase
+        public SearchOptions SearchOptions
         {
-            get { return _searchPhrase; }
+            get { return _searchOptions; }
             set
             {
-                _searchPhrase = value;
+                _searchOptions = value;
                 OnPropertyChanged();
             }
         }
@@ -99,10 +94,12 @@ namespace SwiftTailer.Wpf.Models
         /// </summary>
         /// <param name="content">The content.</param>
         /// <param name="highlight">The highlight.</param>
-        public LogLine(string content, LogHighlight highlight)
+        /// <param name="searchOptions">The search options.</param>
+        public LogLine(string content, LogHighlight highlight, SearchOptions searchOptions)
         {
             Content = content;
             Highlight = highlight;
+            SearchOptions = searchOptions;
 
             Settings.SettingsChanged += SettingsChanged;
         }

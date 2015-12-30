@@ -47,7 +47,6 @@ namespace SwiftTailer.Wpf.Models
                 return new RelayCommand(
                 obj =>
                 {
-                    Trace.WriteLine("Tilde key detected");
                     SelectedTail.ShowSearchOptions = !SelectedTail.ShowSearchOptions;
                 });
             }
