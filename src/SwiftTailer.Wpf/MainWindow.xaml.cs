@@ -1,15 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using SwiftTailer.Wpf.Commands;
+using SwiftTailer.Wpf.Infrastructure.Messaging;
 using SwiftTailer.Wpf.Models;
-using SwiftTailer.Wpf.Pages;
 
 namespace SwiftTailer.Wpf
 {
@@ -20,6 +19,16 @@ namespace SwiftTailer.Wpf
             InitializeComponent();
             Dispatcher.UnhandledException += DisplayException;
             SourceInitialized += OnSourceInitialized; // Used to hook window behaviors before they fire
+
+            MessageBroker.Subscribe(typeof(WindowFocusedRequestMessage), RequestFocusHandler);
+        }
+
+        private void RequestFocusHandler(DomainEvent args)
+        {
+            Activate();
+            Topmost = true;
+            Topmost = false;
+            Focus();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -105,69 +114,12 @@ namespace SwiftTailer.Wpf
                 lbx.ScrollIntoView(lbx.SelectedItem);
         }
 
-        //private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
-        //{
-        //    var item = e.Source as TabItem;
-        //    if (item == null) return;
-
-        //    if (Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
-        //    {
-        //        DragDrop.DoDragDrop(item, item, DragDropEffects.All);
-        //    }
-        //}
-
-        //private void TabItem_Drop(object sender, DragEventArgs e)
-        //{
-        //    var itemTarget = e.Source as TabItem;
-        //    var itemSource = e.Data.GetData(typeof (TabItem)) as TabItem;
-
-        //    var pageContext = DataContext as MainViewModel;
-        //    var targetContext = itemTarget?.DataContext as TailFile;
-        //    var sourceContext = itemSource?.DataContext as TailFile;
-
-        //    if (targetContext == null || sourceContext == null || pageContext == null) return;
-
-        //    if (sourceContext.Order < targetContext.Order)
-        //    {
-        //        var sourceOrder = sourceContext.Order;
-        //        sourceContext.Order = targetContext.Order;
-        //        for (var i = targetContext.Order; i > sourceOrder; i--)
-        //        {
-        //            var item = SessionTabs.Items[i] as TailFile;
-        //            if (item == null) continue;
-        //            item.Order--;
-        //        }
-        //        pageContext.BindGroups();
-        //        pageContext.SaveOrder();
-        //    }
-        //    else
-        //    {
-        //        var sourceOrder = sourceContext.Order;
-        //        sourceContext.Order = targetContext.Order;
-        //        for (var i = targetContext.Order; i < sourceOrder; i++)
-        //        {
-        //            var item = SessionTabs.Items[i] as TailFile;
-        //            if(item == null) continue;
-        //            item.Order++;
-        //        }
-        //        pageContext.BindGroups();
-        //        pageContext.SaveOrder();
-        //    }
-        //}
         private void ListBoxItem_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             var lbi = sender as ListBoxItem;
             if (lbi == null) return;
 
             StaticCommands.OpenLogLineCommand.Execute(lbi);
-        }
-
-        private void UIElement_OnDrop(object sender, DragEventArgs e)
-        {
-            var files = (string[]) e.Data.GetData(DataFormats.FileDrop, false);
-            
-            var windows = files.Select(file => new AdHocTailingWindow(file)).Cast<Window>().ToList();
-            windows.ForEach(window => window.Show());
         }
     }
 }

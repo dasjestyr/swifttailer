@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Dragablz;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using MaterialDesignThemes.Wpf;
 using SwiftTailer.Wpf.Behaviors;
 using SwiftTailer.Wpf.Commands;
+using SwiftTailer.Wpf.Controls;
 using SwiftTailer.Wpf.Data;
 using SwiftTailer.Wpf.Infrastructure;
 using SwiftTailer.Wpf.Pages;
@@ -39,7 +46,7 @@ namespace SwiftTailer.Wpf.Models
         public AddGroupDialogCommand AddGroupDialogCommand { get; set; }
 
         public FollowTailToggleCommand FollowTailToggleCommand { get; set; }
-
+        
         public ICommand ToggleSearchOptionsCommand
         {
             get
@@ -52,6 +59,7 @@ namespace SwiftTailer.Wpf.Models
             }
         }
         
+        public FileDropMonitor FileDrop { get; }
         #endregion
 
         #region -- Observable Properties --
@@ -164,15 +172,8 @@ namespace SwiftTailer.Wpf.Models
 
         public MainViewModel()
         {
-            //Groups = new ObservableCollection<LogGroup>(LogSource.Instance.Logs.Groups);
-            //SelectedGroup = Groups.Count > 0 ? Groups[0] : new LogGroup();
-
-            //SelectedGroup = LogSource.Instance.Logs.Groups[0];
-
             IntertabClient = new IntertabClient(new TailerWindowFactory());
-
             LogSourceBound(this, new EventArgs());
-
             OpenLogPickerDialogCommand = new OpenLogPickerDialogCommand();
             AddGroupDialogCommand = new AddGroupDialogCommand();
             StopTailingCommand = new StopTailingCommand(this);
@@ -188,6 +189,9 @@ namespace SwiftTailer.Wpf.Models
             LogSource.Instance.LogGroupAdded += SetSelectedGroup;
             LogSource.Instance.LogGroupEdited += SetSelectedGroup;
             LogSource.Instance.LogGroupDeleted += LogGroupDeleted;
+
+            FileDrop = new FileDropMonitor();
+            FileDrop.Dropped.Subscribe(OnFileDrop);
         }
 
         public void StartTailing()
@@ -244,6 +248,33 @@ namespace SwiftTailer.Wpf.Models
         }
 
         #region -- Event Handlers --
+
+        private async void OnFileDrop(FileInfoCollection files)
+        {
+            var view = new FileDropDialog();
+            view.DataContext = new FileDropViewModel(this, files);
+
+            await DialogHost.Show(view, "RootDialog", ClosingEventHandler);
+        }
+
+        private void ClosingEventHandler(object sender, DialogClosingEventArgs eventArgs)
+        {
+            var parameter = eventArgs.Parameter as FileDropResultArgs;
+            if (parameter == null) return;
+
+            switch (parameter.Option)
+            {
+                case FileDropOption.None:
+                    MessageBox.Show("You chose cancel");
+                    break;
+                case FileDropOption.New:
+                    MessageBox.Show($"Create {parameter.GroupName}!");
+                    break;
+                case FileDropOption.Add:
+                    MessageBox.Show($"Add to {parameter.GroupName}");
+                    break;
+            }
+        }
 
         private void LogSourceBound(object sender, EventArgs args)
         {
@@ -304,7 +335,6 @@ namespace SwiftTailer.Wpf.Models
             Debug.WriteLine("Setting selected group...");
             SelectedGroup = Groups.FirstOrDefault();
         }
-
         #endregion
     }
 }

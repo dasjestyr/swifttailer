@@ -37,22 +37,22 @@ namespace SwiftTailer.Wpf.Controls
             new UIPropertyMetadata(string.Empty,
               UpdateControlCallBack));
 
-        /// <summary>
-        /// HighlightBackground sandbox which is used to get or set the value from a dependency property,
-        /// if it gets a value,it should be forced to bind to a Brushes type.
-        /// </summary>
-        public Brush HighlightBackground
-        {
-            get { return (Brush)GetValue(HighlightBackgroundProperty); }
-            set { SetValue(HighlightBackgroundProperty, value); }
-        }
+        ///// <summary>
+        ///// HighlightBackground sandbox which is used to get or set the value from a dependency property,
+        ///// if it gets a value,it should be forced to bind to a Brushes type.
+        ///// </summary>
+        //public Brush HighlightBackground
+        //{
+        //    get { return (Brush)GetValue(HighlightBackgroundProperty); }
+        //    set { SetValue(HighlightBackgroundProperty, value); }
+        //}
 
 
-        // Real implementation about HighlightBackgroundProperty which registers a dependency property 
-        // with the specified property name, property type, owner type, and property metadata. 
-        public static readonly DependencyProperty HighlightBackgroundProperty =
-            DependencyProperty.Register("HighlightBackground", typeof(Brush), typeof(SearchableTextControl),
-            new UIPropertyMetadata(Brushes.Yellow, UpdateControlCallBack));
+        //// Real implementation about HighlightBackgroundProperty which registers a dependency property 
+        //// with the specified property name, property type, owner type, and property metadata. 
+        //public static readonly DependencyProperty HighlightBackgroundProperty =
+        //    DependencyProperty.Register("HighlightBackground", typeof(Brush), typeof(SearchableTextControl),
+        //    new UIPropertyMetadata(Brushes.Yellow, UpdateControlCallBack));
 
         /// <summary>
         /// HighlightForeground sandbox which is used to get or set the value from a dependency property,
@@ -285,8 +285,9 @@ namespace SwiftTailer.Wpf.Controls
         private static List<PhraseMatchInfo> GetMatchIndices(IEnumerable<string> searchPhrases, string searchTarget, LogHighlight highlight)
         {
             // DEFECT: this only marks the first instance of the match
+            // DEFECT: this does not prevent collisions (same search term in multiple categories). Create a priority.
 
-            // Don't LINQify until defect is fixed
+            // Don't LINQify until defect are fixed
             var matchInfo = new List<PhraseMatchInfo>();
             foreach (var phrase in searchPhrases)
             {

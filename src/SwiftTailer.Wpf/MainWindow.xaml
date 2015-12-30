@@ -8,7 +8,8 @@
                       xmlns:models="clr-namespace:SwiftTailer.Wpf.Models"
                       xmlns:converters="clr-namespace:SwiftTailer.Wpf.Converters"
                       xmlns:stControl="clr-namespace:SwiftTailer.Wpf.Controls"
-                      xmlns:commands="clr-namespace:SwiftTailer.Wpf.Commands"
+                      xmlns:is="clr-namespace:SwiftTailer.Wpf.Infrastructure"
+                      xmlns:system="clr-namespace:System;assembly=mscorlib"
                       WindowTransitionsEnabled="True"
                       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                       Background="{DynamicResource MaterialDesignPaper}"					  
@@ -52,7 +53,7 @@
     </controls:MetroWindow.LeftWindowCommands>
     
     <AdornerDecorator>
-        <Grid>
+        <Grid is:DependencyObjectHook.Receiver="{Binding FileDrop}">
             <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding MenuIsOpen}">
                 <materialDesign:DrawerHost.LeftDrawerContent>
                     <Grid>
@@ -66,7 +67,13 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="30" />
                     </Grid.RowDefinitions>
-                    
+
+                    <materialDesign:DialogHost Identifier="RootDialog"
+                                               
+                                               Grid.Column="0" Grid.Row="1" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center" />
+
                     <!-- ACTION BAR -->
                     <ToolBarTray Grid.Row="0" VerticalAlignment="Center">
                         <ToolBar Band="0" BandIndex="0">
@@ -142,7 +149,6 @@
                                                                IsMatchCase="{Binding SearchOptions.CaseSensitive, Mode=TwoWay}"
                                                                SearchText="{Binding SearchOptions.SearchPhrase, Mode=TwoWay}"
                                                                ErrorText="{Binding SearchOptions.ErrorPhrases, Mode=TwoWay}"
-                                                               HighlightBackground="{Binding Highlight.HighlightColor, Converter={StaticResource HighlightConverter}}"
                                                                HighlightForeground="Black"
                                                                FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}"/>
                                                     </StackPanel>
@@ -176,7 +182,6 @@
                         </StatusBarItem>
                     </StatusBar>
                 </Grid>
-                
             </materialDesign:DrawerHost>
         </Grid>
     </AdornerDecorator>

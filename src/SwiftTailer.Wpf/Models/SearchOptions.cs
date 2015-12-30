@@ -15,7 +15,7 @@ namespace SwiftTailer.Wpf.Models
         private readonly TailFile _tail;
         private readonly HighlightApplicator _applicator = new HighlightApplicator();
         private CancellationTokenSource _cancellationTokenSource;
-        private bool _caseSensitive;
+        private bool _caseSensitive = false;
         private string _searchPhrase;
         private SearchMode _searchMode = SearchMode.Find;
         private PhraseType _phraseType = PhraseType.Literal;

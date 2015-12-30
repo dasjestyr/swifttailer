@@ -34,7 +34,7 @@
         <converters:FontFamilyStringConverter x:Key="FontFamilyConverter" />
     </UserControl.Resources>
 
-    <Grid Margin="10 0 0 0">
+    <Grid Margin="10 0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -85,6 +85,5 @@
                       IsChecked="{Binding AutoFollow}" 
                       Margin="5" 
                       ToolTip="When selected, log tails will have 'Follow Tail' selected by default, when opened."/>
-        
     </Grid>
 </UserControl>

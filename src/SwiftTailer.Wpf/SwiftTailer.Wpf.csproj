@@ -123,6 +123,18 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -202,6 +214,10 @@
     <Compile Include="Commands\ZipGroupAndEmailCommand.cs" />
     <Compile Include="Commands\ZipGroupCommand.cs" />
     <Compile Include="Commands\ZipTasks.cs" />
+    <Compile Include="Controls\FileDropDialog.xaml.cs">
+      <DependentUpon>FileDropDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FileDropViewModel.cs" />
     <Compile Include="Controls\GeneralSettings.xaml.cs">
       <DependentUpon>GeneralSettings.xaml</DependentUpon>
     </Compile>
@@ -236,7 +252,18 @@
     <Compile Include="Filters\LogHighlight.cs" />
     <Compile Include="Filters\HighlightApplicator.cs" />
     <Compile Include="Filters\FindHighlightRule.cs" />
+    <Compile Include="Infrastructure\DependencyObjectHook.cs" />
+    <Compile Include="Infrastructure\DialogCoordinator.cs" />
+    <Compile Include="Infrastructure\DialogParticipation.cs" />
+    <Compile Include="Infrastructure\FileDropContainer.cs" />
+    <Compile Include="Infrastructure\FileDropMonitor.cs" />
+    <Compile Include="Infrastructure\IDialogCoordinator.cs" />
     <Compile Include="Infrastructure\IntertabClient.cs" />
+    <Compile Include="Infrastructure\IProperty.cs" />
+    <Compile Include="Infrastructure\Messaging\DomainEvent.cs" />
+    <Compile Include="Infrastructure\Messaging\MessageBroker.cs" />
+    <Compile Include="Infrastructure\Messaging\WindowFocusedRequestMessage.cs" />
+    <Compile Include="Infrastructure\ReactiveExtensions.cs" />
     <Compile Include="Models\BindableBase.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\IProperty.cs" />
@@ -286,6 +313,10 @@
     <Page Include="Assets\Resources\TrayIconDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\FileDropDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\GeneralSettings.xaml">
       <SubType>Designer</SubType>
