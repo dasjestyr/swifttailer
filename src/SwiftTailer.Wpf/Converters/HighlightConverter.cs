@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Media;
 using SwiftTailer.Wpf.Filters;
 
 namespace SwiftTailer.Wpf.Converters
@@ -9,21 +10,8 @@ namespace SwiftTailer.Wpf.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var highlighter = (LogHighlight) value;
-            var category = highlighter.Category.ToString();
-
-            string colorValue = null;
-            switch (category)
-            {
-                case "Find":
-                    colorValue = "Yellow";
-                    break;
-                case "Error":
-                    colorValue = "Red";
-                    break;
-            }
-
-            return colorValue;
+            var highlighter = (Color) value;
+            return new SolidColorBrush(highlighter);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

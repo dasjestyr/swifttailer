@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using SwiftTailer.Wpf.Filters;
+using SwiftTailer.Wpf.Models;
 
 namespace SwiftTailer.Wpf.Controls
 {
@@ -120,6 +122,22 @@ namespace SwiftTailer.Wpf.Controls
             new UIPropertyMetadata(string.Empty, UpdateControlCallBack));
 
         /// <summary>
+        /// Gets or sets the error text.
+        /// </summary>
+        /// <value>
+        /// The error text.
+        /// </value>
+        public string ErrorText
+        {
+            get { return (string) GetValue(ErrorTextProperty); }
+            set { SetValue(ErrorTextProperty, value);}
+        }
+
+        public static readonly DependencyProperty ErrorTextProperty =
+            DependencyProperty.Register("ErrorText", typeof(string), typeof(SearchableTextControl),
+                new UIPropertyMetadata(string.Empty, UpdateControlCallBack));
+
+        /// <summary>
         /// Create a call back function which is used to invalidate the rendering of the element, 
         /// and force a complete new layout pass.
         /// One such advanced scenario is if you are creating a PropertyChangedCallback for a 
@@ -133,23 +151,27 @@ namespace SwiftTailer.Wpf.Controls
         }
         #endregion
 
+        
+
         /// <summary>
         /// override the OnRender method which is used to search for the keyword and highlight
         /// it when the operation gets the result.
         /// </summary>
         protected override void OnRender(DrawingContext drawingContext)
         {
-            TextBlock displayTextBlock = this.Template.FindName("PART_TEXT", this) as TextBlock;
+            var displayTextBlock = Template.FindName("PART_TEXT", this) as TextBlock;
+            if(displayTextBlock == null)
+                throw new InvalidOperationException("Cannot virtualize log lines without PART_TEXT");
 
-            if (string.IsNullOrEmpty(this.Text))
+            if (string.IsNullOrEmpty(Text))
             {
                 base.OnRender(drawingContext);
                 return;
             }
 
-            if (!this.IsHighlight)
+            if (!IsHighlight)
             {
-                displayTextBlock.Text = this.Text;
+                displayTextBlock.Text = Text;
                 base.OnRender(drawingContext);
                 return;
             }
@@ -158,39 +180,64 @@ namespace SwiftTailer.Wpf.Controls
 
             if(string.IsNullOrEmpty(SearchText))
                 SearchText = string.Empty;
-            
-            var searchPhrases = this.IsMatchCase 
-                ? SearchText.Trim().Split(new [] {","}, StringSplitOptions.RemoveEmptyEntries) 
-                : SearchText.Trim().ToUpper().Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
-            var compareText = this.IsMatchCase ? this.Text : this.Text.ToUpper();
-            var displayText = this.Text;
+            /* BEGIN SEARCH MAGIC */
 
-            var matches = GetMatchIndices(searchPhrases, compareText);
+            var displayText = Text;
+            var matches = GetMatchInfos();
 
-            Run run;
-            var position = 0;
-
+            // no matches, apply no filter
             if (!matches.Any())
             {
-                var runText = GenerateRun(displayText, false);
+                var runText = GenerateRun(displayText, false, LogHighlight.None);
                 displayTextBlock.Inlines.Add(runText);
                 base.OnRender(drawingContext);
                 return;
             }
 
+            // start building
+            BuildTextLine(matches, displayTextBlock);
+
+            // render
+            base.OnRender(drawingContext);
+        }
+
+        private List<PhraseMatchInfo> GetMatchInfos()
+        {
+            var searchPhrases = IsMatchCase
+                ? SearchText.Trim().Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                : SearchText.Trim().ToUpper().Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+            var errorPhrases = IsMatchCase
+                ? ErrorText.Trim().Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                : ErrorText.Trim().ToUpper().Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+            var compareText = IsMatchCase ? Text : Text.ToUpper();
+
+            var findMatches = GetMatchIndices(searchPhrases, compareText, LogHighlight.Find);
+            findMatches.AddRange(GetMatchIndices(errorPhrases, compareText, LogHighlight.Error));
+            var matches = findMatches.OrderBy(m => m.Index).ToList();
+
+            return matches;
+        }
+
+        private void BuildTextLine(IReadOnlyList<PhraseMatchInfo> matches, TextBlock displayTextBlock)
+        {
+            Run run;
+            var position = 0;
             var firstMatchIndex = matches[0].Index;
+            var displayText = Text;
 
             // if first match is not at start, grab first chunk of text
             if (firstMatchIndex != 0)
             {
                 var firstChunk = displayText.Substring(0, firstMatchIndex);
-                run = GenerateRun(firstChunk, false); // unformatted text
+                run = GenerateRun(firstChunk, false, LogHighlight.None); // unformatted text
                 displayTextBlock.Inlines.Add(run);
                 position = firstMatchIndex;
             }
 
-            // start building
+            // build up inner text
             for (var i = 0; i < matches.Count; i++)
             {
                 var match = matches[i];
@@ -199,8 +246,8 @@ namespace SwiftTailer.Wpf.Controls
                     : -1;
 
                 // grab the match
-                var runText = GetSubStringAndAdvancePosition(displayText, ref position, match.Length);
-                run = GenerateRun(runText, true);
+                var runText = SubstringAndAdvance(displayText, ref position, match.Length);
+                run = GenerateRun(runText, true, match.Highlight);
 
                 if (run != null)
                     displayTextBlock.Inlines.Add(run);
@@ -209,10 +256,10 @@ namespace SwiftTailer.Wpf.Controls
                 if (nextIndex != match.Index + 1 && nextIndex != -1)
                 {
                     var length = nextIndex - position;
-                    runText = GetSubStringAndAdvancePosition(displayText, ref position, length);
-                    run = GenerateRun(runText, false);
+                    runText = SubstringAndAdvance(displayText, ref position, length);
+                    run = GenerateRun(runText, false, LogHighlight.None);
 
-                    if(run != null)
+                    if (run != null)
                         displayTextBlock.Inlines.Add(run);
                 }
             }
@@ -221,14 +268,12 @@ namespace SwiftTailer.Wpf.Controls
             if (position < displayText.Length)
             {
                 var runText = displayText.Substring(position, displayText.Length - position);
-                run = GenerateRun(runText, false);
+                run = GenerateRun(runText, false, LogHighlight.None);
                 displayTextBlock.Inlines.Add(run);
             }
-
-            base.OnRender(drawingContext);
         }
 
-        private static string GetSubStringAndAdvancePosition(string source, ref int position, int length)
+        private static string SubstringAndAdvance(string source, ref int position, int length)
         {
             if (length < 0) return source;
 
@@ -237,8 +282,11 @@ namespace SwiftTailer.Wpf.Controls
             return result;
         }
 
-        private static List<PhraseMatchInfo> GetMatchIndices(IEnumerable<string> searchPhrases, string searchTarget)
+        private static List<PhraseMatchInfo> GetMatchIndices(IEnumerable<string> searchPhrases, string searchTarget, LogHighlight highlight)
         {
+            // DEFECT: this only marks the first instance of the match
+
+            // Don't LINQify until defect is fixed
             var matchInfo = new List<PhraseMatchInfo>();
             foreach (var phrase in searchPhrases)
             {
@@ -246,8 +294,10 @@ namespace SwiftTailer.Wpf.Controls
                     continue;
 
                 matchInfo.Add(new PhraseMatchInfo(
+                    searchTarget,
                     searchTarget.IndexOf(phrase.Trim(), StringComparison.Ordinal), 
-                    phrase.Length));
+                    phrase.Length,
+                    highlight));
             }
 
             return matchInfo
@@ -255,14 +305,17 @@ namespace SwiftTailer.Wpf.Controls
                 .ToList();
         } 
 
-        private Run GenerateRun(string runSegment, bool isHighlight)
+        private Run GenerateRun(string runSegment, bool isHighlight, LogHighlight highlight)
         {
             if (string.IsNullOrEmpty(runSegment)) return null;
 
             var run = new Run(runSegment)
             {
-                Background = isHighlight ? this.HighlightBackground : this.Background,
+                // NOTE: This ignores what is set in the view/xaml
+                Background = isHighlight ? new SolidColorBrush(highlight.HighlightColor) : this.Background,
                 Foreground = isHighlight ? this.HighlightForeground : this.Foreground,
+
+                // ** Leave this here as reference for pinned lines **/
 
                 // Set the source text with the style which is Italic.
                 //   FontStyle = isHighlight ? FontStyles.Italic : FontStyles.Normal,
@@ -272,19 +325,6 @@ namespace SwiftTailer.Wpf.Controls
             };
 
             return run;
-        }
-
-        private class PhraseMatchInfo
-        {
-            public int Index { get; }
-
-            public int Length { get; private set; }
-
-            public PhraseMatchInfo(int index, int length)
-            {
-                Index = index;
-                Length = length;
-            }
         }
     }
 }

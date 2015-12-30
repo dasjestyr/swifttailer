@@ -21,7 +21,7 @@
         <Expander Padding="3" IsExpanded="{Binding ShowSearchOptions, Mode=TwoWay}" Focusable="False">
             <Expander.Header>
                 <DockPanel LastChildFill="True">
-                    <TextBox Text="{Binding SearchOptions.SearchPhrase, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    <TextBox Text="{Binding SearchOptions.SearchPhrase, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, Delay=250}"
                              ToolTip="You can separated phrases with a comma"
                              materialDesign:TextFieldAssist.Hint="Type search phrase here. Comma-separate terms and phrases (e.g. 'hello, world, hello world')"
                              Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}"
@@ -56,9 +56,9 @@
                                           ToolTip="Experimental. Each line will contain a tool tip with the filter hit along with x lines of context, before and/or after.">
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="Head"/>
-                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextHeadSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}" Minimum="0" />
+                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextHeadSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}" Minimum="0" />
                         <TextBlock Text="Tail"/>
-                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextTailSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}" Minimum="0" />
+                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextTailSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}" Minimum="0" />
                     </StackPanel>
                 </GroupBox>
 

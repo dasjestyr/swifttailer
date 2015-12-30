@@ -244,6 +244,7 @@
     <Compile Include="Models\LogLine.cs" />
     <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\NewContentEventArgs.cs" />
+    <Compile Include="Models\PhraseMatchInfo.cs" />
     <Compile Include="Models\Property.cs" />
     <Compile Include="Models\RawContentsChangedEventArgs.cs" />
     <Compile Include="Models\SearchOptions.cs" />

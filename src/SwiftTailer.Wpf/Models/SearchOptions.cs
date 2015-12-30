@@ -49,14 +49,7 @@ namespace SwiftTailer.Wpf.Models
             set
             {
                 _searchPhrase = value;
-
-                // .Net reloads the search phrase on list virtualization 
-                // which causes filters to get reapplied. This is a short-circuit workaround
-                if (!string.IsNullOrEmpty(value))
-                {
-                    ApplyFilters();
-                }
-
+                TryApplyFilters(value);
                 OnPropertyChanged();
             }
         }
@@ -73,7 +66,7 @@ namespace SwiftTailer.Wpf.Models
             set
             {
                 _errorPhrases = value;
-                ApplyFilters();
+                TryApplyFilters(value);
                 OnPropertyChanged();
             }
         }
@@ -90,7 +83,7 @@ namespace SwiftTailer.Wpf.Models
             set
             {
                 _generalPhrases = value;
-                ApplyFilters();
+                TryApplyFilters(value);
                 OnPropertyChanged();
             }
         }
@@ -107,7 +100,6 @@ namespace SwiftTailer.Wpf.Models
             set
             {
                 _caseSensitive = value;
-                ApplyFilters();
                 OnPropertyChanged();
             }
         }
@@ -200,14 +192,24 @@ namespace SwiftTailer.Wpf.Models
             _tail.NewLinesAdded += NewContentAddedHandler;
         }
 
+        private void TryApplyFilters(string triggerValue)
+        {
+            // .Net reloads the search phrase on list virtualization 
+            // which causes filters to get reapplied. This is a short-circuit workaround
+            if (string.IsNullOrEmpty(triggerValue))
+                return;
+
+            ApplyFilters();
+        }
+
         private void ApplyFilters()
         {
             // doing this every time seems to be the only way 
             // to keep this shit uniformly in sync
             _cancellationTokenSource?.Dispose();
-            _cancellationTokenSource = new CancellationTokenSource();
             Trace.WriteLine("Interrupted previous filter configuration");
 
+            _cancellationTokenSource = new CancellationTokenSource();
             _applicator.ClearGlobalFilters();
 
             switch (SearchMode)
@@ -216,9 +218,7 @@ namespace SwiftTailer.Wpf.Models
                     _applicator.AddFilter(new FindHighlightRule(this, PhraseType, CompareRule));
                     break;
                 case SearchMode.Filter:
-                    // must be applied in this order
                     _applicator.AddFilter(new HideLineRule(this, ContextHeadSize, ContextTailSize));
-                    //_applicator.AddFilter(new CaptureContextRule(this, ContextHeadSize, ContextTailSize));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -229,31 +229,12 @@ namespace SwiftTailer.Wpf.Models
             _applicator.AddFilter(new ErrorPhraseRule(this));
 
             Trace.WriteLine("Applying filters...");
-
-            // make sure to stop anything that's still in flight
-
             Application.Current.Dispatcher.Invoke(() => _applicator.Apply(this, _cancellationTokenSource));
         }
 
         private void NewContentAddedHandler(object sender, NewContentEventArgs args)
         {
             ApplyFilters();
-        }
-
-        private bool CanProcessPhrase(string input)
-        {
-            if (PhraseType == PhraseType.Literal)
-                return true;
-
-            try
-            {
-                new Regex(input);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
     }
 

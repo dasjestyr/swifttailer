@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using SwiftTailer.Wpf.Models;
+#pragma warning disable 1998
 
 namespace SwiftTailer.Wpf.Filters
 {
@@ -31,6 +32,7 @@ namespace SwiftTailer.Wpf.Filters
     public class GeneralPhraseRule : ILogLineFilter
     {
         private readonly ISearchSource _source;
+
         public string Description => "Applies 'General' highlight for keywords";
 
         public GeneralPhraseRule(ISearchSource source)

@@ -139,9 +139,10 @@
                                                                ToolTipService.HasDropShadow="True"
                                                                ToolTip="{Binding LineContext}"
                                                                IsHighlight="True"
-                                                               IsMatchCase="{Binding SearchOptions.CaseSensitive}"
+                                                               IsMatchCase="{Binding SearchOptions.CaseSensitive, Mode=TwoWay}"
                                                                SearchText="{Binding SearchOptions.SearchPhrase, Mode=TwoWay}"
-                                                               HighlightBackground="{Binding Highlight, Converter={StaticResource HighlightConverter}}"
+                                                               ErrorText="{Binding SearchOptions.ErrorPhrases, Mode=TwoWay}"
+                                                               HighlightBackground="{Binding Highlight.HighlightColor, Converter={StaticResource HighlightConverter}}"
                                                                HighlightForeground="Black"
                                                                FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}"/>
                                                     </StackPanel>

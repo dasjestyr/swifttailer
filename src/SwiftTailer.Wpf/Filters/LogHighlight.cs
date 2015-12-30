@@ -1,3 +1,5 @@
+using System.Windows.Media;
+
 namespace SwiftTailer.Wpf.Filters
 {
     public class LogHighlight
@@ -7,7 +9,7 @@ namespace SwiftTailer.Wpf.Filters
         /// <summary>
         /// No hilight
         /// </summary>
-        public static LogHighlight None => new LogHighlight(HighlightCategory.None);
+        public static LogHighlight None => new LogHighlight(HighlightCategory.None, Colors.Transparent);
 
         /// <summary>
         /// Highlight search hit
@@ -15,7 +17,7 @@ namespace SwiftTailer.Wpf.Filters
         /// <value>
         /// The find.
         /// </value>
-        public static LogHighlight Find => new LogHighlight(HighlightCategory.Find);
+        public static LogHighlight Find => new LogHighlight(HighlightCategory.Find, Colors.Goldenrod);
 
         /// <summary>
         /// Highlight an error hit
@@ -23,7 +25,7 @@ namespace SwiftTailer.Wpf.Filters
         /// <value>
         /// The error.
         /// </value>
-        public static LogHighlight Error => new LogHighlight(HighlightCategory.Error);
+        public static LogHighlight Error => new LogHighlight(HighlightCategory.Error, Colors.Red);
 
         /// <summary>
         /// Indicates that the object should be hidden.
@@ -31,7 +33,7 @@ namespace SwiftTailer.Wpf.Filters
         /// <value>
         /// The hide.
         /// </value>
-        public static LogHighlight Hide => new LogHighlight(HighlightCategory.Hide);
+        public static LogHighlight Hide => new LogHighlight(HighlightCategory.Hide, Colors.Transparent);
 
         /// <summary>
         /// Gets or sets the general.
@@ -39,7 +41,7 @@ namespace SwiftTailer.Wpf.Filters
         /// <value>
         /// The general.
         /// </value>
-        public static LogHighlight General => new LogHighlight(HighlightCategory.General);
+        public static LogHighlight General => new LogHighlight(HighlightCategory.General, Colors.Green);
 
 
         /// <summary>
@@ -50,13 +52,17 @@ namespace SwiftTailer.Wpf.Filters
         /// </value>
         public HighlightCategory Category { get; set; }
 
+        public Color HighlightColor { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LogHighlight" /> class.
         /// </summary>
         /// <param name="category">The category.</param>
-        public LogHighlight(HighlightCategory category)
+        /// <param name="highlightColor">Color of the highlight.</param>
+        public LogHighlight(HighlightCategory category, Color highlightColor)
         {
             Category = category;
+            HighlightColor = highlightColor;
         }
 
         public override string ToString()

@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +19,8 @@ namespace SwiftTailer.Wpf.Filters
             lock (_lockObject)
             {
                 _globalFilters.Clear();
+
+                // so far we only have one global filter
                 _globalFilters.Add(new ClearFiltersRule()); // always needs to be first
             }
         }
