@@ -16,7 +16,10 @@ namespace SwiftTailer.Wpf.Converters
             switch (category)
             {
                 case "Find":
-                    colorValue = "Green";
+                    colorValue = "Yellow";
+                    break;
+                case "Error":
+                    colorValue = "Red";
                     break;
             }
 

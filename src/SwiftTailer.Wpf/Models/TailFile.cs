@@ -209,6 +209,11 @@ namespace SwiftTailer.Wpf.Models
         /// </value>
         public LogInfo LogInfo { get; }
 
+        public TailFile()
+        {
+            
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TailFile" /> class.
         /// </summary>

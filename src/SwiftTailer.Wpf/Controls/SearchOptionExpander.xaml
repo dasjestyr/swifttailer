@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="SwiftTailer.Wpf.Controls.SearchOptionExpander"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SwiftTailer.Wpf.Controls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:converters="clr-namespace:SwiftTailer.Wpf.Converters"
+             xmlns:models="clr-namespace:SwiftTailer.Wpf.Models"
+             mc:Ignorable="d" 
+             Background="{DynamicResource MaterialDesignPaper}"
+             d:DesignHeight="200" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <models:TailFile />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Expander Padding="3" IsExpanded="{Binding ShowSearchOptions, Mode=TwoWay}" Focusable="False">
+            <Expander.Header>
+                <DockPanel LastChildFill="True">
+                    <TextBox Text="{Binding SearchOptions.SearchPhrase, UpdateSourceTrigger=PropertyChanged}"
+                             ToolTip="You can separated phrases with a comma"
+                             materialDesign:TextFieldAssist.Hint="Type search phrase here. Comma-separate terms and phrases (e.g. 'hello, world, hello world')"
+                             Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}, Path=ActualWidth}"
+                             Margin="5"/>
+                </DockPanel>
+            </Expander.Header>
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <GroupBox Header="Case Sensitivity" Padding="5 5 5 0" Margin="2"
+                                          ToolTip="Whether or not the search will use Ordinal matching rules.">
+                    <StackPanel Orientation="Vertical">
+                        <RadioButton GroupName="CaseSensitivity" Content="On" IsChecked="{Binding SearchOptions.CaseSensitive, Mode=TwoWay}"/>
+                        <RadioButton GroupName="CaseSensitivity" Content="Off" IsChecked="{Binding SearchOptions.CaseSensitive, Converter={StaticResource InverseBoolConverter}, Mode=TwoWay}" />
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Search Mode" Padding="5 5 5 0" Margin="2"
+                                          ToolTip="How the search will return hits. Find will highlight hits, Filter will disclude all non-hits.">
+                    <StackPanel Orientation="Vertical">
+                        <RadioButton GroupName="SearchMode" Name="FindModeRdo"  Content="Find" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Find}" />
+                        <RadioButton GroupName="SearchMode" Name="FilterModeRdo" Content="Filter" IsChecked="{Binding SearchOptions.SearchMode, Mode=TwoWay, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Filter}"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Lines of Context" Visibility="{Binding ElementName=FilterModeRdo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                          ToolTip="Experimental. Each line will contain a tool tip with the filter hit along with x lines of context, before and/or after.">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Head"/>
+                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextHeadSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}" Minimum="0" />
+                        <TextBlock Text="Tail"/>
+                        <xctk:IntegerUpDown Value="{Binding SearchOptions.ContextTailSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=1000}" Minimum="0" />
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Phrase Type" Padding="5 5 5 0" Margin="2"
+                                          ToolTip="How the search phrase will be treated">
+                    <StackPanel Orientation="Vertical">
+                        <RadioButton GroupName="PhraseType" Content="Literal" IsChecked="{Binding SearchOptions.PhraseType, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Literal, Mode=TwoWay}" />
+                        <RadioButton GroupName="PhraseType" Content="Regex" IsChecked="{Binding SearchOptions.PhraseType, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Regex, Mode=TwoWay}"/>
+                    </StackPanel>
+                </GroupBox>
+                <StackPanel Orientation="Vertical" Margin="2">
+                    <TextBox Text="{Binding SearchOptions.ErrorPhrases, Mode=TwoWay, Delay=500, UpdateSourceTrigger=PropertyChanged}"
+                             Width="300"
+                             Margin="5"
+                             materialDesign:TextFieldAssist.Hint="Error phrases"/>
+                    
+                    <TextBox Text="{Binding SearchOptions.GeneralPhrases, Mode=TwoWay, Delay=500, UpdateSourceTrigger=PropertyChanged}"
+                             Width="300"
+                             Margin="5"
+                             ToolTip="Enter phrases here (comma-separated) that you want applied throughout your session. This will allow you to change the ad-hoc search filter at will without losing these 'sticky' terms."
+                             materialDesign:TextFieldAssist.Hint="General phrases"/>
+                </StackPanel>
+            </StackPanel>
+        </Expander>
+    </Grid>
+</UserControl>

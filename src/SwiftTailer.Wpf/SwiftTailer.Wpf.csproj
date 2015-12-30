@@ -206,6 +206,9 @@
       <DependentUpon>GeneralSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SearchableTextControl.cs" />
+    <Compile Include="Controls\SearchOptionExpander.xaml.cs">
+      <DependentUpon>SearchOptionExpander.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TrayIconInfoTooltip.xaml.cs">
       <DependentUpon>TrayIconInfoTooltip.xaml</DependentUpon>
     </Compile>
@@ -284,6 +287,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\GeneralSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SearchOptionExpander.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

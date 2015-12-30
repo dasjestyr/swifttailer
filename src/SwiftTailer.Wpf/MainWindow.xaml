@@ -36,6 +36,12 @@
             </Style>
         </ResourceDictionary>
     </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Key="OemTilde" 
+                    Command="{Binding ToggleSearchOptionsCommand}" />
+    </Window.InputBindings>
+
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
             <ToggleButton Width="22" Height="22" Margin="5 0 0 0"
@@ -116,7 +122,7 @@
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*" />
-                                            <RowDefinition Height="35" />
+                                            <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <ListBox x:Name="LogList"
                                              ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}"
@@ -143,9 +149,8 @@
                                             </ListBox.ItemTemplate>
 
                                         </ListBox>
-                                        <TextBox Grid.Row="1" 
-                                                 Foreground="Black"
-                                                 Text="{Binding SearchOptions.SearchPhrase, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <stControl:SearchOptionExpander DataContext="{Binding}"
+                                                                        Grid.Row="1" />
                                     </Grid>
                                     
                                 </DataTemplate>
