@@ -11,6 +11,7 @@
                       xmlns:is="clr-namespace:SwiftTailer.Wpf.Infrastructure"
                       xmlns:system="clr-namespace:System;assembly=mscorlib"
                       xmlns:generalSettings="clr-namespace:SwiftTailer.Wpf.Controls.GeneralSettings"
+                      xmlns:logViewer="clr-namespace:SwiftTailer.Wpf.Controls.LogViewer"
                       WindowTransitionsEnabled="True"
                       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                       Background="{DynamicResource MaterialDesignPaper}"					  
@@ -127,40 +128,7 @@
                             
                             <TabControl.ContentTemplate>
                                 <DataTemplate DataType="{x:Type models:TailFile}">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="*" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <ListBox x:Name="LogList"
-                                             ItemsSource="{Binding LogLines, UpdateSourceTrigger=PropertyChanged}"
-                                             SelectedIndex="{Binding SelectedLine}"
-                                             SelectionMode="Extended"
-                                             Foreground="Black">
-
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Vertical">
-                                                        <stControl:SearchableTextControl Text="{Binding Content}"
-                                                               ToolTipService.InitialShowDelay="500"
-                                                               ToolTipService.ShowDuration="20000"
-                                                               ToolTipService.HasDropShadow="True"
-                                                               ToolTip="{Binding LineContext}"
-                                                               IsHighlight="True"
-                                                               IsMatchCase="{Binding SearchOptions.CaseSensitive, Mode=TwoWay}"
-                                                               SearchText="{Binding SearchOptions.SearchPhrase, Mode=TwoWay}"
-                                                               ErrorText="{Binding SearchOptions.ErrorPhrases, Mode=TwoWay}"
-                                                               HighlightForeground="Black"
-                                                               FontFamily="{Binding LogFont, Converter={StaticResource FontFamilyStringConverter}}"/>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-
-                                        </ListBox>
-                                        <stControl:SearchOptionExpander DataContext="{Binding}"
-                                                                        Grid.Row="1" />
-                                    </Grid>
-                                    
+                                    <logViewer:LogViewer DataContext="{Binding}" />
                                 </DataTemplate>
                             </TabControl.ContentTemplate>
                         </dragablz:TabablzControl>

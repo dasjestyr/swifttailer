@@ -224,6 +224,9 @@
       <DependentUpon>GeneralSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\GeneralSettings\SettingsViewModel.cs" />
+    <Compile Include="Controls\LogViewer\LogViewer.xaml.cs">
+      <DependentUpon>LogViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SearchableTextControl.cs" />
     <Compile Include="Controls\SearchOptionExpander.xaml.cs">
       <DependentUpon>SearchOptionExpander.xaml</DependentUpon>
@@ -321,6 +324,10 @@
     <Page Include="Controls\GeneralSettings\GeneralSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\LogViewer\LogViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SearchOptionExpander.xaml">
       <SubType>Designer</SubType>
@@ -467,9 +474,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\backup\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
