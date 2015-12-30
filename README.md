@@ -1,6 +1,8 @@
 # SwiftTailer
 ####A lightweight log tailer with some practical options
 
+# UI redesign is underway! Material Design incoming...
+
 ![SwiftTailer](http://i.imgur.com/PGL2fZK.png)
 
 SwiftTailer is an open-source log tailer application that was put together to address some short-comings of other popular .Net log tailing projects in terms of how *we* needed to use it at my current job. We have been having so much success with this log monitor that I decided we should share it with the community. This is also my first real attempt at WPF/XAML so it also doubled as a learning project.
