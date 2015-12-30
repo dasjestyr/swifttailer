@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using SwiftTailer.Wpf.Filters;
+using SwiftTailer.Wpf.Infrastructure.Mvvm;
 
 namespace SwiftTailer.Wpf.Models
 {

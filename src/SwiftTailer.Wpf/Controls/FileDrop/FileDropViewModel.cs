@@ -1,8 +1,9 @@
 ﻿using System;
 using SwiftTailer.Wpf.Infrastructure;
+using SwiftTailer.Wpf.Infrastructure.Mvvm;
 using SwiftTailer.Wpf.Models;
 
-namespace SwiftTailer.Wpf.Controls
+namespace SwiftTailer.Wpf.Controls.FileDrop
 {
     public class FileDropViewModel : ModelBase
     {

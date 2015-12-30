@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using SwiftTailer.Wpf.Commands;
+using SwiftTailer.Wpf.Infrastructure.Mvvm;
 
 namespace SwiftTailer.Wpf.Models
 {

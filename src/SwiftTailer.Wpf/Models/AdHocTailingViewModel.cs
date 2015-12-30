@@ -6,6 +6,7 @@ using System.Windows.Input;
 using SwiftTailer.Wpf.Behaviors;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
+using SwiftTailer.Wpf.Infrastructure.Mvvm;
 
 namespace SwiftTailer.Wpf.Models
 {

@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace SwiftTailer.Wpf.Models
+namespace SwiftTailer.Wpf.Infrastructure.Mvvm
 {
     public interface IProperty : INotifyPropertyChanged
     {

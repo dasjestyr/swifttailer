@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace SwiftTailer.Wpf.Models
+namespace SwiftTailer.Wpf.Infrastructure.Mvvm
 {
     public abstract class ModelBase : BindableBase, IModel
     {

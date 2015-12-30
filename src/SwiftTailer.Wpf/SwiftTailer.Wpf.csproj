@@ -214,13 +214,16 @@
     <Compile Include="Commands\ZipGroupAndEmailCommand.cs" />
     <Compile Include="Commands\ZipGroupCommand.cs" />
     <Compile Include="Commands\ZipTasks.cs" />
-    <Compile Include="Controls\FileDropDialog.xaml.cs">
+    <Compile Include="Controls\FileDrop\FileDropContainer.cs" />
+    <Compile Include="Controls\FileDrop\FileDropDialog.xaml.cs">
       <DependentUpon>FileDropDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\FileDropViewModel.cs" />
-    <Compile Include="Controls\GeneralSettings.xaml.cs">
+    <Compile Include="Controls\FileDrop\FileDropMonitor.cs" />
+    <Compile Include="Controls\FileDrop\FileDropViewModel.cs" />
+    <Compile Include="Controls\GeneralSettings\GeneralSettings.xaml.cs">
       <DependentUpon>GeneralSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\GeneralSettings\SettingsViewModel.cs" />
     <Compile Include="Controls\SearchableTextControl.cs" />
     <Compile Include="Controls\SearchOptionExpander.xaml.cs">
       <DependentUpon>SearchOptionExpander.xaml</DependentUpon>
@@ -255,24 +258,22 @@
     <Compile Include="Infrastructure\DependencyObjectHook.cs" />
     <Compile Include="Infrastructure\DialogCoordinator.cs" />
     <Compile Include="Infrastructure\DialogParticipation.cs" />
-    <Compile Include="Infrastructure\FileDropContainer.cs" />
-    <Compile Include="Infrastructure\FileDropMonitor.cs" />
     <Compile Include="Infrastructure\IDialogCoordinator.cs" />
     <Compile Include="Infrastructure\IntertabClient.cs" />
     <Compile Include="Infrastructure\IProperty.cs" />
     <Compile Include="Infrastructure\Messaging\DomainEvent.cs" />
     <Compile Include="Infrastructure\Messaging\MessageBroker.cs" />
     <Compile Include="Infrastructure\Messaging\WindowFocusedRequestMessage.cs" />
+    <Compile Include="Infrastructure\Mvvm\BindableBase.cs" />
+    <Compile Include="Infrastructure\Mvvm\IModel.cs" />
+    <Compile Include="Infrastructure\Mvvm\IProperty.cs" />
+    <Compile Include="Infrastructure\Mvvm\ModelBase.cs" />
+    <Compile Include="Infrastructure\Mvvm\Property.cs" />
     <Compile Include="Infrastructure\ReactiveExtensions.cs" />
-    <Compile Include="Models\BindableBase.cs" />
-    <Compile Include="Models\IModel.cs" />
-    <Compile Include="Models\IProperty.cs" />
     <Compile Include="Models\ISearchSource.cs" />
     <Compile Include="Models\LogLine.cs" />
-    <Compile Include="Models\ModelBase.cs" />
     <Compile Include="Models\NewContentEventArgs.cs" />
     <Compile Include="Models\PhraseMatchInfo.cs" />
-    <Compile Include="Models\Property.cs" />
     <Compile Include="Models\RawContentsChangedEventArgs.cs" />
     <Compile Include="Models\SearchOptions.cs" />
     <Compile Include="Models\TailFile.cs" />
@@ -307,20 +308,19 @@
     <Compile Include="Models\IProgressProvider.cs" />
     <Compile Include="Models\LogPickerDialogViewModel.cs" />
     <Compile Include="Models\MainViewModel.cs" />
-    <Compile Include="Models\SettingsViewModel.cs" />
     <Compile Include="Models\TrayIconViewModel.cs" />
     <Compile Include="Models\ViewSelectionViewModel.cs" />
     <Page Include="Assets\Resources\TrayIconDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\FileDropDialog.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Controls\FileDrop\FileDropDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\GeneralSettings.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Controls\GeneralSettings\GeneralSettings.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\SearchOptionExpander.xaml">
       <SubType>Designer</SubType>

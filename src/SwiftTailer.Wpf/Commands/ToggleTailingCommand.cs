@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using SwiftTailer.Wpf.Infrastructure.Mvvm;
 using SwiftTailer.Wpf.Models;
 
 namespace SwiftTailer.Wpf.Commands

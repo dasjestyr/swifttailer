@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using SwiftTailer.Wpf.Infrastructure.Messaging;
 
-namespace SwiftTailer.Wpf.Controls
+namespace SwiftTailer.Wpf.Controls.FileDrop
 {
     /// <summary>
     /// Interaction logic for FileDropDialog.xaml

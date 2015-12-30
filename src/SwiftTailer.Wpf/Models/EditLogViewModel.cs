@@ -1,5 +1,6 @@
 ﻿using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Data;
+using SwiftTailer.Wpf.Infrastructure.Mvvm;
 
 namespace SwiftTailer.Wpf.Models
 {

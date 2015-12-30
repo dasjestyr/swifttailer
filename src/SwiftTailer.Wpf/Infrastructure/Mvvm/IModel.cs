@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 
-namespace SwiftTailer.Wpf.Models
+namespace SwiftTailer.Wpf.Infrastructure.Mvvm
 {
     public interface IModel
     {

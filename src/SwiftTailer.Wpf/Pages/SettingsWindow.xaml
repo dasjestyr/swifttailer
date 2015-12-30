@@ -9,12 +9,13 @@
         xmlns:wpf="clr-namespace:SwiftTailer.Wpf"
         xmlns:converter="clr-namespace:SwiftTailer.Wpf.Converters"
         xmlns:models="clr-namespace:SwiftTailer.Wpf.Models"
+        xmlns:generalSettings="clr-namespace:SwiftTailer.Wpf.Controls.GeneralSettings"
         mc:Ignorable="d"
         Title="Settings" Height="300" Width="375"
         Name="ThisWindow" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" SizeToContent="Width">
 
     <Window.DataContext>
-        <models:SettingsViewModel />
+        <generalSettings:SettingsViewModel />
     </Window.DataContext>
 
     <Window.Resources>

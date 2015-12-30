@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace SwiftTailer.Wpf.Controls
+namespace SwiftTailer.Wpf.Controls.GeneralSettings
 {
     /// <summary>
     /// Interaction logic for GeneralSettings.xaml

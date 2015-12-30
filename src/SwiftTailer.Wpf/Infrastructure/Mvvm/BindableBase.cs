@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace SwiftTailer.Wpf.Models
+namespace SwiftTailer.Wpf.Infrastructure.Mvvm
 {
     public class BindableBase : INotifyPropertyChanged
     {

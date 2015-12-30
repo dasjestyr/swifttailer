@@ -13,9 +13,12 @@ using MaterialDesignThemes.Wpf;
 using SwiftTailer.Wpf.Behaviors;
 using SwiftTailer.Wpf.Commands;
 using SwiftTailer.Wpf.Controls;
+using SwiftTailer.Wpf.Controls.FileDrop;
 using SwiftTailer.Wpf.Data;
 using SwiftTailer.Wpf.Infrastructure;
+using SwiftTailer.Wpf.Infrastructure.Mvvm;
 using SwiftTailer.Wpf.Pages;
+using FileDropDialog = SwiftTailer.Wpf.Controls.FileDrop.FileDropDialog;
 
 namespace SwiftTailer.Wpf.Models
 {

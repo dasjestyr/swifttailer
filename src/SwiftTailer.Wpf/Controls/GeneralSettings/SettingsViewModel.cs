@@ -1,8 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
+using SwiftTailer.Wpf.Infrastructure.Mvvm;
 
-namespace SwiftTailer.Wpf.Models
+namespace SwiftTailer.Wpf.Controls.GeneralSettings
 {
     public class SettingsViewModel : ModelBase
     {

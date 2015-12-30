@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace SwiftTailer.Wpf.Infrastructure
+namespace SwiftTailer.Wpf.Controls.FileDrop
 {
     public class FileDropContainer
     {

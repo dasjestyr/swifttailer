@@ -10,6 +10,7 @@
                       xmlns:stControl="clr-namespace:SwiftTailer.Wpf.Controls"
                       xmlns:is="clr-namespace:SwiftTailer.Wpf.Infrastructure"
                       xmlns:system="clr-namespace:System;assembly=mscorlib"
+                      xmlns:generalSettings="clr-namespace:SwiftTailer.Wpf.Controls.GeneralSettings"
                       WindowTransitionsEnabled="True"
                       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                       Background="{DynamicResource MaterialDesignPaper}"					  
@@ -57,7 +58,7 @@
             <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding MenuIsOpen}">
                 <materialDesign:DrawerHost.LeftDrawerContent>
                     <Grid>
-                        <stControl:GeneralSettings Margin="10 10" />
+                        <generalSettings:GeneralSettings Margin="10 10" />
                     </Grid>
                 </materialDesign:DrawerHost.LeftDrawerContent>
 

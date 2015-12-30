@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using SwiftTailer.Wpf.Filters;
+using SwiftTailer.Wpf.Infrastructure.Mvvm;
 
 namespace SwiftTailer.Wpf.Models
 {

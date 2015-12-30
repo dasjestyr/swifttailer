@@ -9,8 +9,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using SwiftTailer.Wpf.Infrastructure;
 
-namespace SwiftTailer.Wpf.Infrastructure
+namespace SwiftTailer.Wpf.Controls.FileDrop
 {
     public class FileInfoCollection
     {
