@@ -21,6 +21,24 @@ namespace SwiftTailer.Wpf
             SourceInitialized += OnSourceInitialized; // Used to hook window behaviors before they fire
 
             MessageBroker.Subscribe(typeof(WindowFocusedRequestMessage), RequestFocusHandler);
+
+            SetInitialWindowSize();
+        }
+
+        private void SetInitialWindowSize()
+        {
+            PropertyChangedCallback windowSizeCallback =
+                (source, args) =>
+                {
+                    var workArea = (Rect)args.NewValue;
+                    Height = workArea.Height;
+                    Width = workArea.Width*.7;
+                };
+
+            var windowSizeProperty = DependencyProperty.Register("InitialWindowSize", typeof(Rect), typeof(Window),
+                                                                 new PropertyMetadata(windowSizeCallback));
+
+            SetResourceReference(windowSizeProperty, SystemParameters.WorkAreaKey);
         }
 
         private void RequestFocusHandler(DomainEvent args)
